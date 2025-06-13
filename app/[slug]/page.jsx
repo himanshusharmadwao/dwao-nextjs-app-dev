@@ -4,7 +4,7 @@ import qs from 'qs';
 import NotFound from '@/app/not-found';
 import SinglePageWrapper from '@/components/wrapper/single-page';
 import { getCapability } from '@/libs/apis/data/capaibilities';
-
+ 
 export async function generateMetadata({ params, searchParams }) {
   try {
     const resolvedParams = await params;
