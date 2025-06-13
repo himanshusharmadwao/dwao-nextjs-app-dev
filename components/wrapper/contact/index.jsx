@@ -36,7 +36,7 @@ const ContactWrapper = async () => {
     const offices = officesResponse.data;
 
     const officeMapResponse = await getOfficeMap();
-    const officeMap = officeMapResponse.data[0].image.url;
+    const officeMap = officeMapResponse.data[0]?.image?.url;
 
     return (
         <>
@@ -73,7 +73,7 @@ const ContactWrapper = async () => {
                                             width={30}
                                             alt="Phone Icon"
                                         />
-                                        <Link prefetch={false} 
+                                        <Link prefetch={false}
                                             href={`tel:${office.phone}`}
                                             className="text-[1.1rem] text-con-dark"
                                         >
@@ -89,7 +89,7 @@ const ContactWrapper = async () => {
                                             width={30}
                                             alt="Email Icon"
                                         />
-                                        <Link prefetch={false} 
+                                        <Link prefetch={false}
                                             href={`mailto:${office.email}`}
                                             className="text-[1.1rem] text-con-dark"
                                         >
@@ -110,13 +110,15 @@ const ContactWrapper = async () => {
             {/* map */}
             <div className="container">
                 <div className="mb-14">
-                    <Image
-                        src={officeMap || "/map.png"}
-                        height={600}
-                        width={1000}
-                        alt="Dwao Office Map"
-                        className="w-full max-h-[200px] lg:max-h-none lg:h-auto"
-                    />
+                    {officeMap && (
+                        <Image
+                            src={officeMap || "/map.png"}
+                            height={600}
+                            width={1000}
+                            alt="Dwao Office Map"
+                            className="w-full max-h-[200px] lg:max-h-none lg:h-auto"
+                        />
+                    )}
                 </div>
             </div>
 
