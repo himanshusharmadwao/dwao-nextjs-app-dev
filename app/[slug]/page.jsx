@@ -3,7 +3,7 @@ import qs from 'qs';
 // import { notFound, redirect } from 'next/navigation';
 import NotFound from '@/app/not-found';
 import SinglePageWrapper from '@/components/wrapper/single-page';
-import { getCapability } from '@/libs/apis/data/capaibilities';
+import { getCapability } from '@/libs/apis/data/capaibilities'; 
  
 export async function generateMetadata({ params, searchParams }) {
   try {
