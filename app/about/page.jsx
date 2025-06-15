@@ -9,7 +9,7 @@ export const metadata = {
 
 const About = async ({searchParams}) => {
 
-    const preview = searchParams.preview === "true";
+    const preview = searchParams?.preview === "true";
     // console.log("preview: ", preview)
 
     return (

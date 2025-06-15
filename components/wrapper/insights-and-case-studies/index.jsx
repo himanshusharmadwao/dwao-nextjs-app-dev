@@ -24,7 +24,7 @@ const InsightCaseWrapper = async ({preview}) => {
         <>
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <BlogPost filterItems={insightCategoryResponse.data} variant="caseStudies" preview={preview} />
+                <BlogPost filterItems={insightCategoryResponse?.data} variant="caseStudies" preview={preview} />
             </Suspense>
 
             {/* Contact */}

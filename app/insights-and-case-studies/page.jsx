@@ -8,7 +8,7 @@ export const metadata = {
 }
 
 const InsightCaseStudies = ({ searchParams }) => {
-    const preview = searchParams.preview === "true";
+    const preview = searchParams?.preview === "true";
     // console.log("preview level 1: ", preview)
     return (
         <>

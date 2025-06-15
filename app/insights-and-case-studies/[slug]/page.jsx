@@ -43,7 +43,7 @@ const SingleBlog = async ({ params, searchParams }) => {
 
     const resolvedParams = await params;
     // console.log("Resolved params:", resolvedParams);
-    const preview = searchParams.preview ? true : false;
+    const preview = searchParams?.preview ? true : false;
     // console.log("preview: ", preview)
     const insightBlogsResponse = await getInsightBlog(preview, resolvedParams.slug);
     // console.log("insightBlogsResponse: ", insightBlogsResponse)

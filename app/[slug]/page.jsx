@@ -90,7 +90,7 @@ export const loadPage = async (slug) => {
 const DynamicPages = async ({ params, searchParams }) => {
   const resolvedParams = await params;
   console.log("resolved params", resolvedParams);
-  const preview = searchParams.preview === "true"; //exact comparison because of js non-empty string logic
+  const preview = searchParams?.preview === "true"; //exact comparison because of js non-empty string logic
   // console.log("preview: ", preview)
   const capabilityResponse = await getCapability(preview, resolvedParams.slug);
   console.log("capabilityResponse: ", capabilityResponse)
