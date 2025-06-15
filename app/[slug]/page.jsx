@@ -8,7 +8,7 @@ import { getCapability } from '@/libs/apis/data/capaibilities';
 export async function generateMetadata({ params, searchParams }) {
   try {
     const resolvedParams = await params;
-    const preview = searchParams.preview ? true : false;
+    const preview = searchParams?.preview === "true";
     const capabilityResponse = await getCapability(preview ,resolvedParams.slug);
 
     // const currentPost = capabilityResponse.data.find(post => post.slug === params?.slug);

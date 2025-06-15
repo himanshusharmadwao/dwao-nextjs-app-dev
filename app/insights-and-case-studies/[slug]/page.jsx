@@ -5,7 +5,7 @@ import { getInsightBlog } from "@/libs/apis/data/insights";
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
     const resolvedParams = await params;
-    const preview = searchParams.preview ? true : false;
+    const preview = searchParams?.preview === "true";
     const insightBlogsResponse = await getInsightBlog(preview, resolvedParams.slug);
 
     // const insightBlog = insightBlogsResponse.data.find(post => post.slug === params.slug);

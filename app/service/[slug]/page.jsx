@@ -6,7 +6,7 @@ import NotFound from '@/app/not-found';
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   const resolvedParams = await params;
-  const preview = searchParams.preview ? true : false;
+  const preview = searchParams?.preview === "true";
   // console.log(resolvedParams)
   const serviceResponse = await getServiceData(preview, resolvedParams.slug);
   console.log("serviceResponse: ", serviceResponse)

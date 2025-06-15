@@ -25,7 +25,7 @@ const BlogWrapper = async ({preview}) => {
         <>
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <BlogPost filterItems={categoryResponse.data} variant="blogPosts" preview={preview} />
+                <BlogPost filterItems={categoryResponse?.data} variant="blogPosts" preview={preview} />
             </Suspense>
 
             <Suspense fallback={<LoadingPlaceholder />}>
