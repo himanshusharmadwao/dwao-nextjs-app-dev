@@ -1,4 +1,4 @@
-import { getAllBlogs, getCategory } from '@/libs/apis/data/blog';
+import { getCategory } from '@/libs/apis/data/blog';
 import dynamicImport from 'next/dynamic';
 import { Suspense } from 'react';
 
@@ -15,20 +15,17 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const BlogWrapper = async () => {
+const BlogWrapper = async ({preview}) => {
 
-    const [categoryResponse, blogsResponse] = await Promise.all([
-        getCategory(),
-        getAllBlogs()
-    ]);
+    const categoryResponse = await getCategory(preview);
 
-    console.log("categoryResponse: ", categoryResponse, "blogsResponse", blogsResponse)
+    // console.log("categoryResponse: ", categoryResponse)
 
     return (
         <>
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <BlogPost filterItems={categoryResponse.data} blogPosts={blogsResponse.data} variant="blogPosts" />
+                <BlogPost filterItems={categoryResponse.data} variant="blogPosts" preview={preview} />
             </Suspense>
 
             <Suspense fallback={<LoadingPlaceholder />}>

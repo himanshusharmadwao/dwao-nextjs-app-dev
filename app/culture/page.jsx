@@ -11,9 +11,8 @@ export const metadata = {
 
 const Culture = async ({ searchParams }) => {
 
-    const resolvedSearchParams  = await searchParams;
-    const preview = resolvedSearchParams.preview ? true : false;
-    console.log("preview: ", preview)
+     const preview = searchParams.preview === "true";
+    // console.log("preview: ", preview)
 
     return (
         <>

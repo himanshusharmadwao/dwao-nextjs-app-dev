@@ -7,10 +7,12 @@ export const metadata = {
     },
 }
 
-const InsightCaseStudies = () => {
+const InsightCaseStudies = ({ searchParams }) => {
+    const preview = searchParams.preview === "true";
+    // console.log("preview level 1: ", preview)
     return (
         <>
-            <InsightCaseWrapper />
+            <InsightCaseWrapper preview={preview} />
         </>
     );
 };

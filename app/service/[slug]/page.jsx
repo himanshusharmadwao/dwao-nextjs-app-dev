@@ -36,11 +36,11 @@ export async function generateMetadata({ params, searchParams }) {
 
 const DV360 = async ({ params, searchParams }) => {
   const resolvedParams = await params;
-  console.log("params:", resolvedParams);
-  const preview = searchParams.preview ? true : false;
-  console.log("preview: ", preview)
+  // console.log("params:", resolvedParams);
+  const preview = searchParams.preview === "true";
+  // console.log("preview: ", preview)
   const serviceResponse = await getServiceData(preview, resolvedParams.slug);
-  console.log("serviceResponse: ", serviceResponse)
+  // console.log("serviceResponse: ", serviceResponse)
 
   // const servicePage = serviceResponse.data.find(service => service.slug === resolvedParams.slug);
 

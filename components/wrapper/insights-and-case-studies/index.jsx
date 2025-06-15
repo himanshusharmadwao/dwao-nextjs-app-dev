@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { getAllInsightBlogs, getInsightCategory } from '@/libs/apis/data/insights';
+import { getInsightCategory } from '@/libs/apis/data/insights';
 import dynamic from "next/dynamic";
 
 const BlogPost = dynamic(() => import('@/components/blog/blogPost'), {
@@ -16,23 +16,15 @@ const LoadingPlaceholder = () => (
 );
 
 
-const InsightCaseWrapper = async () => {
+const InsightCaseWrapper = async ({preview}) => {
 
-    // const insightCategoryResponse = await getInsightCategory();
-    // console.log(insightCategoryResponse);
-    // const insightBlogsResponse = await getInsightBlogs();
-    // console.log(insightBlogsResponse);
-
-    const [insightCategoryResponse, insightBlogsResponse] = await Promise.all([
-        getInsightCategory(),
-        getAllInsightBlogs()
-    ]);
+    const insightCategoryResponse = await getInsightCategory(preview);
 
     return (
         <>
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <BlogPost filterItems={insightCategoryResponse.data} blogPosts={insightBlogsResponse.data} variant="caseStudies" />
+                <BlogPost filterItems={insightCategoryResponse.data} variant="caseStudies" preview={preview} />
             </Suspense>
 
             {/* Contact */}

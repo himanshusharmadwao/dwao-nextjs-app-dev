@@ -41,7 +41,7 @@ const SingleBlogWrapper = ({ pageData, relatedBlogs }) => {
                                 rehypePlugins={[rehypeRaw]}
                                 transform={(html) => DOMPurify.sanitize(html)}
                             >
-                                {pageData.markdownContent}
+                                {pageData?.markdownContent}
                             </ReactMarkdown>
                         ) : (
                             <p>No content available</p>

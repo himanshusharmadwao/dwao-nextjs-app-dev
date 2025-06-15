@@ -98,7 +98,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                 (
                     <div className="relative w-full aspect-[1400/690]">
                         <Image
-                            src={pageData?.valueVisual.url}
+                            src={pageData?.valueVisual?.url}
                             fill
                             sizes="100vw"
                             alt="Axis MaxLife Insurance Case Study"

@@ -49,7 +49,7 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
     })
 
     const dualLayout = pageData?.section;
-    console.log("pageData: ", pageData)
+    // console.log("pageData: ", pageData)
 
     return (
         <>
@@ -61,7 +61,7 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
                         <div className="aspect-[7/10] hidden lg:block">
                             {pageData?.featuredImage && (
                                 <Image
-                                    src={getImageUrl(pageData.featuredImage)}
+                                    src={getImageUrl(pageData?.featuredImage)}
                                     alt="Desktop Banner"
                                     fill
                                     priority
@@ -72,7 +72,7 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
                         <div className="aspect-[15/7] lg:hidden">
                             {pageData?.thumbnail && (
                                 <Image
-                                    src={getImageUrl(pageData.thumbnail)}
+                                    src={getImageUrl(pageData?.thumbnail)}
                                     alt="Mobile Banner"
                                     fill
                                     priority
@@ -84,10 +84,10 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
                             <div className="container">
                                 <div className="text-left py-5">
                                     <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{pageData.title}</h1>
-                                    <p className="text-[17px] text-white mt-[2rem]">{pageData.description}</p>
+                                    <p className="text-[17px] text-white mt-[2rem]">{pageData?.description}</p>
                                     <Suspense fallback={<LoadingPlaceholder />}>
                                         {pageData?.linkTitle && pageData?.linkHref && (
-                                            <ExtendLink title={pageData.linkTitle} href={pageData.linkHref} className="text-white text-[20px]" />
+                                            <ExtendLink title={pageData?.linkTitle} href={pageData?.linkHref} className="text-white text-[20px]" />
                                         )}
                                     </Suspense>
                                 </div>

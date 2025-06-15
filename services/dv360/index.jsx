@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic"
 
 const Dv360Service = ({ serviceData }) => {
 
-  console.log(serviceData)
+  // console.log(serviceData)
 
   const [clientSlide, setClientSlide] = useState([]);
 
@@ -78,26 +78,26 @@ const Dv360Service = ({ serviceData }) => {
           <div className="flex flex-col-reverse lg:flex-row items-center">
             <div className="lg:w-1/2 lg:pr-12">
               <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                {serviceData?.banner.title}
+                {serviceData?.banner?.title}
               </h1>
               <p className="text-xl mb-8 text-blue-100">
-                {serviceData?.banner.description}
+                {serviceData?.banner?.description}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link prefetch={false}  href={serviceData?.banner?.primaryBtnHref || '/'}
                   className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition text-center font-medium cursor-pointer getStarted"
                   onClick={handleRequestQuoteClick}
                 >
-                  {serviceData?.banner.primaryBtnTitle}
+                  {serviceData?.banner?.primaryBtnTitle}
                 </Link>
                 <Link prefetch={false}  href={serviceData?.banner?.secondaryBtnHref || '/'} className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-blue-900 transition text-center font-medium cursor-pointer">
-                  {serviceData?.banner.secondaryBtnTitle}
+                  {serviceData?.banner?.secondaryBtnTitle}
                 </Link>
               </div>
               <div className="mt-12">
-                <p className="text-sm text-blue-200 mb-4">{serviceData?.banner.trustedBrandsText}</p>
+                <p className="text-sm text-blue-200 mb-4">{serviceData?.banner?.trustedBrandsText}</p>
                 <div className="flex flex-wrap items-center gap-8">
-                  {serviceData?.banner.trustedBrands.map((item, index) => (
+                  {serviceData?.banner?.trustedBrands.map((item, index) => (
                     <div key={index} className="bg-white/10 p-3 rounded-lg">
                       <Image src={item.url} alt="Brand Image" height={30} width={30} loading="lazy" />
                     </div>
@@ -116,13 +116,13 @@ const Dv360Service = ({ serviceData }) => {
       <section id="what-is-dv360" className="py-20 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.section[0].title}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.section?.[0]?.title}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {serviceData?.section[0].description}
+              {serviceData?.section?.[0]?.description}
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {serviceData?.section[0].card.map((item, index) => (
+            {serviceData?.section?.[0]?.card.map((item, index) => (
               <IntroCard
                 key={index}
                 icon={item.icon.url}
@@ -138,13 +138,13 @@ const Dv360Service = ({ serviceData }) => {
       <section id="services" className="py-20 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.section[1].title}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.section?.[1]?.title}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {serviceData?.section[1].description}
+              {serviceData?.section?.[1]?.description}
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            {serviceData?.section[1].card.map((item, index) => (
+            {serviceData?.section?.[1]?.card.map((item, index) => (
               <ServiceCard
                 key={index}
                 icon={item.icon.url}
@@ -158,7 +158,7 @@ const Dv360Service = ({ serviceData }) => {
               className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer getStarted"
             // onClick={pageMove}
             >
-              {serviceData?.section[1].ctaTitle}
+              {serviceData?.section?.[1]?.ctaTitle}
             </Link>
           </div>
         </div>
@@ -168,13 +168,13 @@ const Dv360Service = ({ serviceData }) => {
       <section id="our-value" className="py-20 bg-[#4A69BB] text-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">{serviceData?.section[2].title}</h2>
+            <h2 className="text-3xl font-bold mb-4">{serviceData?.section?.[2]?.title}</h2>
             <p className="text-xl text-white/80 max-w-3xl mx-auto">
-              {serviceData?.section[2].description}
+              {serviceData?.section?.[2]?.description}
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {serviceData?.section[2].card.map((item, index) => (
+            {serviceData?.section?.[2]?.card.map((item, index) => (
               <ValueCard
                 key={index}
                 icon={item.icon.url}
@@ -190,13 +190,13 @@ const Dv360Service = ({ serviceData }) => {
       <section id="why-us" className="py-20 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.InfoPanel.title}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.InfoPanel?.title}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {serviceData?.InfoPanel.description}
+              {serviceData?.InfoPanel?.description}
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {serviceData?.InfoPanel.InfoPanel.map((story, index) => (
+            {serviceData?.InfoPanel?.InfoPanel?.map((story, index) => (
               <StoryCard
                 key={index}
                 logo={story.logo.url}
@@ -212,7 +212,7 @@ const Dv360Service = ({ serviceData }) => {
           </div>
           <div className="text-center mt-12">
             <Link prefetch={false}  href={serviceData?.InfoPanel?.ctaHref || '/'} className="inline-block bg-[#4A69BB] text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer">
-              {serviceData?.InfoPanel.ctaTitle}
+              {serviceData?.InfoPanel?.ctaTitle}
             </Link>
           </div>
         </div>
@@ -222,9 +222,9 @@ const Dv360Service = ({ serviceData }) => {
       <section id="testimonials" className="py-20 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.clientTestimonial.title}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{serviceData?.clientTestimonial?.title}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {serviceData?.clientTestimonial.description}
+              {serviceData?.clientTestimonial?.description}
             </p>
           </div>
           <div className="">
@@ -232,7 +232,7 @@ const Dv360Service = ({ serviceData }) => {
           </div>
           <div className="mt-12 text-center">
             <Link prefetch={false}  href={serviceData?.clientTestimonial?.ctaHref || '/'} className="inline-block bg-[#4A69BB] text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer">
-              {serviceData?.clientTestimonial.ctaTitle}
+              {serviceData?.clientTestimonial?.ctaTitle}
             </Link>
           </div>
         </div>
