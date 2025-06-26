@@ -1,10 +1,10 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-export const getCapability = async (preview = false, slug) => {
+export const getPartner = async (preview = false, slug = '') => {
   // console.log("slug: ", slug);
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=section&populate[3]=section.visual&populate[4]=section.content&populate[5]=seo&filters[slug][$eq]=${slug}&${preview ? 'status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[section][populate][visual][populate]=*&populate[section][populate][content][populate]=*&populate[seo][populate]=*&filters[slug][$eq]=${slug}&${preview ? 'status=draft' : ''}`,
       {
         next: { revalidate: getRevalidateTime(preview) },
       }
@@ -18,13 +18,13 @@ export const getCapability = async (preview = false, slug) => {
     if (!mainCapability) return null;
 
     // 2. Extract the category of the main capability
-    const category = mainCapability.category;
+    const categorySlug = mainCapability.category.slug;
 
     // 3. Fetch related capabilities (same category, different slug)
     let related = [];
-    if (category) {
+    if (categorySlug) {
       const relatedResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=section&populate[3]=section.visual&populate[4]=section.content&populate[5]=seo&filters[slug][$ne]=${slug}&filters[category][$eq]=${category}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[section][populate][visual][populate]=*&populate[section][populate][content][populate]=*&populate[seo][populate]=*&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`,
         {
           next: { revalidate: getRevalidateTime(preview) },
         }

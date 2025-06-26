@@ -3,7 +3,7 @@ import { getRevalidateTime } from "@/libs/utils";
 export const getReviews = async (preview = false) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews-mat?${preview ? 'status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews-mat?populate[0]=seo&populate[1]=seo.openGraph&populate[2]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 

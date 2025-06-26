@@ -6,7 +6,7 @@ import rehypeRaw from 'rehype-raw'; // for raw html
 import styles from "@/styles/markdown.module.css";
 
 const DualLayout = ({ data }) => {
-  console.log("data: ", JSON.stringify(data));
+  // console.log("data: ", JSON.stringify(data));
 
   const contentData = Array.isArray(data) ? data[0] : data;
 

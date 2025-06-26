@@ -1,11 +1,11 @@
 import { getRevalidateTime } from "@/libs/utils";
 
 // getHome
-export const getHome = async (device, preview = false) => {
+export const getHome = async (device = "desktop", preview = false) => {
   try {
     const url = device === "mobile"
-      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.mobileImg&populate[1]=storyOverlay.image&populate[2]=insightMobileImg&${preview ? 'status=draft' : ''}`
-      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.deskImg&populate[1]=storyOverlay.image&populate[2]=insightDeskImg&${preview ? 'status=draft' : ''}`;
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.mobileImg&populate[1]=storyOverlay.image&populate[2]=insightMobileImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.deskImg&populate[1]=storyOverlay.image&populate[2]=insightDeskImg&&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`;
 
     const response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
     if (!response.ok) throw new Error(`Failed: ${response.status}`);

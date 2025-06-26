@@ -38,7 +38,7 @@ const LoadingPlaceholder = () => (
 
 const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
 
-    // console.log("Pagedata: ", pageData)
+    console.log("Pagedata: ", pageData)
 
     const studySlides = relatedInsightBlogs?.map((card, index) => (
         <StudyCard
@@ -102,7 +102,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                             fill
                             sizes="100vw"
                             alt="Axis MaxLife Insurance Case Study"
-                            className="object-cover"
+                            className="object-contain"
                         />
                     </div>
                 )
@@ -125,7 +125,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                     <div className="grid grid-cols-1 lg:grid-cols-5 lg:gap-[100px] gap-[40px] mb-14">
                         <div className="lg:col-span-2 col-span-1">
                             <div className="relative lg:h-[700px] lg:w-[450px] h-[500px] w-full">
-                                <Image src={`${getImageUrl(pageData?.insightVisual) || "/axis-maxlife-insurance-casestudy-left-480.webp "}`} fill alt="missing image" objectFit='cover' />
+                                <Image src={pageData?.insightVisual?.url || ''} fill alt="missing image" objectFit='cover' />
                             </div>
                         </div>
                         <div className="lg:col-span-3 col-span-1 flex items-center">
@@ -140,7 +140,6 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                     </Suspense>
 
                     <div className="mb-14 flex items-center gap-8">
-                        {/* <h2 className='text-con-dark text-[28px] leading-[1.1]'>"The implementation of server-side tracking has been a game changer for our marketing strategy, enhancing data accuracy, ensuring compliance, and driving greater efficiency. By reducing customer acquisition costs for our <Link prefetch={false}  href="https://www.maxlifeinsurance.com/term-insurance-plans" target="_blank" className='text-blue-700'>Term</Link> & <Link prefetch={false}  href="https://www.maxlifeinsurance.com/investment-plans" target="_blank" className='text-blue-700'>Savings</Link> business and optimizing campaign performance, we’ve been able to expand our reach and engage with our audience more meaningfully. This data-driven transformation has reinforced our brand’s commitment to innovation and customer-centricity, delivering measurable success in our marketing efforts"</h2> */}
                         <div className='lg:w-[55%] w-full'>
                             <div className={styles.testimonialStyle}>
                                 <ReactMarkdown
@@ -155,9 +154,9 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                             <span className='w-full italic lg:text-[1.8rem] text-[1.2rem]  inline-block'><strong>{pageData?.insightTestimonial?.name}</strong>, {pageData?.insightTestimonial?.designition}</span>
                         </div>
                         {pageData?.insightTestimonial?.image && (
-                            <div className='w-[45%] hidden lg:visible'>
+                            <div className='w-[45%] hidden lg:block'>
                                 <Image
-                                    src={getImageUrl(pageData?.insightTestimonial?.image)}
+                                    src={pageData?.insightTestimonial?.image.url}
                                     alt='Testimonial Image'
                                     height={455}
                                     width={696}
@@ -167,7 +166,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                     </div>
 
                     <div className="mb-14 text-center mx-auto flex justify-center gap-20 flex-wrap">
-                        {pageData?.insightTestimonial?.testimonialStats.map((stat, index) => {
+                        {pageData?.insightTestimonial?.testimonialStats?.map((stat, index) => {
                             return (
                                 <div key={index}>
                                     <h4 className="text-con-dark text-[3.2rem] leading-[1.1] mb-3">

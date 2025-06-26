@@ -1,5 +1,4 @@
 import React from 'react';
-import CommonBanner from '@/components/common/banner';
 import ReachOut from '@/components/common/reachOut';
 import { getPolicy } from '@/libs/apis/data/privacyPolicy';
 import ReactMarkdown from 'react-markdown';
@@ -13,7 +12,7 @@ import { breakTitle } from '@/libs/utils';
 const PrivacyPolicyWrapper = async ({ preview }) => {
 
     const policyResponse = await getPolicy(preview);
-    const content = policyResponse.data.markdownContent;
+    const content = policyResponse?.data?.markdownContent;
     // console.log(content)
 
     return (
@@ -25,7 +24,7 @@ const PrivacyPolicyWrapper = async ({ preview }) => {
                         <div className="relative w-full h-[410px]">
                             <div className="aspect-[7/10] hidden lg:block">
                                 <Image
-                                    src={policyResponse.data.bannerDeskImage.url}
+                                    src={policyResponse?.data?.bannerDeskImage?.url}
                                     alt="Desktop Banner"
                                     fill
                                     priority
@@ -34,7 +33,7 @@ const PrivacyPolicyWrapper = async ({ preview }) => {
                             </div>
                             <div className="aspect-[15/7] lg:hidden">
                                 <Image
-                                    src={policyResponse.data.bannerMobileImage.url}
+                                    src={policyResponse?.data?.bannerMobileImage?.url}
                                     alt="Mobile Banner"
                                     fill
                                     priority
@@ -44,14 +43,14 @@ const PrivacyPolicyWrapper = async ({ preview }) => {
                             <div className="absolute inset-0 bg-black/30 flex items-center">
                                 <div className="container">
                                     <div className="text-left py-5 ">
-                                        <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{breakTitle(policyResponse.data.title)}</h1>
+                                        <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{breakTitle(policyResponse?.data?.title)}</h1>
                                         <div className="text-[17px] text-white mt-[2rem]">
                                             <ReactMarkdown
                                                 remarkPlugins={[remarkGfm]}
                                                 rehypePlugins={[rehypeRaw]}
                                                 transform={(html) => DOMPurify.sanitize(html)}
                                             >
-                                                {policyResponse.data.bannerContent}
+                                                {policyResponse?.data?.bannerContent}
                                             </ReactMarkdown>
                                         </div>
                                     </div>

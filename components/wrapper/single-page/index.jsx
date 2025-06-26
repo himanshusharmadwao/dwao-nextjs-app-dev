@@ -40,10 +40,10 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
 
     // console.log(relatedCapabilities)
 
-    const relatedCard = relatedCapabilities.map((item, index) => {
+    const relatedCard = relatedCapabilities?.map((item, index) => {
         return (
             <div className='' key={index}>
-                <RelatedCard imageSrc={item.thumbnail} linkTitle={item.sub_category} linkHref={item.slug} />
+                <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.sub_category?.name} linkHref={item.slug} />
             </div>
         )
     })

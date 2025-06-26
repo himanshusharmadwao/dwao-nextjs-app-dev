@@ -71,7 +71,7 @@ const HomeWrapper = async ({ preview }) => {
         getAllInsightBlogs(),
     ]);
 
-    console.log(clientTestimonialResponse)
+    // console.log(clientTestimonialResponse)
 
     // Prepare data for components that will be rendered later
     const studySlides = insightBlogsResponse.data.map((card, index) => (
@@ -83,6 +83,8 @@ const HomeWrapper = async ({ preview }) => {
             href={`/insights-and-case-studies/${card.slug}`}
         />
     ));
+
+    console.log("insightBlogsResponse: ",insightBlogsResponse)
 
     const testimonialSlides = clientTestimonialResponse.data.map((testimonial, index) => (
         <TestimonialCard

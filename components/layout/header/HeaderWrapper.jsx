@@ -9,6 +9,10 @@ import AnchorLink from "react-anchor-link-smooth-scroll";
 import { usePathname } from "next/navigation";
 
 const HeaderWrapper = ({headerData, secMenu}) => {
+
+  // console.log("headerData: ", headerData)
+  // console.log("secMenu: ", secMenu)
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const headerRef = useRef(null);
@@ -17,9 +21,9 @@ const HeaderWrapper = ({headerData, secMenu}) => {
   const pathname = usePathname();
 
   const isHome = pathname === "/";
-  const isCulturePage = pathname === "/culture";
+  const isCulturePage = pathname === "/about/culture";
   const isBlogPage = pathname === "/blog";
-  const isInsightsCaseStudies = pathname === "/insights-and-case-studies";
+  const isInsightsCaseStudies = pathname === "/case-studies";
   const isReview = pathname.includes("/reviews");
   const isPartner = pathname === "/partners";
 

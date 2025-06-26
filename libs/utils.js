@@ -1,4 +1,6 @@
 import { getCookie } from "cookies-next";
+import Head from "next/head";
+import Script from "next/script";
 
 export { default as cn } from "clsx";
 

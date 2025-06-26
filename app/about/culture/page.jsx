@@ -1,25 +1,26 @@
 import StructuredData from "@/components/StructuredData";
-import ContactWrapper from "@/components/wrapper/contact"
-import { getContact } from "@/libs/apis/data/contact";
+import CultureWrapper from "@/components/wrapper/culture"
+import { getCulture } from "@/libs/apis/data/culture";
 
 // Generate dynamic metadata
 export async function generateMetadata({ searchParams }) {
     const preview = searchParams?.preview === "true";
-    const contactResponse = await getContact(preview);
+    console.log("preview: ", preview)
+    const cultureResponse = await getCulture(preview);
 
-    if (!contactResponse) {
+    if (!cultureResponse) {
         return {
             title: "Data Not Found",
             description: "The requested source could not be found.",
         };
     }
 
-    const seo = contactResponse?.data?.seo || {};
+    const seo = cultureResponse?.data?.seo || {};
     // console.log("Seo: ", seo);
 
     return {
-        title: seo?.metaTitle || contactResponse?.data?.title,
-        description: seo?.metaDescription || contactResponse?.data?.excerpt,
+        title: seo?.metaTitle || cultureResponse?.data?.title,
+        description: seo?.metaDescription || cultureResponse?.data?.excerpt,
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL || '/'
@@ -41,19 +42,18 @@ export async function generateMetadata({ searchParams }) {
     };
 }
 
-const Contact = async ({ searchParams }) => {
+const Culture = async ({ searchParams }) => {
 
     const preview = searchParams?.preview === "true";
     // console.log("preview: ", preview)
-
-    const contactResponse = await getContact(preview);
+    const cultureResponse = await getCulture(preview);
 
     return (
         <>
-            <StructuredData data={contactResponse?.data?.seo?.structuredData} />
-            <ContactWrapper preview={preview} />
+            <StructuredData data={cultureResponse?.data?.seo?.structuredData} />
+            <CultureWrapper preview={preview} />
         </>
     )
 }
 
-export default Contact
+export default Culture

@@ -82,7 +82,7 @@ const BlogPost = ({ filterItems, variant, preview }) => {
         setCurrentPage(page);
     };
 
-    console.log("posts: ", posts)
+    // console.log("posts: ", posts)
 
     return (
         <div className="container">

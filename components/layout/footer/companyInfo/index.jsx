@@ -1,14 +1,16 @@
-import { getOffices } from "@/libs/apis/data/contact";
+import { getContact } from "@/libs/apis/data/contact";
 import Link from "next/link";
 
 const CompanyInfo = async () => {
-    // Fetch data directly on the server
-    const officeResponse = await getOffices();
-    const offices = officeResponse.data;
+
+    const contactResponse = await getContact();
+    const officeResponse = contactResponse?.data;
+
+    // console.log("office: ", officeResponse)
 
     return (
         <>
-            <Link prefetch={false} 
+            <Link prefetch={false}
                 href=""
                 className="lg:text-[5.25rem] text-[29px] hover:text-[var(--mainColor)] font-bold lg:leading-[4.25rem] transition-all duration-300"
                 style={{ fontFamily: "var(--font-helveticaneuebold)" }}
@@ -16,7 +18,7 @@ const CompanyInfo = async () => {
                 DWAO
             </Link>
             <p className="text-con text-[var(--color-con-gray)] lg:mt-10 lg:mb-24 my-5">
-                {offices.find(office => office.city === "Gurugram")?.address || "Address not found"}
+                {officeResponse?.offices?.find((item, index) => item.city === "Gurugram") ?.address || "Address not found"}
             </p>
         </>
     );

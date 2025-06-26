@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { getOfficeMap, getOffices } from "@/libs/apis/data/contact";
+import { getContact } from "@/libs/apis/data/contact";
 
 // Dynamic imports with loading placeholders
 const CommonBanner = dynamic(() => import("@/components/common/banner"), {
@@ -25,36 +25,36 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const ContactWrapper = async () => {
-    const contactBanner = {
-        title: "Reach out to Us",
-        deskImage: "/contact-us.jpg",
-        mobileImage: "/contact-us-mobile.jpg",
+const ContactWrapper = async ({ preview }) => {
+
+    const contactResponse = await getContact(preview);
+    const contactData = contactResponse?.data;
+
+     const contactBanner = {
+        title: contactData.title,
+        deskImage: contactData.bannerDeskImage.url,
+        mobileImage: contactData.bannerMobileImage.url,
     };
-
-    const officesResponse = await getOffices();
-    const offices = officesResponse.data;
-
-    const officeMapResponse = await getOfficeMap();
-    const officeMap = officeMapResponse.data[0]?.image?.url;
 
     return (
         <>
             {/* banner */}
-            <div className="mb-14">
-                <CommonBanner data={contactBanner} />
-            </div>
+            <Suspense fallback={<LoadingPlaceholder />}>
+                <div className="mb-14">
+                    <CommonBanner data={contactBanner} />
+                </div>
+            </Suspense>
 
             {/* address and form */}
             <div className="container">
                 <div className="grid grid-cols-1 md:grid-cols-2 mb-14">
                     <div>
                         <h2 className="text-head-large text-con-dark leading-[1] mb-10">
-                            Visit our offices
+                            {contactData?.officeHeading}
                         </h2>
-                        {offices.map((office, index) => (
+                        {contactData?.offices?.map((office, index) => (
                             <ul key={index} className="mb-14 w-[300px]">
-                                {office.address && (
+                                {office?.address && (
                                     <li className="flex gap-4 items-start mb-6">
                                         <Image
                                             src="/icons/location.svg"
@@ -62,10 +62,10 @@ const ContactWrapper = async () => {
                                             width={30}
                                             alt="Location Icon"
                                         />
-                                        <p className="text-[1.1rem] text-con-dark">{office.address}</p>
+                                        <p className="text-[1.1rem] text-con-dark">{office?.address}</p>
                                     </li>
                                 )}
-                                {office.phone && (
+                                {office?.phone && (
                                     <li className="flex gap-4 items-start mb-6">
                                         <Image
                                             src="/icons/call.svg"
@@ -77,11 +77,11 @@ const ContactWrapper = async () => {
                                             href={`tel:${office.phone}`}
                                             className="text-[1.1rem] text-con-dark"
                                         >
-                                            {office.phone}
+                                            {office?.phone}
                                         </Link>
                                     </li>
                                 )}
-                                {office.email && (
+                                {office?.email && (
                                     <li className="flex gap-4 items-start mb-6">
                                         <Image
                                             src="/icons/envelope.svg"
@@ -90,41 +90,44 @@ const ContactWrapper = async () => {
                                             alt="Email Icon"
                                         />
                                         <Link prefetch={false}
-                                            href={`mailto:${office.email}`}
+                                            href={`mailto:${office?.email}`}
                                             className="text-[1.1rem] text-con-dark"
                                         >
-                                            {office.email}
+                                            {office?.email}
                                         </Link>
                                     </li>
                                 )}
                             </ul>
                         ))}
                     </div>
-
-                    <div>
-                        <ContactForm />
-                    </div>
+                    <Suspense fallback={<LoadingPlaceholder />}>
+                        <div>
+                            <ContactForm />
+                        </div>
+                    </Suspense>
                 </div>
             </div>
 
             {/* map */}
             <div className="container">
                 <div className="mb-14">
-                    {officeMap && (
-                        <Image
-                            src={officeMap || "/map.png"}
-                            height={600}
-                            width={1000}
-                            alt="Dwao Office Map"
-                            className="w-full max-h-[200px] lg:max-h-none lg:h-auto"
-                        />
-                    )}
+                    <Image
+                        src={contactData?.officeMap?.[0]?.url || "/map.png"}
+                        height={600}
+                        width={1000}
+                        alt="Dwao Office Map"
+                        className="w-full max-h-[200px] lg:max-h-none lg:h-auto"
+                    />
                 </div>
             </div>
 
             {/* contact */}
-            <ReachOut />
-            <ToastNotification />
+            <Suspense fallback={<LoadingPlaceholder />}>
+                <ReachOut />
+            </Suspense>
+            <Suspense fallback={<LoadingPlaceholder />}>
+                <ToastNotification />
+            </Suspense>
         </>
     );
 };

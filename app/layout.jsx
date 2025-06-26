@@ -11,7 +11,8 @@ export const metadata = {
   description: "DWAO offers digital transformation and marketing services, including analytics, CRO, performance marketing, CDP, marketing automation, SEO, and more, helping businesses enhance their online presence, optimize performance, and drive growth."
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, params }) {
+
   return (
     <html lang="en">
       <head />

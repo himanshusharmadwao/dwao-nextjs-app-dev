@@ -16,10 +16,15 @@ export const getInsightCategory = async (preview = false) => {
   }
 };
 
-export const getInsightBlog = async (preview = false, slug) => {
+export const getInsightBlog = async (preview = false, industry = '', slug = '') => {
   try {
+    // const response = await fetch(
+    //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[brandLogo][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[stats][populate]=*&populate[background][populate]=*&populate[valueVisual][populate]=*&populate[objective][populate]=*&populate[solution][populate]=*&populate[insightVisual][populate]=*&populate[result][fields]=title,heading,markdownContent&populate[result][populate][resultStats]=*&populate[insightTestimonial][populate]=*&populate[seo][populate]=*&filters[slug][$eq]=${slug}&filters[stats][industry][$eqi]=${industry}&${preview ? 'status=draft' : ''}`,
+    //   { next: { revalidate: getRevalidateTime(preview) } }
+    // );
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[brandLogo][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[stats][populate]=*&populate[background][populate]=*&populate[valueVisual][populate]=*&populate[objective][populate]=*&populate[solution][populate]=*&populate[insightVisual][populate]=*&populate[result][fields]=title,heading,markdownContent&populate[result][populate][resultStats]=*&populate[insightTestimonial][populate]=*&populate[seo][populate]=*&filters[slug][$eq]=${slug}&${preview ? 'status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[0]=brandLogo&populate[1]=category&populate[2]=sub_category&populate[3]=thumbnail&populate[4]=featuredImage&populate[5]=stats&populate[6]=background&populate[7]=valueVisual&populate[8]=objective&populate[9]=solution&populate[10]=insightVisual&populate[11]=result.resultStats&populate[12]=insightTestimonial&populate[13]=insightTestimonial.image&populate[14]=seo&populate[15]=seo.openGraph&populate[16]=seo.openGraph.ogImage&filters[slug][$eq]=${slug}&filters[stats][industry][$eqi]=${industry}&${preview ? 'status=draft' : ''}`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
@@ -31,13 +36,13 @@ export const getInsightBlog = async (preview = false, slug) => {
     if (!mainInsight) return null;
 
     // 2. Extract the category slug of the main capability
-    const categorySlug = mainInsight.category.slug;
+    const categorySlug = mainInsight?.category?.slug;
 
-    // 3. Fetch related capabilities (same category, different slug)
+    // 3. Fetch related insights (same category, different slug)
     let related = [];
     if (categorySlug) {
       const relatedResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[brandLogo][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[stats][populate]=*&populate[background][populate]=*&populate[valueVisual][populate]=*&populate[objective][populate]=*&populate[solution][populate]=*&populate[insightVisual][populate]=*&populate[result][fields]=title,heading,markdownContent&populate[result][populate][resultStats]=*&populate[insightTestimonial][populate]=*&populate[seo][populate]=*&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[0]=brandLogo&populate[1]=category&populate[2]=sub_category&populate[3]=thumbnail&populate[4]=featuredImage&populate[5]=stats&populate[6]=background&populate[7]=valueVisual&populate[8]=objective&populate[9]=solution&populate[10]=insightVisual&populate[11]=result.resultStats&populate[12]=insightTestimonial&populate[13]=insightTestimonial.image&populate[14]=seo&populate[15]=seo.openGraph&populate[16]=seo.openGraph.ogImage&filters[category][slug][$eq]=${categorySlug}`,
         {
           next: { revalidate: getRevalidateTime(preview) },
         }
@@ -58,23 +63,6 @@ export const getInsightBlog = async (preview = false, slug) => {
     throw error;
   }
 };
-
-// export const getAllInsightBlogs = async (preview = false) => {
-//   try {
-//     const response = await fetch(
-//       `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[brandLogo][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[stats][populate]=*&populate[background][populate]=*&populate[valueVisual][populate]=*&populate[objective][populate]=*&populate[solution][populate]=*&populate[insightVisual][populate]=*&populate[result][fields]=title,heading,markdownContent&populate[result][populate][resultStats]=*&populate[insightTestimonial][populate]=*&populate[seo][populate]=*&${preview ? 'status=draft' : ''}`,
-//       { next: { revalidate: getRevalidateTime(preview) } }
-//     );
-
-//     if (!response.ok) throw new Error(`Failed: ${response.status}`);
-
-//     return await response.json();
-//   } catch (error) {
-//     console.error("Error:", error);
-//     throw error;
-//   }
-// };
-
 
 export const getAllInsightBlogs = async (
   page = 1,

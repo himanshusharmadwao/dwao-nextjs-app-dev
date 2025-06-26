@@ -8,7 +8,7 @@ const ServicePage = async ({ serviceData }) => {
 
   return (
     <>
-      <ServiceWrapper serviceData={serviceData} clients={clientsResponse.data} />
+      <ServiceWrapper serviceData={serviceData} clients={clientsResponse?.data} />
     </>
   )
 }

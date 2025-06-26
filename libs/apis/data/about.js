@@ -3,7 +3,7 @@ import { getRevalidateTime } from "@/libs/utils";
 export const getAboutData = async (preview = false) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/about?populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=valueVisual&populate[3]=intro.image&populate[4]=workPlace.image&populate[5]=partner.image&populate[6]=service.image&populate[7]=industry.image&populate[8]=impact.image&populate[9]=expert.image&populate[10]=demoOverlay.image&populate[12]=client&${preview ? 'status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/about?populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=valueVisual&populate[3]=intro.image&populate[4]=workPlace.image&populate[5]=partner.image&populate[6]=service.image&populate[7]=industry.image&populate[8]=impact.image&populate[9]=expert.image&populate[10]=demoOverlay.image&populate[12]=client&populate[13]=seo&populate[14]=seo.openGraph&populate[15]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`,
       {
         next: { revalidate: getRevalidateTime(preview) },
       }

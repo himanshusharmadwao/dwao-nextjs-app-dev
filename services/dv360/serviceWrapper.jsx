@@ -19,7 +19,7 @@ const ServiceWrapper = ({ serviceData, clients }) => {
     // console.log(serviceData)
 
 
-    const clientSlide = clients.filter(item => item.service === serviceData?.slug);
+    const clientSlide = clients?.filter(item => item.service === serviceData?.slug);
 
     // console.log(clientSlide);
 

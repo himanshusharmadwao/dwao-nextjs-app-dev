@@ -4,7 +4,7 @@ import { getRevalidateTime } from "@/libs/utils";
 export const getCulture = async (preview = false) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/culture?populate[0]=introVisuals&populate[1]=missionImage&populate[2]=growthImage&${preview ? 'status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/culture?populate[0]=introVisuals&populate[1]=missionImage&populate[2]=growthImage&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 

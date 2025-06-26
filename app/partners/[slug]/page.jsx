@@ -3,15 +3,14 @@ import qs from 'qs';
 // import { notFound, redirect } from 'next/navigation';
 import NotFound from '@/app/not-found';
 import SinglePageWrapper from '@/components/wrapper/single-page';
-import { getCapability } from '@/libs/apis/data/capaibilities'; 
- 
+import { getPartner } from '@/libs/apis/data/partners';
+import StructuredData from '@/components/StructuredData';
+
 export async function generateMetadata({ params, searchParams }) {
   try {
-    const resolvedParams = await params;
+    const { slug } = params;
     const preview = searchParams?.preview === "true";
-    const capabilityResponse = await getCapability(preview ,resolvedParams.slug);
-
-    // const currentPost = capabilityResponse.data.find(post => post.slug === params?.slug);
+    const capabilityResponse = await getPartner(preview, slug);
 
     if (!capabilityResponse) {
       return {
@@ -20,26 +19,32 @@ export async function generateMetadata({ params, searchParams }) {
       };
     }
 
-    const seo = capabilityResponse.data[0].seo || {};
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    const canonicalUrl = `${baseUrl}/${capabilityResponse.data[0].slug}`;
-
-    let title = seo.metaTitle || capabilityResponse.data[0].title;
-    // if (searchParams.preview === true) {
-    //     title = `Draft - ${title}`;
-    // }
-
-    // console.log("metaDescription: ", seo.metaDescription )
+    const seo = capabilityResponse?.data?.[0]?.seo || {};
+    // console.log("seo: ", seo)
 
     return {
-      title,
-      description: seo.metaDescription || "Explore our capabilities and expertise.",
-      ...(seo.keywords && {
-        keywords: seo.keywords.split(',').map(keyword => keyword.trim()),
+      title: seo?.metaTitle || capabilityResponse?.data?.[0]?.title,
+      description: seo?.metaDescription || "Explore our capabilities and expertise.",
+      ...(seo?.keywords && {
+        keywords: seo?.keywords.split(',').map(keyword => keyword.trim()),
       }),
       alternates: {
-        canonical: canonicalUrl,
+        canonical: seo?.canonicalURL,
       },
+      openGraph: {
+        title: seo?.openGraph?.ogTitle,
+        description: seo?.openGraph?.ogDescription,
+        url: seo?.openGraph?.ogUrl,
+        images: [
+          {
+            url: seo?.openGraph?.ogImage?.url,
+            width: seo?.openGraph?.ogImage?.width,
+            height: seo?.openGraph?.ogImage?.height,
+            alt: seo?.openGraph?.ogImage?.alternativeText || 'DWAO Image',
+          },
+        ],
+        type: seo?.openGraph?.ogType || 'website'
+      }
     };
   } catch (error) {
     console.error("Error generating metadata:", error);
@@ -64,7 +69,7 @@ export const loadPage = async (slug) => {
     }
   }, { encode: false });
 
-  console.log(query, "query");
+  // console.log(query, "query");
 
   // try {
   //   const getPageApi = await fetch(`http://localhost:1337/api/pages?${query}`);
@@ -88,20 +93,24 @@ export const loadPage = async (slug) => {
 };
 
 const DynamicPages = async ({ params, searchParams }) => {
-  const resolvedParams = await params;
-  console.log("resolved params", resolvedParams);
+
+  const { slug } = params;
+  // console.log("slug: ", slug);
   const preview = searchParams?.preview === "true"; //exact comparison because of js non-empty string logic
   // console.log("preview: ", preview)
-  const capabilityResponse = await getCapability(preview, resolvedParams.slug);
-  console.log("capabilityResponse: ", capabilityResponse)
+  const capabilityResponse = await getPartner(preview, slug);
+  // console.log("capabilityResponse: ", capabilityResponse)
+
   // const capabilityPost = capabilityResponse.data.find(post => post.slug === resolvedParams?.slug);
-  // console.log("capability post: ",capabilityPost)
+
+
   if (!capabilityResponse) {
     return <NotFound />
   }
 
   return (
     <>
+      <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
       <SinglePageWrapper pageData={capabilityResponse.data[0]} relatedCapabilities={capabilityResponse.related} />
     </>
   );
