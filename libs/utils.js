@@ -115,24 +115,26 @@ export const getImageUrl = (image) => {
 
 // helper function for breaking the title
 export const breakTitle = (title, maxChars = 20) => {
-  const words = title.split(' ');
+  const words = title?.split(' ');
   let charCount = 0;
   let result = [];
   let line = [];
   let isFirstLine = true;
 
-  for (let word of words) {
-    const wordLength = word.length + (line.length > 0 ? 1 : 0);
+  if (words) {
+    for (let word of words) {
+      const wordLength = word.length + (line.length > 0 ? 1 : 0);
 
-    if (isFirstLine && charCount + wordLength > maxChars) {
-      result.push(line.join(' '));
-      result.push(<br key={result.length} />);
-      line = [word];
-      charCount = word.length;
-      isFirstLine = false; // Switch to unlimited chars for subsequent lines
-    } else {
-      line.push(word);
-      charCount += wordLength;
+      if (isFirstLine && charCount + wordLength > maxChars) {
+        result.push(line.join(' '));
+        result.push(<br key={result.length} />);
+        line = [word];
+        charCount = word.length;
+        isFirstLine = false;
+      } else {
+        line.push(word);
+        charCount += wordLength;
+      }
     }
   }
 

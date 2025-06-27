@@ -15,7 +15,7 @@ export async function generateMetadata({ searchParams }) {
   }
 
   const seo = homeResponse?.data?.seo || {};
-  console.log("Seo: ", seo);
+  // console.log("Seo: ", seo);
 
   return {
     title: seo?.metaTitle || homeResponse?.data?.title,

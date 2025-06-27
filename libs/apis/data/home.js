@@ -3,16 +3,28 @@ import { getRevalidateTime } from "@/libs/utils";
 // getHome
 export const getHome = async (device = "desktop", preview = false) => {
   try {
-    const url = device === "mobile"
-      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.mobileImg&populate[1]=storyOverlay.image&populate[2]=insightMobileImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`
-      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.deskImg&populate[1]=storyOverlay.image&populate[2]=insightDeskImg&&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`;
+    const url =
+      device === "mobile"
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.mobileImg&populate[1]=storyOverlay.image&populate[2]=insightMobileImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? "status=draft" : ""}`
+        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.deskImg&populate[1]=storyOverlay.image&populate[2]=insightDeskImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? "status=draft" : ""}`;
 
-    const response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
-    return await response.json();
+    const response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    const finalResponse = await response.json();
+
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -23,11 +35,19 @@ export const getClients = async (preview = false) => {
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/clients?populate=logo&pagination[page]=1&pagination[pageSize]=100`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
-    return await response.json();
+    const finalResponse = await response.json();
+
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -38,11 +58,19 @@ export const getClientTestimonials = async (preview = false) => {
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/client-testimonials?populate=*`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
-    return await response.json();
+    const finalResponse = await response.json();
+
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -53,11 +81,19 @@ export const getJoinTheTeam = async (preview = false) => {
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/join-the-teams?populate=*`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
-    return await response.json();
+    const finalResponse = await response.json();
+
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -75,10 +111,18 @@ export const reachOut = async (formData) => {
         },
       }),
     });
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
-    return await response.json();
+    const finalResponse = await response.json();
+
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };

@@ -28,9 +28,23 @@ const LoadingPlaceholder = () => (
 const ContactWrapper = async ({ preview }) => {
 
     const contactResponse = await getContact(preview);
+    const { data, error } = contactResponse;
+    if (error) {
+        return (
+            <div className='h-screen block'>
+                <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>{error}</h1>
+            </div>
+        )
+    }
+    if (!data) {
+        return (<div className='h-screen block'>
+            <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>Data Not Found!</h1>
+        </div>)
+    }
+
     const contactData = contactResponse?.data;
 
-     const contactBanner = {
+    const contactBanner = {
         title: contactData.title,
         deskImage: contactData.bannerDeskImage.url,
         mobileImage: contactData.bannerMobileImage.url,

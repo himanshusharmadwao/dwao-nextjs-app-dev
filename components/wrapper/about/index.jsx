@@ -37,10 +37,24 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const AboutWrapper = async ({preview}) => {
+const AboutWrapper = async ({ preview }) => {
 
     const aboutResponse = await getAboutData(preview);
     // console.log(aboutResponse);
+    const { data, error } = aboutResponse;
+    if (error) {
+        return (
+            <div className='h-screen block'>
+                <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>{error}</h1>
+            </div>
+        )
+    }
+    if (!data) {
+        return (<div className='h-screen block'>
+            <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>Data Not Found!</h1>
+        </div>)
+    }
+
     const clientsResponse = await getClients();
 
     const clientSlide = clientsResponse.data.filter((item, index) => {
@@ -253,7 +267,7 @@ const AboutWrapper = async ({preview}) => {
                             </div>
 
                             <div className="relative lg:order-2 order-1 basis-full md:basis-[calc((100%-60px)/3)]">
-                                <Link prefetch={false}  href="/insights-and-case-studies/airtel-case-study.html" className="relative group w-full lg:inline inline-block">
+                                <Link prefetch={false} href="/insights-and-case-studies/airtel-case-study.html" className="relative group w-full lg:inline inline-block">
                                     <Image
                                         src={aboutResponse.data.demoOverlay.image.url}
                                         alt="Card Image"

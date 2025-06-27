@@ -14,7 +14,7 @@ export async function generateMetadata({ searchParams }) {
         };
     }
 
-    console.log(reviewResponse)
+    // console.log(reviewResponse)
 
     const seo = reviewResponse?.data?.seo || {};
     console.log("Seo: ", seo);

@@ -8,12 +8,19 @@ export const getCulture = async (preview = false) => {
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -25,12 +32,19 @@ export const getBenefitAndPerks = async (preview = false) => {
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -42,12 +56,19 @@ export const getTestimonials = async (preview = false) => {
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -59,12 +80,19 @@ export const getTeams = async (preview = false) => {
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -76,12 +104,19 @@ export const getEvents = async (preview = false) => {
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
@@ -93,11 +128,18 @@ export const getSocialResponsibility = async (preview = false) => {
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };

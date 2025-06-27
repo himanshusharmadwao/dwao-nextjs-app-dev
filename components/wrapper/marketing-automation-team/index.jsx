@@ -16,6 +16,20 @@ const ReviewWrapper = async ({ preview }) => {
     const socialResponsibilityResponse = await getSocialResponsibility();
     const reviewResponse = await getReviews(preview);
 
+    const { data, error } = reviewResponse;
+    if (error) {
+        return (
+            <div className='h-screen block'>
+                <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>{error}</h1>
+            </div>
+        )
+    }
+    if (!data) {
+        return (<div className='h-screen block'>
+            <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>Data Not Found!</h1>
+        </div>)
+    }
+
     const half = Math.ceil(testimonialsResponse?.data?.length / 2);
 
     const firstHalfSlides = testimonialsResponse?.data?.slice(7, half).map((testimonial, index) => (

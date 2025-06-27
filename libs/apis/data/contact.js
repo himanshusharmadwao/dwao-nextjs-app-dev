@@ -7,14 +7,23 @@ export const getContact = async (preview = false) => {
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };
+
+// console.log("getContact: ", getContact())
 
 // Fetch Offices
 // export const getOffices = async (preview = false) => {
@@ -63,11 +72,18 @@ export const submitContactForm = async (formData) => {
       }
     );
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    const finalResponse = await response.json();
 
-    return await response.json();
+    if (
+      finalResponse?.data === null &&
+      finalResponse?.error &&
+      Object.keys(finalResponse?.error).length > 0
+    ) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data, error: null };
   } catch (error) {
-    console.error("Error:", error);
-    throw error;
+    return { data: null, error: error.message || "Something went wrong" };
   }
 };

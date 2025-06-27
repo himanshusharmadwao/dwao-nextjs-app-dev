@@ -85,8 +85,8 @@ const SingleBlogWrapper = ({ pageData, relatedBlogs }) => {
             <div className="light-bg py-16 text-center lg:text-start">
                 <div className="container">
                     <h2 className='font-bold text-[28px] mb-12'>Authors</h2>
-                    {pageData?.author?.image && (
-                        <Image src={getImageUrl(pageData?.author?.image)} height={130} width={190} alt="missing image" className='mb-5 mx-auto lg:mx-[unset]' />
+                    {pageData?.author?.image?.url && (
+                        <Image src={pageData?.author?.image?.url} height={130} width={190} alt="missing image" className='mb-5 mx-auto lg:mx-[unset]' />
                     )}
                     <h3 className='font-semibold text-[22px]'>{pageData?.author?.name}</h3>
                     {pageData?.author?.designition && (

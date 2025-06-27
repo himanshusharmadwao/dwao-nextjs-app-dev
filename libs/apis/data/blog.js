@@ -24,7 +24,7 @@ export const getBlog = async (preview = false, slug) => {
     // );
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs?populate[0]=category&populate[1]=sub_category&populate[2]=author&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=thumbnail&populate[7]=featuredImage&filters[slug][$eq]=${slug}&${preview ? 'status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs?populate[0]=category&populate[1]=sub_category&populate[2]=author&populate[3]=author.image&populate[4]=seo&populate[5]=seo.openGraph&populate[6]=seo.openGraph.ogImage&populate[7]=thumbnail&populate[8]=featuredImage&filters[slug][$eq]=${slug}&${preview ? 'status=draft' : ''}`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 
@@ -43,7 +43,7 @@ export const getBlog = async (preview = false, slug) => {
     let related = [];
     if (categorySlug) {
       const relatedResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs?populate[0]=category&populate[1]=sub_category&populate[2]=author&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=thumbnail&populate[7]=featuredImage&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs?populate[0]=category&populate[1]=sub_category&populate[2]=author&populate[3]=author.image&populate[4]=seo&populate[5]=seo.openGraph&populate[6]=seo.openGraph.ogImage&populate[7]=thumbnail&populate[8]=featuredImage&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`,
         {
           next: { revalidate: getRevalidateTime(preview) },
         }
@@ -93,8 +93,6 @@ export const getAllBlogs = async (
     }
 
     const data = await response.json();
-    // console.log('API response:', data); 
-    // console.log("Preview value: ", preview)
 
     return {
       data: data.data || [],

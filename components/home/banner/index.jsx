@@ -57,12 +57,12 @@ const Banner = ({ data, isMobile }) => {
                     clickable: true,
                     renderBullet: (index, className) => {
                         return `<div class="${className} custom-bullet">
-                            <span>${data.banner[index].navLabel}</span>
+                            <span>${data[index].navLabel}</span>
                         </div>`;
                     },
                 }}
             >
-                {data.banner.map((item, index) => (
+                {data?.map((item, index) => (
                     <SwiperSlide key={index} className="relative w-full">
                         {isMobile && item.mobileImg?.url ? (
                             <div className="relative aspect-[7/10] lg:hidden">
@@ -78,7 +78,7 @@ const Banner = ({ data, isMobile }) => {
                         ) : item.deskImg?.url ? (
                             <div className="relative aspect-[15/7] hidden lg:block">
                                 <Image
-                                    src={item.deskImg.url}
+                                    src={item.deskImg?.url}
                                     alt={item.title || "Banner Image"}
                                     fill
                                     priority
