@@ -40,15 +40,17 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
 
     console.log("Pagedata: ", pageData)
 
-    const studySlides = relatedInsightBlogs?.map((card, index) => (
-        <StudyCard
-            key={index}
-            imageSrc={getImageUrl(card.thumbnail)}
-            title={card.title}
-            description={card.title}
-            href={card.slug}
-        />
-    ));
+    const studySlides = relatedInsightBlogs?.map((card, index) => {
+        return (
+            <StudyCard
+                key={index}
+                imageSrc={getImageUrl(card.thumbnail)}
+                title={card.title}
+                description={card.title}
+                href={`/case-studies/${card?.stats?.industry?.toLowerCase()}/${card?.slug}`}
+            />
+        )
+    });
 
     return (
         <>
@@ -125,7 +127,9 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                     <div className="grid grid-cols-1 lg:grid-cols-5 lg:gap-[100px] gap-[40px] mb-14">
                         <div className="lg:col-span-2 col-span-1">
                             <div className="relative lg:h-[700px] lg:w-[450px] h-[500px] w-full">
-                                <Image src={pageData?.insightVisual?.url || ''} fill alt="missing image" objectFit='cover' />
+                                {pageData?.insightVisual?.url && (
+                                    <Image src={pageData?.insightVisual?.url || ''} fill alt="missing image" objectFit='cover' />
+                                )}
                             </div>
                         </div>
                         <div className="lg:col-span-3 col-span-1 flex items-center">
@@ -191,7 +195,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                         </div>
                     </Suspense>
                     <div className="text-center">
-                        <Link prefetch={false}  href="/insights-and-case-studies" className="border-[1px] border-[#333] rounded-[10px] inline-block text-[#333] text-center py-[0.5rem] px-[3rem] transition-all duration-300 text-[1.2rem] hover:text-[var(--mainColor)] hover:border-[var(--mainColor)]">View all case studies</Link>
+                        <Link prefetch={false} href="/case-studies" className="border-[1px] border-[#333] rounded-[10px] inline-block text-[#333] text-center py-[0.5rem] px-[3rem] transition-all duration-300 text-[1.2rem] hover:text-[var(--mainColor)] hover:border-[var(--mainColor)]">View all case studies</Link>
                     </div>
                 </div>
             </div>
