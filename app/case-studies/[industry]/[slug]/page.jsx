@@ -52,7 +52,7 @@ export async function generateMetadata({ params, searchParams }) {
 const SingleBlog = async ({ params, searchParams }) => {
 
     const { industry, slug } = params;
-    // console.log("Resolved params:", resolvedParams);
+    // console.log("params:", industry, slug);
     const preview = searchParams?.preview === "true";
     // console.log("preview: ", preview)
     const insightBlogsResponse = await getInsightBlog(preview, industry, slug);

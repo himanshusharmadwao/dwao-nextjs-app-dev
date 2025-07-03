@@ -9,7 +9,7 @@ const DualLayout = ({ data }) => {
     return (
         <>
             <h2 className='text-head text-color-con mb-6'>{heading}</h2>
-            <div className={`flex ${variant === "secondary" ? "flex-row-reverse" : "flex-row"}`}>
+            <div className={`flex ${variant === "secondary" ? "flex-row-reverse" : "flex-row"} items-center`}>
                 <div className="lg:basis-[40%] basis-full hidden lg:block">
                     {/* <div className={`h-[500px] w-[370px] relative ${variant === "secondary" ? "ms-auto" : ""}`}>
                         <Image src={imageSrc} fill alt="missing image" />

@@ -40,10 +40,6 @@ const Accordion = ({ data }) => {
             } bg-white`}
         >
           <div className="p-4">
-            {/* <p className="text-[1rem]">
-              {data.content[0].children[0].text}
-            </p> */}
-            {/* {data.content && <CustomBlocksRenderer content={data.content} />} */}
             <div className={`${styles.accordionStyle} ${styles.markdownStyle}`}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}

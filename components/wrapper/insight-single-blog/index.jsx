@@ -38,7 +38,7 @@ const LoadingPlaceholder = () => (
 
 const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
 
-    console.log("Pagedata: ", pageData)
+    // console.log("Pagedata: ", pageData)
 
     const studySlides = relatedInsightBlogs?.map((card, index) => {
         return (
@@ -47,7 +47,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                 imageSrc={getImageUrl(card.thumbnail)}
                 title={card.title}
                 description={card.title}
-                href={`/case-studies/${card?.stats?.industry?.toLowerCase()}/${card?.slug}`}
+                href={`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`}
             />
         )
     });
@@ -96,7 +96,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                 </div>
             </Suspense>
 
-            {pageData?.valueVisual &&
+            {pageData?.valueVisual?.url &&
                 (
                     <div className="relative w-full aspect-[1400/690]">
                         <Image
@@ -143,31 +143,33 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                         </div>
                     </Suspense>
 
-                    <div className="mb-14 flex items-center gap-8">
-                        <div className='lg:w-[55%] w-full'>
-                            <div className={styles.testimonialStyle}>
-                                <ReactMarkdown
-                                    remarkPlugins={[remarkGfm]}
-                                    rehypePlugins={[rehypeRaw]}
-                                    transform={(html) => DOMPurify.sanitize(html)}
-                                >
-                                    {pageData?.insightTestimonial?.markdownTestimonial}
-                                </ReactMarkdown>
+                    {pageData?.insightTestimonial && (
+                        <div className="mb-14 flex items-center gap-8">
+                            <div className='lg:w-[55%] w-full'>
+                                <div className={styles.testimonialStyle}>
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        rehypePlugins={[rehypeRaw]}
+                                        transform={(html) => DOMPurify.sanitize(html)}
+                                    >
+                                        {pageData?.insightTestimonial?.markdownTestimonial}
+                                    </ReactMarkdown>
+                                </div>
+                                <br />
+                                <span className='w-full italic lg:text-[1.8rem] text-[1.2rem]  inline-block'>{pageData?.insightTestimonial?.name && (<strong>{pageData?.insightTestimonial?.name},</strong>)} {pageData?.insightTestimonial?.designition}</span>
                             </div>
-                            <br />
-                            <span className='w-full italic lg:text-[1.8rem] text-[1.2rem]  inline-block'><strong>{pageData?.insightTestimonial?.name}</strong>, {pageData?.insightTestimonial?.designition}</span>
+                            {pageData?.insightTestimonial?.image && (
+                                <div className='w-[45%] hidden lg:block'>
+                                    <Image
+                                        src={pageData?.insightTestimonial?.image?.url}
+                                        alt='Testimonial Image'
+                                        height={455}
+                                        width={696}
+                                    />
+                                </div>
+                            )}
                         </div>
-                        {pageData?.insightTestimonial?.image && (
-                            <div className='w-[45%] hidden lg:block'>
-                                <Image
-                                    src={pageData?.insightTestimonial?.image.url}
-                                    alt='Testimonial Image'
-                                    height={455}
-                                    width={696}
-                                />
-                            </div>
-                        )}
-                    </div>
+                    )}
 
                     <div className="mb-14 text-center mx-auto flex justify-center gap-20 flex-wrap">
                         {pageData?.insightTestimonial?.testimonialStats?.map((stat, index) => {

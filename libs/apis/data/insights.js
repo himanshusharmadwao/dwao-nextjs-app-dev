@@ -24,7 +24,7 @@ export const getInsightBlog = async (preview = false, industry = '', slug = '') 
     // );
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[0]=brandLogo&populate[1]=category&populate[2]=sub_category&populate[3]=thumbnail&populate[4]=featuredImage&populate[5]=stats&populate[6]=background&populate[7]=valueVisual&populate[8]=objective&populate[9]=solution&populate[10]=insightVisual&populate[11]=result.resultStats&populate[12]=insightTestimonial&populate[13]=insightTestimonial.image&populate[14]=seo&populate[15]=seo.openGraph&populate[16]=seo.openGraph.ogImage&filters[slug][$eq]=${slug}&filters[stats][industry][$eqi]=${industry}&${preview ? 'status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[0]=brandLogo&populate[1]=category&populate[2]=sub_category&populate[3]=thumbnail&populate[4]=featuredImage&populate[5]=stats&populate[6]=background&populate[7]=valueVisual&populate[8]=objective&populate[9]=solution&populate[10]=insightVisual&populate[11]=result.resultStats&populate[12]=insightTestimonial&populate[13]=insightTestimonial.image&populate[14]=seo&populate[15]=seo.openGraph&populate[16]=seo.openGraph.ogImage&filters[slug][$eq]=${slug}&filters[stats][industry][$eqi]=${industry.replace(/-/g, ' ')}&${preview ? 'status=draft' : ''}`,
       { next: { revalidate: getRevalidateTime(preview) } }
     );
 

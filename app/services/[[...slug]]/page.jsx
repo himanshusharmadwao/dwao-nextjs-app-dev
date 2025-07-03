@@ -97,11 +97,11 @@ export const loadPage = async (slug) => {
 
 const DynamicPages = async ({ params, searchParams }) => {
   const resolvedParams = await params;
-  console.log("Resolvedparams: ", resolvedParams.slug[0], resolvedParams.slug[1])
+  // console.log("Resolvedparams: ", resolvedParams.slug[0], resolvedParams.slug[1])
   const preview = searchParams?.preview === "true"; //exact comparison because of js non-empty string logic
   // console.log("preview: ", preview)
   const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1]);
-  console.log("capabilityResponse: ", capabilityResponse)
+  // console.log("capabilityResponse: ", capabilityResponse)
 
   // const capabilityPost = capabilityResponse.data.find(post => post.slug === resolvedParams?.slug);
 

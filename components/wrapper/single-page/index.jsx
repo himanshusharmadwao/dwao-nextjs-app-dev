@@ -99,7 +99,7 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
 
             <Suspense fallback={<LoadingPlaceholder />}>
                 <div className="container" id='howWeHelp'>
-                    {dualLayout.map((item, index) => {
+                    {dualLayout?.map((item, index) => {
                         return (
                             <div key={index} className="mb-20" id={`layout${index + 1}`}>
                                 <DualLayout data={item} />

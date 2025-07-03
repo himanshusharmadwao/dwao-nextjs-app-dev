@@ -10,7 +10,7 @@ const OverlayCard = ({ data={}, className = "" }) => {
     // const slug = data.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '-');
     return (
         <div className={`relative lg:order-2 order-1 ${className}`}>
-            <Link prefetch={false}  href={`/case-studies/${data?.stats?.industry?.toLowerCase()}/${data?.slug}` || "#"}  className="relative group w-full lg:inline inline-block">
+            <Link prefetch={false}  href={`/case-studies/${data?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${data?.slug}` || "#"}  className="relative group w-full lg:inline inline-block">
                 <Image
                     src={getImageUrl(data?.thumbnail) || "/featured-thumb-airtel.webp"}
                     alt="Card Image"

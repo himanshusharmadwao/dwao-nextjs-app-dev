@@ -11,7 +11,7 @@
     padding: 0;
 }
 
-.secondaryPage .topMenu{
+.secondaryPage .topMenu {
     border-bottom: 1px solid #ddd;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .header.active .cssmenu>ul>li>a,
-.secondaryPage .cssmenu>ul>li>a{
+.secondaryPage .cssmenu>ul>li>a {
     color: var(--color-con-dark);
 }
 
@@ -142,6 +142,7 @@
 .cssmenu ul ul li a:hover {
     color: var(--mainColor);
     text-decoration: underline;
+    z-index: 99999;
 }
 
 .cssmenu ul ul ul li {
@@ -183,7 +184,7 @@
 
 .cssmenu ul ul ul {
     margin-left: 0;
-    top: 1.7rem;
+    top: 1.5rem;
     width: 100%;
     padding: 0;
     background: #f4f4f4;
