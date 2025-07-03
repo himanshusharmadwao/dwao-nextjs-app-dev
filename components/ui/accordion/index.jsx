@@ -25,7 +25,7 @@ const Accordion = ({ data }) => {
           onClick={toggleAccordion}
           className={`w-full flex items-center justify-between px-4 py-3 bg-white border-b ${isOpen ? "border-[var(--mainColor)]" : "border-gray-200"} transition-all duration-300 hover:bg-gray-50 cursor-pointer outline-none`}
         >
-          <span className="lg:text-[1.8rem] text-[1.2rem]">{data?.heading}</span>
+          <span className="lg:text-[1.8rem] text-[1.2rem] text-left">{data?.heading}</span>
           <span className="relative w-5 h-5 flex items-center justify-center">
             <span className="absolute w-3 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
             <span
