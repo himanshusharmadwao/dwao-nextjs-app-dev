@@ -1,8 +1,8 @@
 import { getRevalidateTime } from "@/libs/utils";
 
 export const getCapability = async (preview = false, type, slug) => {
-  // console.log("slug: ", slug);
   // console.log("type: ", type);
+  // console.log("slug: ", slug);
   try {
     // const response = await fetch(
     //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[section][populate][visual][populate]=*&populate[section][populate][content][populate]=*&populate[seo][populate]=*&${slug !== undefined ? `filters[slug][$eq]=${slug}`: '' }&filters[category][slug][$eqi]=${type}&${preview ? 'status=draft' : ''}`,
@@ -12,7 +12,7 @@ export const getCapability = async (preview = false, type, slug) => {
     // );
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage${slug !== undefined ? `&filters[slug][$eq]=${slug}` : ''}${type !== undefined ? `&filters[category][slug][$eqi]=${type}` : ''}${preview ? '&status=draft' : ''}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage${slug !== undefined ? `&filters[slug][$eq]=${slug}` : `&filters[slug][$eq]=${type}`}${type !== undefined ? `&filters[category][slug][$eqi]=${type}` : ''}${preview ? '&status=draft' : ''}`,
       {
         next: { revalidate: getRevalidateTime(preview) },
       }
@@ -39,12 +39,11 @@ export const getCapability = async (preview = false, type, slug) => {
       // );
 
       const relatedResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage${slug !== undefined ? `&filters[slug][$ne]=${slug}` : `&filters[slug][$ne]=${type}`}&filters[category][slug][$eq]=${categorySlug}`,
         {
           next: { revalidate: getRevalidateTime(preview) },
         }
       );
-
 
       if (relatedResponse.ok) {
         const relatedData = await relatedResponse.json();
