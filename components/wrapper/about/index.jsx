@@ -69,34 +69,38 @@ const AboutWrapper = async ({ preview }) => {
                     <div className="relative w-full overflow-hidden">
                         <div className="relative w-full h-[410px]">
                             <div className="aspect-[7/10] hidden lg:block">
-                                <Image
-                                    src={aboutResponse.data.bannerDeskImage.url}
-                                    alt="Desktop Banner"
-                                    fill
-                                    priority
-                                    objectFit="cover"
-                                />
+                                {aboutResponse?.data?.bannerDeskImage?.url && (
+                                    <Image
+                                        src={aboutResponse?.data?.bannerDeskImage?.url}
+                                        alt="Desktop Banner"
+                                        fill
+                                        priority
+                                        objectFit="cover"
+                                    />
+                                )}
                             </div>
                             <div className="aspect-[15/7] lg:hidden">
-                                <Image
-                                    src={aboutResponse.data.bannerMobileImage.url}
-                                    alt="Mobile Banner"
-                                    fill
-                                    priority
-                                    objectFit="cover"
-                                />
+                                {aboutResponse?.data?.bannerMobileImage?.url && (
+                                    <Image
+                                        src={aboutResponse?.data?.bannerMobileImage?.url}
+                                        alt="Mobile Banner"
+                                        fill
+                                        priority
+                                        objectFit="cover"
+                                    />
+                                )}
                             </div>
                             <div className="absolute inset-0 bg-black/30 flex items-center">
                                 <div className="container">
                                     <div className="text-left py-5 ">
-                                        <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{breakTitle(aboutResponse.data.title)}</h1>
+                                        <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{breakTitle(aboutResponse?.data?.title)}</h1>
                                         <div className="text-[17px] text-white mt-[2rem]">
                                             <ReactMarkdown
                                                 remarkPlugins={[remarkGfm]}
                                                 rehypePlugins={[rehypeRaw]}
                                                 transform={(html) => DOMPurify.sanitize(html)}
                                             >
-                                                {aboutResponse.data.bannerContent}
+                                                {aboutResponse?.data?.bannerContent}
                                             </ReactMarkdown>
                                         </div>
                                     </div>
@@ -110,7 +114,7 @@ const AboutWrapper = async ({ preview }) => {
             {/* intro */}
             <div className="container" id='whoWeAre'>
                 <div className="grid grid-cols-1 lg:grid-cols-2 mb-14">
-                    <h2 className='text-head-large text-con-dark leading-[1] mb-5 lg:mb-0'>{aboutResponse.data.intro.title}</h2>
+                    <h2 className='text-head-large text-con-dark leading-[1] mb-5 lg:mb-0'>{aboutResponse?.data?.intro?.title}</h2>
                     <div>
                         <div className='text-small-con text-con-light'>
                             <ReactMarkdown
@@ -118,7 +122,7 @@ const AboutWrapper = async ({ preview }) => {
                                 rehypePlugins={[rehypeRaw]}
                                 transform={(html) => DOMPurify.sanitize(html)}
                             >
-                                {aboutResponse.data.intro.markdownContent}
+                                {aboutResponse?.data?.intro?.markdownContent}
                             </ReactMarkdown>
                         </div>
                     </div>
@@ -128,16 +132,18 @@ const AboutWrapper = async ({ preview }) => {
             {/* work place */}
             <div className="light-bg py-14" id='greatPlace'>
                 <div className="container">
-                    <h2 className='text-[1.2rem] lg:text-head-large text-con-dark lg:mb-12 mb-5'>{aboutResponse.data.workPlace.title}</h2>
+                    <h2 className='text-[1.2rem] lg:text-head-large text-con-dark lg:mb-12 mb-5'>{aboutResponse?.data?.workPlace.title}</h2>
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                        <Image
-                            src={getImageUrl(aboutResponse.data.workPlace.image)}
-                            alt="missing image"
-                            width={476}
-                            height={268}
-                            priority
-                            className='mb-5 lg:mb-0'
-                        />
+                        {aboutResponse?.data?.workPlace?.image?.url && (
+                            <Image
+                                src={aboutResponse?.data?.workPlace?.image?.url}
+                                alt="missing image"
+                                width={476}
+                                height={268}
+                                priority
+                                className='mb-5 lg:mb-0'
+                            />
+                        )}
                         <div className='flex items-center'>
                             <div className='text-small-con text-con-light'>
                                 <ReactMarkdown
@@ -145,7 +151,7 @@ const AboutWrapper = async ({ preview }) => {
                                     rehypePlugins={[rehypeRaw]}
                                     transform={(html) => DOMPurify.sanitize(html)}
                                 >
-                                    {aboutResponse.data.workPlace.markdownContent}
+                                    {aboutResponse?.data?.workPlace?.markdownContent}
                                 </ReactMarkdown>
                             </div>
                         </div>
@@ -154,13 +160,17 @@ const AboutWrapper = async ({ preview }) => {
             </div>
 
             {/* what we beleive */}
-            <div className='w-full h-[180px] lg:h-[620px] relative' id='believe'>
-                <Image
-                    src={getImageUrl(aboutResponse.data.valueVisual)}
-                    fill
-                    alt="missing image"
-                    className='object-cover'
-                />
+            <div id='believe'>
+                {aboutResponse?.data?.valueVisual?.url && (
+                    <Image
+                        src={aboutResponse?.data?.valueVisual?.url}
+                        alt='missing image'
+                        width={500} 
+                        height={620}
+                        className='object-cover'
+                        layout="responsive"
+                    />
+                )}
             </div>
 
             {/* our clients */}
@@ -178,14 +188,16 @@ const AboutWrapper = async ({ preview }) => {
                 <div className="container">
                     <h2 className='text-head-large text-con-dark mb-12'>Our partners in success</h2>
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                        <Image
-                            src={getImageUrl(aboutResponse.data.partner.image)}
-                            alt="missing image"
-                            width={476}
-                            height={268}
-                            priority
-                            className='mb-5 lg:mb-0'
-                        />
+                        {aboutResponse?.data?.partner?.image?.url && (
+                            <Image
+                                src={aboutResponse?.data?.partner?.image?.url}
+                                alt="missing image"
+                                width={476}
+                                height={268}
+                                priority
+                                className='mb-5 lg:mb-0'
+                            />
+                        )}
                         <div className='flex items-center'>
                             <div className='text-small-con text-con-light'>
                                 <ReactMarkdown
@@ -193,7 +205,7 @@ const AboutWrapper = async ({ preview }) => {
                                     rehypePlugins={[rehypeRaw]}
                                     transform={(html) => DOMPurify.sanitize(html)}
                                 >
-                                    {aboutResponse.data.partner.markdownContent}
+                                    {aboutResponse?.data?.partner?.markdownContent}
                                 </ReactMarkdown>
                             </div>
                         </div>
@@ -212,7 +224,7 @@ const AboutWrapper = async ({ preview }) => {
                                 rehypePlugins={[rehypeRaw]}
                                 transform={(html) => DOMPurify.sanitize(html)}
                             >
-                                {aboutResponse.data.service.markdownContent}
+                                {aboutResponse?.data?.service?.markdownContent}
                             </ReactMarkdown>
                         </div>
                     </div>
@@ -230,7 +242,7 @@ const AboutWrapper = async ({ preview }) => {
                                 rehypePlugins={[rehypeRaw]}
                                 transform={(html) => DOMPurify.sanitize(html)}
                             >
-                                {aboutResponse.data.industry.markdownContent}
+                                {aboutResponse?.data?.industry?.markdownContent}
                             </ReactMarkdown>
                         </div>
                     </div>
@@ -248,7 +260,7 @@ const AboutWrapper = async ({ preview }) => {
                                 rehypePlugins={[rehypeRaw]}
                                 transform={(html) => DOMPurify.sanitize(html)}
                             >
-                                {aboutResponse.data.impact.markdownContent}
+                                {aboutResponse?.data?.impact?.markdownContent}
                             </ReactMarkdown>
                         </div>
                     </div>
@@ -261,27 +273,29 @@ const AboutWrapper = async ({ preview }) => {
                     <div className="mb-14">
                         <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-dense">
                             <div className='flex flex-col justify-center lg:gap-4 mt-10 lg:mt-0 lg:order-1 order-2'>
-                                <h2 className='text-head-large text-con-dark leading-[1] mb-5 lg:mb-0'>{aboutResponse.data.demoHeading}</h2>
-                                <p className='text-small-con text-con-light'>{aboutResponse.data.demoContent}</p>
-                                <ExtendLink title={aboutResponse.data.demoLinkTitle} href={aboutResponse.data.demoLinkHref} />
+                                <h2 className='text-head-large text-con-dark leading-[1] mb-5 lg:mb-0'>{aboutResponse?.data?.demoHeading}</h2>
+                                <p className='text-small-con text-con-light'>{aboutResponse?.data?.demoContent}</p>
+                                <ExtendLink title={aboutResponse?.data?.demoLinkTitle} href={aboutResponse?.data?.demoLinkHref} />
                             </div>
 
                             <div className="relative lg:order-2 order-1 basis-full md:basis-[calc((100%-60px)/3)]">
                                 <Link prefetch={false} href="/insights-and-case-studies/airtel-case-study.html" className="relative group w-full lg:inline inline-block">
-                                    <Image
-                                        src={aboutResponse.data.demoOverlay.image.url}
-                                        alt="Card Image"
-                                        width={394}
-                                        height={293}
-                                        priority
-                                        className="w-full h-auto object-cover rounded-[10px]"
-                                    />
+                                    {aboutResponse?.data?.demoOverlay?.image?.url && (
+                                        <Image
+                                            src={aboutResponse?.data?.demoOverlay?.image?.url}
+                                            alt="Card Image"
+                                            width={394}
+                                            height={293}
+                                            priority
+                                            className="w-full h-auto object-cover rounded-[10px]"
+                                        />
+                                    )}
                                     <div className="absolute top-0 left-0 text-white bg-black/40 pt-4 w-full h-full rounded-[10px] group-hover:bg-transparent group-hover:bg-black transition-bg duration-300">
-                                        <div className="text-[32px] px-[1rem]">{aboutResponse.data.demoOverlay.heading}</div>
+                                        <div className="text-[32px] px-[1rem]">{aboutResponse?.data?.demoOverlay?.heading}</div>
                                         <div className="absolute bottom-8 lg:mt-4 px-[1rem] lg:pt-[30px] pt-[22px]">
-                                            <p className="text-small-con">{aboutResponse.data.demoOverlay.category} | {aboutResponse.data.demoOverlay.subCategory}</p>
+                                            <p className="text-small-con">{aboutResponse?.data?.demoOverlay?.category} | {aboutResponse?.data?.demoOverlay?.subCategory}</p>
                                             <p className="lg:text-[20px] text-[18px] mt-3 leading-[1.2]">
-                                                {aboutResponse.data.demoOverlay.title}
+                                                {aboutResponse?.data?.demoOverlay?.title}
                                             </p>
                                         </div>
                                     </div>
@@ -296,9 +310,9 @@ const AboutWrapper = async ({ preview }) => {
             <Suspense fallback={<LoadingPlaceholder />}>
                 <div className="light-bg py-14">
                     <div className="container">
-                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{aboutResponse.data.expertHeading}</h2>
+                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{aboutResponse?.data?.expertHeading}</h2>
                         <div className="flex gap-8 flex-col lg:flex-row">
-                            {aboutResponse.data.expert.map((item, index) => (
+                            {aboutResponse?.data?.expert?.map((item, index) => (
                                 <ProfileCard key={index} data={item} />
                             ))}
                         </div>

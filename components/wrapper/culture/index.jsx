@@ -208,7 +208,7 @@ const CultureWrapper = async ({ preview }) => {
                     <div className="container">
                         <h2 className="text-head text-con-dark mb-12">{cultureResponse?.data?.teamsAndCollaborationHeading}</h2>
                     </div>
-                    <div className='ps-[calc(5%-10px)]'>
+                    <div className='container'>
                         <ImgCarousel slides={teamsResponse?.data} resConf={{ mobile: "1", tab: "2", desktop: "3.1" }} slider={"team_collaboration"} />
                     </div>
                 </div>
@@ -300,7 +300,7 @@ const CultureWrapper = async ({ preview }) => {
                         </p>
                     </div>
                 </div>
-                <div className='ps-[calc(5%-10px)]'>
+                <div className='container'>
                     <Suspense fallback={<LoadingPlaceholder />}>
                         <ImgCarousel slides={socialResponsibilityResponse?.data} resConf={{ mobile: "1", tab: "2", desktop: "4.1" }} slider={"social_impact"} />
                     </Suspense>

@@ -4,7 +4,6 @@ import Link from 'next/link'
 import React from 'react'
 
 const RelatedCard = ({ imageSrc = "", linkTitle = "", linkHref = "" }) => {
-    // console.log(">>>>",JSON.stringify(linkHref))
     return (
         <Link prefetch={false}  href={linkHref} className='group'>
             <div className='h-[280px] relative rounded-[10px] overflow-hidden transition-all duration-300 group-hover:shadow-[0_10px_20px_0_rgba(0,0,0,0.15)]'>

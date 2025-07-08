@@ -1,10 +1,10 @@
 "use client"
- 
+
 import Image from "next/image";
 import styles from "./Banner.module.css";
 import ExtendLink from "../../ui/extendLink";
 import dynamic from "next/dynamic";
- 
+
 import { SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,29 +13,29 @@ import "swiper/css/effect-fade";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { breakTitle, getImageUrl } from "@/libs/utils";
 import { useEffect } from "react";
- 
+
 // Dynamically import Swiper with no SSR
 const SwiperNoSSR = dynamic(() => import("swiper/react").then(mod => mod.Swiper), {
     // ssr: false,
     loading: () => <BannerFallback />,
 });
- 
+
 // Fallback component while Swiper is loading
 const BannerFallback = () => (
     <div className="w-full h-[700px] bg-gray-200"></div>
 );
- 
+
 // export const getStaticProps = async () => {
 //     const resulting = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/home-banners?populate=*`);
 //     const result = await resulting.json();
- 
+
 //     return {
 //         props: {
 //             result: result,
 //         },
 //     };
 // }
- 
+
 // Main Banner component
 const Banner = ({ data, isMobile }) => {
 
@@ -93,7 +93,7 @@ const Banner = ({ data, isMobile }) => {
 
 
                         <div className="absolute inset-0 bg-black opacity-30" aria-hidden="true"></div>
-                        <div className="absolute lg:top-[25%] top-[15%] left-[5%] z-10">
+                        <div className="absolute lg:top-[25%] top-[15%] left-1/2 transform -translate-x-1/2 max-w-[1200px] w-[90%] z-10">
                             <h2 className="lg:text-[3.5vw] text-[26px] leading-[1.2] text-white">{breakTitle(item.title)}</h2>
                             {/* <h2 className="lg:text-[3.5vw] text-[26px] leading-[1.2] text-white">{item.subtitle}</h2> */}
                             <ExtendLink title={item.linkTitle} href={item.linkHref} className="text-white text-[20px]" aria-label="Learn more about our work" />
@@ -103,9 +103,9 @@ const Banner = ({ data, isMobile }) => {
                 {/* Custom Pagination */}
                 <div className={`custom-pagination ${styles.customPagi}`}></div>
             </SwiperNoSSR>
- 
+
         </section>
     );
 };
- 
+
 export default Banner;
