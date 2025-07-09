@@ -88,13 +88,13 @@ const HomeWrapper = async ({ preview }) => {
 
     // Prepare data for components that will be rendered later
     const studySlides = insightBlogsResponse?.data?.map((card, index) => (
-        <StudyCard
-            key={index}
-            imageSrc={getImageUrl(card.thumbnail)}
-            title={card.title}
-            description={card.insightStatus}
-            href={`/insights-and-case-studies/${card.slug}`}
-        />
+            <StudyCard
+                key={index}
+                imageSrc={getImageUrl(card.thumbnail)}
+                title={card.title}
+                description={card.insightStatus}
+                href={`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`}
+            />
     ));
 
     // console.log("insightBlogsResponse: ",insightBlogsResponse)

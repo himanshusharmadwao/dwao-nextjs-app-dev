@@ -8,6 +8,7 @@ import DOMPurify from 'dompurify';
 import remarkGfm from 'remark-gfm'; // for features like strikethrough and tables
 import rehypeRaw from 'rehype-raw'; // for raw html 
 import styles from "./Accordion.module.css";
+import markStyles from "@/styles/markdown.module.css";
 
 const Accordion = ({ data }) => {
   // console.log(data)
@@ -25,7 +26,7 @@ const Accordion = ({ data }) => {
           onClick={toggleAccordion}
           className={`w-full flex items-center justify-between px-4 py-3 bg-white border-b ${isOpen ? "border-[var(--mainColor)]" : "border-gray-200"} transition-all duration-300 hover:bg-gray-50 cursor-pointer outline-none`}
         >
-          <span className="lg:text-[1.8rem] text-[1.2rem] text-left">{data?.heading}</span>
+          <span className="lg:text-[20px] text-[17px] text-left">{data?.heading}</span>
           <span className="relative w-5 h-5 flex items-center justify-center">
             <span className="absolute w-3 h-0.5 bg-gray-800 rounded-full transition-all duration-300"></span>
             <span
@@ -36,11 +37,11 @@ const Accordion = ({ data }) => {
 
         {/* Accordion Content */}
         <div
-          className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "max-h-96" : "max-h-0"
+          className={`overflow-hidden transition-all duration-500 ease-in-out text-con ${isOpen ? "max-h-96" : "max-h-0"
             } bg-white`}
         >
           <div className="p-4">
-            <div className={`${styles.accordionStyle} ${styles.markdownStyle}`}>
+            <div className={`${styles.accordionStyle} ${markStyles.markdownStyle}`}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}

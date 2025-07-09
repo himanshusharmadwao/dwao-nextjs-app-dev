@@ -15,7 +15,7 @@ const nextConfig = {
         hostname: "picsum.photos"
       }
     ],
-    domains: ["localhost", "harmonious-thrill-30f0c37241.media.strapiapp.com", "res.cloudinary.com", "inspired-friend-28b94fe811.media.strapiapp.com"],
+    domains: ["localhost", "harmonious-thrill-30f0c37241.media.strapiapp.com", "abundant-car-e287c4d86f.media.strapiapp.com"],
   },
 
   // Add webpack configuration for optimizing chunks
