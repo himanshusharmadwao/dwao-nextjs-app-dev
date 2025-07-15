@@ -72,7 +72,7 @@ const LeadForm = forwardRef((_, ref) => {
         page_url: window.location.href,
       };
 
-      // console.log(payload);
+      console.log(payload);
 
       const response = await fetch('https://8kb7ux2337.execute-api.ap-south-1.amazonaws.com/createlead', {
         method: 'POST',
@@ -80,6 +80,7 @@ const LeadForm = forwardRef((_, ref) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+        mode: 'cors',
       });
 
       if (!response.ok) {
