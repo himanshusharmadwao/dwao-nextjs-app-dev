@@ -229,7 +229,7 @@ const ServiceWrapper = ({ serviceData }) => {
                         </p>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-                        {serviceData.clientsSlide.entity.map((item, index) => (
+                        {serviceData?.clientsSlide?.entity?.map((item, index) => (
                             <div key={index} className="bg-white p-6 rounded-xl shadow-sm flex items-center justify-center h-32">
                                 <Image src={item.logo.url} alt="Icon Image" height={50} width={50} />
                             </div>
