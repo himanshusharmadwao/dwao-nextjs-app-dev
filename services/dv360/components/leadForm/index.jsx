@@ -80,7 +80,6 @@ const LeadForm = forwardRef((_, ref) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-        mode: 'cors',
       });
 
       if (!response.ok) {
