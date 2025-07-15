@@ -9,7 +9,7 @@ const LeadForm = forwardRef((_, ref) => {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    countryCode: "",
+    countryCode: "+91",
     email: "",
     message: "",
   });
