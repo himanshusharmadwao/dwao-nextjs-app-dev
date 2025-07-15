@@ -5,8 +5,8 @@ export const getHome = async (device = "desktop", preview = false) => {
   try {
     const url =
       device === "mobile"
-        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.mobileImg&populate[1]=storyOverlay.image&populate[2]=insightMobileImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=clientsSlide&populate[7]=clientsSlide.entity&populate[8]=clientsSlide.entity.logo&${preview ? "status=draft" : ""}`
-        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.deskImg&populate[1]=storyOverlay.image&populate[2]=insightDeskImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=clientsSlide&populate[7]=clientsSlide.entity&populate[8]=clientsSlide.entity.logo&${preview ? "status=draft" : ""}`;
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.mobileImg&populate[1]=storyOverlay.image&populate[2]=insightMobileImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=clientsSlides&populate[7]=clientsSlides.entity&populate[8]=clientsSlides.entity.logo&${preview ? "status=draft" : ""}`
+        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/home?populate[0]=banner.deskImg&populate[1]=storyOverlay.image&populate[2]=insightDeskImg&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=clientsSlides&populate[7]=clientsSlides.entity&populate[8]=clientsSlides.entity.logo&${preview ? "status=draft" : ""}`;
 
     const response = await fetch(url, {
       next: { revalidate: getRevalidateTime(preview) },

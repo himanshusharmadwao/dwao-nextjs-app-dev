@@ -176,7 +176,7 @@ const HomeWrapper = async ({ preview }) => {
                     <div className="container">
                         <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{homeResponse?.data?.clientsHeading}</h2>
                     </div>
-                    <ClientCarousel slides={data?.clientsSlide?.entity} />
+                    <ClientCarousel slides={data?.clientsSlides?.entity} />
                 </div>
             </Suspense>
 
