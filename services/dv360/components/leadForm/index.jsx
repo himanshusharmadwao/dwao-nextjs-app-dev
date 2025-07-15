@@ -1,5 +1,6 @@
+"use client";
+
 import { toastStyle } from '@/components/toastNotification';
-import { submitLeadForm } from '@/libs/apis/data/servicePage/dv360';
 import React, { forwardRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -14,8 +15,8 @@ const LeadForm = forwardRef((_, ref) => {
   });
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validateForm = () => {
@@ -60,8 +61,33 @@ const LeadForm = forwardRef((_, ref) => {
     }
 
     try {
-      const result = await submitLeadForm(formData);
+
+      const fullPhone = formData.countryCode + formData.phone;
+
+      const payload = {
+        fname: formData.fullName,
+        email: formData.email,
+        number: fullPhone,
+        message: formData.message,
+        page_url: window.location.href,
+      };
+
+      // console.log(payload);
+
+      const response = await fetch('https://8kb7ux2337.execute-api.ap-south-1.amazonaws.com/createlead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       toast("Form submission succeeded", toastStyle);
+
       setFormData({
         fullName: "",
         email: "",
@@ -69,17 +95,18 @@ const LeadForm = forwardRef((_, ref) => {
         phone: "",
         message: "",
       });
+
     } catch (error) {
-      // console.error("Form submission error:", error.response?.data || error.message);
-      const errorMessage = error.response?.data?.message || "Form submission failed. Please try again.";
+      const errorMessage = error.message || "Form submission failed. Please try again.";
       toast.error(errorMessage, toastStyle);
     }
   };
 
+
   return (
     <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
       <div className="bg-blue-600 p-6">
-        <h3 className="text-xl font-bold text-white">Request DV360 Account Access</h3>
+        <h3 className="text-xl font-bold text-white">Submit your request</h3>
         <p className="text-blue-100">Fill the form below and our team will contact you shortly</p>
       </div>
       <div className="p-6">
@@ -92,7 +119,6 @@ const LeadForm = forwardRef((_, ref) => {
               id="fullName"
               className="w-full px-4 py-2 border border-[#e4e4e4] text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 inputName"
               placeholder="John Doe"
-              required
               ref={ref}
               onChange={handleChange}
               value={formData.fullName}
@@ -106,7 +132,6 @@ const LeadForm = forwardRef((_, ref) => {
               id="email"
               className="w-full px-4 py-2 border border-[#e4e4e4] text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="john@company.com"
-              required
               onChange={handleChange}
               value={formData.email}
             />
@@ -118,13 +143,12 @@ const LeadForm = forwardRef((_, ref) => {
                 name="countryCode"
                 id="countryCode"
                 className="w-1/4 px-4 py-2 border border-[#e4e4e4] text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
                 onChange={handleChange}
                 value={formData.countryCode}
               >
-                <option value="+1">+1 (US)</option>
-                <option value="+44">+44 (UK)</option>
                 <option value="+91">+91 (IN)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+1">+1 (US)</option>
                 <option value="+61">+61 (AU)</option>
                 <option value="+86">+86 (CN)</option>
               </select>
@@ -134,7 +158,6 @@ const LeadForm = forwardRef((_, ref) => {
                 id="phone"
                 className="w-3/4 px-4 py-2 border border-[#e4e4e4] text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="(123) 456-7890"
-                required
                 onChange={handleChange}
                 value={formData.phone}
               />
@@ -148,7 +171,6 @@ const LeadForm = forwardRef((_, ref) => {
               className="w-full px-4 py-2 border border-[#e4e4e4] text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="3"
               placeholder="Tell us about your requirements..."
-              required
               onChange={handleChange}
               value={formData.message}
             ></textarea>

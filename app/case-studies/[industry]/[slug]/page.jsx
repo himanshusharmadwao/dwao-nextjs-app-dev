@@ -1,13 +1,24 @@
+import { cache } from 'react';
 import NotFound from "@/app/not-found";
 import StructuredData from "@/components/StructuredData";
 import SingleBlogWrapper from "@/components/wrapper/insight-single-blog"
 import { getInsightBlog } from "@/libs/apis/data/insights";
 
+// Use edge runtime for faster responses
+export const runtime = 'nodejs'; // Keep nodejs for now due to dependencies
+export const preferredRegion = 'auto';
+
+// Cache the API call to prevent duplicate requests
+const getCachedInsightBlog = cache(async (preview, industry, slug) => {
+  return await getInsightBlog(preview, industry, slug);
+});
+
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-    const { industry, slug } = params;
-    const preview = searchParams?.preview === "true";
-    const insightBlogsResponse = await getInsightBlog(preview, industry, slug);
+    const { industry, slug } = await params;
+    const resolvedSearchParams = await searchParams;
+    const preview = resolvedSearchParams?.preview === "true";
+    const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug);
 
     // const insightBlog = insightBlogsResponse.data.find(post => post.slug === params.slug);
 
@@ -51,11 +62,12 @@ export async function generateMetadata({ params, searchParams }) {
 
 const SingleBlog = async ({ params, searchParams }) => {
 
-    const { industry, slug } = params;
+    const { industry, slug } = await params;
     // console.log("params:", industry, slug);
-    const preview = searchParams?.preview === "true";
+    const resolvedSearchParams = await searchParams;
+    const preview = resolvedSearchParams?.preview === "true";
     // console.log("preview: ", preview)
-    const insightBlogsResponse = await getInsightBlog(preview, industry, slug);
+    const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug);
     // console.log("insightBlogsResponse: ", insightBlogsResponse)
 
     // const insightBlog = insightBlogsResponse.data.find(post => post.slug === resolvedParams.slug);

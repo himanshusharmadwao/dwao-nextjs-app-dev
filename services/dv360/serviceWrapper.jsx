@@ -14,12 +14,10 @@ import LeadForm from './components/leadForm';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 
-const ServiceWrapper = ({ serviceData, clients }) => {
+const ServiceWrapper = ({ serviceData }) => {
 
     // console.log(serviceData)
 
-
-    const clientSlide = clients?.filter(item => item.service === serviceData?.slug);
 
     // console.log(clientSlide);
 
@@ -49,12 +47,6 @@ const ServiceWrapper = ({ serviceData, clients }) => {
             imageSrc={testimonial.image.url}
         />
     ));
-
-    // Form submission handler
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        alert('Form submitted successfully!');
-    };
 
     return (
         <div>
@@ -95,7 +87,7 @@ const ServiceWrapper = ({ serviceData, clients }) => {
                             </div>
                         </div>
                         <div className="lg:w-1/2 mb-12 lg:mb-0">
-                            <LeadForm formId="contact-form" onSubmit={handleFormSubmit} ref={heroFormRef} />
+                            <LeadForm/>
                         </div>
                     </div>
                 </div>
@@ -237,7 +229,7 @@ const ServiceWrapper = ({ serviceData, clients }) => {
                         </p>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-                        {clientSlide.map((item, index) => (
+                        {serviceData.clientsSlide.entity.map((item, index) => (
                             <div key={index} className="bg-white p-6 rounded-xl shadow-sm flex items-center justify-center h-32">
                                 <Image src={item.logo.url} alt="Icon Image" height={50} width={50} />
                             </div>
@@ -309,7 +301,7 @@ const ServiceWrapper = ({ serviceData, clients }) => {
                                 </div>
                             </div>
                         </div>
-                        <LeadForm formId="contact-form-cta" onSubmit={handleFormSubmit} />
+                        <LeadForm />
                     </div>
                 </div>
             </section>

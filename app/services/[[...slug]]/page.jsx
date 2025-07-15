@@ -12,7 +12,8 @@ export async function generateMetadata({ params, searchParams }) {
 
   try {
     // const { type, slug } = resolvedParams;
-    const preview = searchParams?.preview === "true";
+    const resolvedSearchParams = await searchParams;
+    const preview = resolvedSearchParams?.preview === "true";
     const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1]);
 
 
@@ -98,7 +99,8 @@ export const loadPage = async (slug) => {
 const DynamicPages = async ({ params, searchParams }) => {
   const resolvedParams = await params;
   // console.log("Resolvedparams: ", resolvedParams.slug[0], resolvedParams.slug[1])
-  const preview = searchParams?.preview === "true"; //exact comparison because of js non-empty string logic
+  const resolvedSearchParams = await searchParams;
+  const preview = resolvedSearchParams?.preview === "true"; //exact comparison because of js non-empty string logic
   // console.log("preview: ", preview)
   const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1]);
   // console.log("capabilityResponse: ", capabilityResponse)

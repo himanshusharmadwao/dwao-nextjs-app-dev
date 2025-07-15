@@ -8,8 +8,9 @@ import StructuredData from '@/components/StructuredData';
 
 export async function generateMetadata({ params, searchParams }) {
   try {
-    const { slug } = params;
-    const preview = searchParams?.preview === "true";
+    const { slug } = await params;
+    const resolvedSearchParams = await searchParams;
+    const preview = resolvedSearchParams?.preview === "true";
     const capabilityResponse = await getPartner(preview, slug);
 
     if (!capabilityResponse) {
@@ -94,9 +95,10 @@ export const loadPage = async (slug) => {
 
 const DynamicPages = async ({ params, searchParams }) => {
 
-  const { slug } = params;
+  const { slug } = await params;
   // console.log("slug: ", slug);
-  const preview = searchParams?.preview === "true"; //exact comparison because of js non-empty string logic
+  const resolvedSearchParams = await searchParams;
+  const preview = resolvedSearchParams?.preview === "true"; //exact comparison because of js non-empty string logic
   // console.log("preview: ", preview)
   const capabilityResponse = await getPartner(preview, slug);
   // console.log("capabilityResponse: ", capabilityResponse)

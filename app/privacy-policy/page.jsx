@@ -4,7 +4,8 @@ import { getPolicy } from "@/libs/apis/data/privacyPolicy";
 
 // Generate dynamic metadata
 export async function generateMetadata({ searchParams }) {
-  const preview = searchParams?.preview === "true";
+  const params = await searchParams;
+  const preview = params?.preview === "true";
   const policyResponse = await getPolicy(preview);
 
   if (!policyResponse) {
@@ -42,8 +43,8 @@ export async function generateMetadata({ searchParams }) {
 }
 
 const PrivacyPolicy = async ({ searchParams }) => {
-
-  const preview = searchParams?.preview === "true";
+  const params = await searchParams;
+  const preview = params?.preview === "true";
   const policyResponse = await getPolicy(preview);
   // console.log("preview: ", preview)
 

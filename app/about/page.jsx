@@ -4,7 +4,8 @@ import { getAboutData } from "@/libs/apis/data/about";
 
 // Generate dynamic metadata
 export async function generateMetadata({ searchParams }) {
-    const preview = searchParams?.preview === "true";
+    const params = await searchParams;
+    const preview = params?.preview === "true";
     const aboutResponse = await getAboutData(preview);
 
     if (!aboutResponse) {
@@ -50,8 +51,8 @@ export async function generateMetadata({ searchParams }) {
 }
 
 const About = async ({ searchParams }) => {
-
-    const preview = searchParams?.preview === "true";
+    const params = await searchParams;
+    const preview = params?.preview === "true";
     // console.log("preview: ", preview)
     const aboutResponse = await getAboutData(preview);
     return (

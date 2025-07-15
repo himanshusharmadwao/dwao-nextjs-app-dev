@@ -7,8 +7,9 @@ export const metadata = {
     },
 }
 
-const Blog = ({ searchParams }) => {
-    const preview = searchParams?.preview === "true";
+const Blog = async ({ searchParams }) => {
+    const params = await searchParams;
+    const preview = params?.preview === "true";
     // console.log("preview level 1: ", preview)
     return (
         <>

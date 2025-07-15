@@ -4,7 +4,8 @@ import { getContact } from "@/libs/apis/data/contact";
 
 // Generate dynamic metadata
 export async function generateMetadata({ searchParams }) {
-    const preview = searchParams?.preview === "true";
+    const params = await searchParams;
+    const preview = params?.preview === "true";
     const contactResponse = await getContact(preview);
 
     if (!contactResponse) {
@@ -42,8 +43,8 @@ export async function generateMetadata({ searchParams }) {
 }
 
 const Contact = async ({ searchParams }) => {
-
-    const preview = searchParams?.preview === "true";
+    const params = await searchParams;
+    const preview = params?.preview === "true";
     // console.log("preview: ", preview)
 
     const contactResponse = await getContact(preview);

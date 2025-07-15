@@ -6,7 +6,8 @@ import { getBlog } from "@/libs/apis/data/blog";
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
     const resolvedParams = await params;
-    const preview = searchParams?.preview === "true";
+    const resolvedSearchParams = await searchParams;
+    const preview = resolvedSearchParams?.preview === "true";
     const blogsResponse = await getBlog(preview, resolvedParams.slug);
 
     if (!blogsResponse) {
@@ -47,7 +48,8 @@ const SingleBlog = async ({ params, searchParams }) => {
 
     const resolvedParams = await params;
     // console.log("Resolved params:", resolvedParams);
-    const preview = searchParams?.preview === "true";
+    const resolvedSearchParams = await searchParams;
+    const preview = resolvedSearchParams?.preview === "true";
     // console.log("preview: ", preview)
     const blogsResponse = await getBlog(preview, resolvedParams.slug);
     // console.log("blogsResponse: ", blogsResponse)

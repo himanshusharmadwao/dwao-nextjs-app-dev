@@ -1,18 +1,18 @@
 /* custom pagination styles */
 
 .customPagi {
-  position: absolute;
-  z-index: 9999;
-  left: calc(50% + 19px) !important;
-  bottom: 12% !important;
-  transform: translateX(-50%);
-  width: 90%!important;
-  max-width: 1200px;
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 50px;
+    position: absolute;
+    z-index: 9999;
+    left: calc(50% + 19px)!important;
+    bottom: 12% !important;
+    transform: translateX(-50%);
+    width: 90% !important;
+    max-width: 1200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 50px;
 }
 
 .customPagi :global(.swiper-pagination-bullet) {

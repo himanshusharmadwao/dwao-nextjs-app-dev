@@ -7,7 +7,8 @@ import StructuredData from '@/components/StructuredData';
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   const resolvedParams = await params;
-  const preview = searchParams?.preview === "true";
+  const resolvedSearchParams = await searchParams;
+  const preview = resolvedSearchParams?.preview === "true";
   // console.log(resolvedParams)
   const serviceResponse = await getServiceData(preview, resolvedParams.slug);
   // console.log("serviceResponse: ", serviceResponse)
@@ -49,15 +50,16 @@ export async function generateMetadata({ params, searchParams }) {
 const DV360 = async ({ params, searchParams }) => {
   const resolvedParams = await params;
   // console.log("params:", resolvedParams);
-  const preview = searchParams?.preview === "true";
+  const resolvedSearchParams = await searchParams;
+  const preview = resolvedSearchParams?.preview === "true";
   // console.log("preview: ", preview)
   const serviceResponse = await getServiceData(preview, resolvedParams.slug);
-  console.log("serviceResponse: ", serviceResponse)
+  // console.log("serviceResponse: ", serviceResponse)
 
   // const servicePage = serviceResponse.data.find(service => service.slug === resolvedParams.slug);
 
   const { data, error } = serviceResponse;
-  console.log(data, error)
+  // console.log(data, error)
   if (error) {
     return (
       <div className='h-screen block'>

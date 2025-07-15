@@ -50,7 +50,7 @@ const Accordion = ({ data }) => {
                 {data?.markdownContent}
               </ReactMarkdown>
             </div>
-            <Link prefetch={false} 
+            <Link prefetch={false}
               href={data?.linkHref || '/'}
               className="mt-4 flex gap-2 items-center group hover:text-[var(--mainColor)] uppercase"
               aria-label="Learn more about our services"

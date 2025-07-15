@@ -23,6 +23,8 @@ const SwiperNoSSR = dynamic(() => import("swiper/react").then((mod) => mod.Swipe
 
 const ClientCarousel = ({ slides }) => {
 
+  // console.log("slides: ",slides)
+
   if (!slides?.length) return <ClientCarouselFallback />;
 
   return (
@@ -53,12 +55,11 @@ const ClientCarousel = ({ slides }) => {
           <Image
             src={getImageUrl(item.logo)}
             alt={item.title}
-            width={150}
-            height={70}
-            layout='intrinsic'
+            width={100}
+            height={100}
             priority={index === 0} 
             loading={index === 0 ? "eager" : "lazy"}
-            className="py-4 px-2 transition-transform duration-300 group-hover:scale-110"
+            className="p-4 w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
           />
         </SwiperSlide>
       ))}

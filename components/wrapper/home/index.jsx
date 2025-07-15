@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import Banner from "@/components/home/banner";
-import { getClients, getClientTestimonials, getHome } from '@/libs/apis/data/home';
+import { getClientTestimonials, getHome } from '@/libs/apis/data/home';
 import { getImageUrl } from '@/libs/utils';
 import { getAllInsightBlogs } from '@/libs/apis/data/insights';
 import dynamic from 'next/dynamic'
@@ -60,6 +60,7 @@ const HomeWrapper = async ({ preview }) => {
     // Fetch critical data for initial render
     const homeResponse = await getHome(isMobile ? "mobile" : "desktop", preview);
     const { data, error } = homeResponse;
+    // console.log(data)
     if (error) {
         return (
             <div className='h-screen block'>
@@ -75,11 +76,9 @@ const HomeWrapper = async ({ preview }) => {
 
     // Fetch remaining data in parallel
     const [
-        clientsResponse,
         clientTestimonialResponse,
         insightBlogsResponse,
     ] = await Promise.all([
-        getClients(),
         getClientTestimonials(),
         getAllInsightBlogs(),
     ]);
@@ -88,13 +87,13 @@ const HomeWrapper = async ({ preview }) => {
 
     // Prepare data for components that will be rendered later
     const studySlides = insightBlogsResponse?.data?.map((card, index) => (
-            <StudyCard
-                key={index}
-                imageSrc={getImageUrl(card.thumbnail)}
-                title={card.title}
-                description={card.insightStatus}
-                href={`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`}
-            />
+        <StudyCard
+            key={index}
+            imageSrc={getImageUrl(card.thumbnail)}
+            title={card.title}
+            description={card.insightStatus}
+            href={`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`}
+        />
     ));
 
     // console.log("insightBlogsResponse: ",insightBlogsResponse)
@@ -109,12 +108,6 @@ const HomeWrapper = async ({ preview }) => {
             imageSrc={getImageUrl(testimonial.icon)}
         />
     ));
-
-    // console.log(clientsResponse.data)
-
-    const clientSlide = clientsResponse.data.filter((item, index) => {
-        return item.service === "main"
-    })
 
     return (
         <>
@@ -183,7 +176,7 @@ const HomeWrapper = async ({ preview }) => {
                     <div className="container">
                         <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{homeResponse?.data?.clientsHeading}</h2>
                     </div>
-                    <ClientCarousel slides={clientSlide} />
+                    <ClientCarousel slides={data?.clientsSlide?.entity} />
                 </div>
             </Suspense>
 

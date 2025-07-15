@@ -2,10 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { Suspense } from 'react'
 import { getImageUrl } from '@/libs/utils'
-import ReactMarkdown from 'react-markdown';
-import DOMPurify from 'dompurify';
-import remarkGfm from 'remark-gfm'; // for features like strikethrough and tables
-import rehypeRaw from 'rehype-raw'; // for raw html 
 import styles from "@/styles/markdown.module.css";
 import dynamic from 'next/dynamic';
 
@@ -15,6 +11,10 @@ const ReachOut = dynamic(() => import('@/components/common/reachOut'), {
 
 const Banner = dynamic(() => import('@/components/singleBlog/banner'), {
     loading: () => <div className="animate-pulse h-40 bg-gray-100 rounded"></div>
+});
+
+const SafeMarkdownComp = dynamic(() => import('@/components/common/SafeMarkdownComp'), {
+    loading: () => <div className="animate-pulse h-20 bg-gray-100 rounded"></div>
 });
 
 // Loader component for suspense fallback
@@ -36,13 +36,9 @@ const SingleBlogWrapper = ({ pageData, relatedBlogs }) => {
                 <div className="flex flex-col lg:flex-row gap-[50px] mb-14">
                     <div className={`${styles.markdownStyle} basis-[70%]`}>
                         {pageData?.markdownContent ? (
-                            <ReactMarkdown
-                                remarkPlugins={[remarkGfm]}
-                                rehypePlugins={[rehypeRaw]}
-                                transform={(html) => DOMPurify.sanitize(html)}
-                            >
+                            <SafeMarkdownComp>
                                 {pageData?.markdownContent}
-                            </ReactMarkdown>
+                            </SafeMarkdownComp>
                         ) : (
                             <p>No content available</p>
                         )}

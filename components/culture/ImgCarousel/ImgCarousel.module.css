@@ -1,6 +1,6 @@
-.mySwiper {
-    /* padding: 20px; */
-}
+/* .mySwiper {
+    padding: 20px;
+} */
 
 .mySwiper :global(.swiper-button-prev),
 .mySwiper :global(.swiper-button-next) {

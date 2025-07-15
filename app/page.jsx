@@ -4,7 +4,8 @@ import { getHome } from "@/libs/apis/data/home";
 
 // Generate dynamic metadata
 export async function generateMetadata({ searchParams }) {
-  const preview = searchParams?.preview === "true";
+  const params = await searchParams;
+  const preview = params?.preview === "true";
   const homeResponse = await getHome(preview);
 
   if (!homeResponse) {
@@ -42,8 +43,8 @@ export async function generateMetadata({ searchParams }) {
 }
 
 export default async function Home({ searchParams }) {
-
-  const preview = searchParams?.preview === "true";
+  const params = await searchParams;
+  const preview = params?.preview === "true";
   // console.log("preview: ", preview)
   const homeResponse = await getHome(preview);
 

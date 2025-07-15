@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import styles from "./Header.module.css";
 import MobileHeader from "./mobile";
@@ -27,9 +27,8 @@ const HeaderWrapper = ({headerData, secMenu}) => {
   const isReview = pathname.includes("/reviews");
   const isPartner = pathname === "/partners";
 
-  // to get capabilities hrefs
-
-  const getCapabilitiesHrefs = (headerData) => {
+  // to get capabilities hrefs - memoized for performance
+  const getCapabilitiesHrefs = useCallback((headerData) => {
     const primaryMenu = headerData.data.find((item) => item.name === "PrimaryMenu");
 
     if (!primaryMenu) return [];
@@ -50,12 +49,12 @@ const HeaderWrapper = ({headerData, secMenu}) => {
     }, []);
 
     return hrefs;
-  };
+  }, []);
 
-  // to examine wheather the url contains anything which has capability url
-  const capabilityUrl = getCapabilitiesHrefs(headerData);
+  // Memoize capability URLs to avoid recalculation on every render
+  const capabilityUrl = useMemo(() => getCapabilitiesHrefs(headerData), [headerData, getCapabilitiesHrefs]);
   // console.log(capabilityUrl);
-  const isCapability = capabilityUrl.some((key) => pathname.includes(key));
+  const isCapability = useMemo(() => capabilityUrl.some((key) => pathname.includes(key)), [capabilityUrl, pathname]);
 
 
   // to toggle menu
@@ -63,8 +62,8 @@ const HeaderWrapper = ({headerData, secMenu}) => {
     setIsMenuOpen((prev) => !prev);
   };
 
-  
-  const handleScroll = () => {
+  // Memoize handleScroll to prevent recreating on every render
+  const handleScroll = useCallback(() => {
     const header = headerRef.current;
     const progress = progressRef.current;
     if (!header || !progress) return;
@@ -85,11 +84,21 @@ const HeaderWrapper = ({headerData, secMenu}) => {
     }
 
     progress.setAttribute("aria-valuenow", scrollPercentage.toFixed(0));
-  };
+  }, []);
 
-  if (typeof window !== "undefined") {
-    window.onscroll = handleScroll;
-  }
+  // Properly handle scroll event with cleanup
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.addEventListener('scroll', handleScroll);
+      // Call once on mount to set initial state
+      handleScroll();
+
+      // Cleanup function to remove event listener
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [handleScroll]);
 
   const primaryMenu = headerData.data.find((item) => item.name === "PrimaryMenu")?.menu || [];
   // const secondaryMenu = headerData.data.find((item) => item.name === "SecondaryMenu")?.menu || [];

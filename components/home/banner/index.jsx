@@ -70,8 +70,10 @@ const Banner = ({ data, isMobile }) => {
                                     src={item.mobileImg.url}
                                     alt={item.title || "Banner Image"}
                                     fill
-                                    priority
-                                    quality={60}
+                                    priority={index === 0}
+                                    fetchPriority={index === 0 ? "high" : "auto"}
+                                    quality={75}
+                                    sizes="100vw"
                                     className="object-cover"
                                 />
                             </div>
@@ -81,8 +83,10 @@ const Banner = ({ data, isMobile }) => {
                                     src={item.deskImg?.url}
                                     alt={item.title || "Banner Image"}
                                     fill
-                                    priority
-                                    quality={60}
+                                    priority={index === 0}
+                                    fetchPriority={index === 0 ? "high" : "auto"}
+                                    quality={75}
+                                    sizes="100vw"
                                     className="object-cover"
                                 />
                             </div>

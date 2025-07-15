@@ -21,19 +21,23 @@ const CommonBanner = ({ data }) => {
         <div className="aspect-[7/10] hidden lg:block">
           <Image
             src={deskImage}
-            alt="Desktop Banner"
+            alt={title || "Desktop Banner"}
             fill
             priority
-            objectFit="cover"
+            sizes="100vw"
+            className="object-cover"
+            quality={75}
           />
         </div>
         <div className="aspect-[15/7] lg:hidden">
           <Image
             src={mobileImage}
-            alt="Mobile Banner"
+            alt={title || "Mobile Banner"}
             fill
             priority
-            objectFit="cover"
+            sizes="100vw"
+            className="object-cover"
+            quality={75}
           />
         </div>
         <div className="absolute inset-0 bg-black/30 flex items-center">
