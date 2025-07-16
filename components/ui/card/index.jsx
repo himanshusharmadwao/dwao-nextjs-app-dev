@@ -10,11 +10,11 @@ const Card = ({ data = {}, className = "" }) => {
     return (
         <div className={`group rounded-lg overflow-hidden md:text-start text-center ${className}`}>
             <Link prefetch={false}  
-                href={`/blog/${data.slug}` || "#"} 
+                href={`/blog/${data?.slug}` || "#"} 
                 className="relative overflow-hidden rounded-[10px] lg:h-[275px] h-[200px] w-full block"
             >
                 <Image
-                    src={getImageUrl(data.thumbnail) || "/blog-thumb.png"}
+                    src={getImageUrl(data?.thumbnail) || "/blog-thumb.png"}
                     alt={data?.title || "Default Image"}
                     fill
                     priority 
@@ -25,12 +25,12 @@ const Card = ({ data = {}, className = "" }) => {
             <div className="py-6">
                 {data?.category || data?.sub_category ? (
                     <div className="text-con leading-[1.4] font-light text-[var(--mainColor)] mb-4 uppercase">
-                        {data?.category.name || "Uncategorized"} | {data?.sub_category.name || "General"}
+                        {data?.category?.name || "Uncategorized"} | {data?.sub_category?.name || "General"}
                     </div>
                 ) : null}
 
                 <Link prefetch={false}  
-                    href={`/blog/${data.slug}` || "#"} 
+                    href={`/blog/${data?.slug}` || "#"} 
                     className="text-[20px] font-bold text-gray-900 hover:text-[var(--mainColor)] transition-all duration-300"
                 >
                     {data?.title || "Untitled Post"}
@@ -38,7 +38,7 @@ const Card = ({ data = {}, className = "" }) => {
 
                 {data?.excerpt && (
                     <p className="text-[16px] mt-4">
-                        {data.excerpt}
+                        {data?.excerpt}
                     </p>
                 )}
             </div>
