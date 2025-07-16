@@ -24,7 +24,7 @@ const Accordion = ({ data }) => {
         {/* Accordion Header */}
         <button
           onClick={toggleAccordion}
-          className={`w-full flex items-center justify-between px-4 py-3 bg-white border-b ${isOpen ? "border-[var(--mainColor)]" : "border-gray-200"} transition-all duration-300 hover:bg-gray-50 cursor-pointer outline-none`}
+          className={`w-full flex items-center justify-between py-3 bg-white border-b ${isOpen ? "border-[var(--mainColor)]" : "border-gray-200"} transition-all duration-300 hover:bg-gray-50 cursor-pointer outline-none`}
         >
           <span className="lg:text-[20px] text-[17px] text-left">{data?.heading}</span>
           <span className="relative w-5 h-5 flex items-center justify-center">
@@ -40,7 +40,7 @@ const Accordion = ({ data }) => {
           className={`overflow-hidden transition-all duration-500 ease-in-out text-con ${isOpen ? "max-h-96" : "max-h-0"
             } bg-white`}
         >
-          <div className="p-4">
+          <div className="py-4">
             <div className={`${styles.accordionStyle} ${markStyles.markdownStyle}`}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}

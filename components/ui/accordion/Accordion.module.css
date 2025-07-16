@@ -1,10 +1,10 @@
 .accordionStyle {
-    overflow: auto;
-    max-height: 400px;
+  overflow: auto;
+  max-height: 400px;
 }
 
 .accordionStyle::-webkit-scrollbar {
-  width: 7px; 
+  width: 7px;
 }
 
 .accordionStyle::-webkit-scrollbar-thumb {
@@ -18,5 +18,6 @@
 
 
 .accordionStyle p {
-    font-size: 1em !important;
+  padding-bottom: 0 !important;
+  font-size: 1em !important;
 }
