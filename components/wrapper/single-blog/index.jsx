@@ -49,7 +49,7 @@ const SingleBlogWrapper = ({ pageData, relatedBlogs }) => {
                             <ul className='flex flex-col items-start gap-[20px]'>
                                 {relatedBlogs?.length > 0 ? (
                                     relatedBlogs?.map((item, index) => (
-                                        <li key={index}>
+                                        <li key={index} className='w-full'>
                                             <Link prefetch={false} href={`/blog/${item.slug}`} className="flex justify-between items-start group">
                                                 <span className="group-hover:underline">{item.title}</span>
                                                 <div className="relative w-12 h-8">
