@@ -74,7 +74,7 @@ export const getAllBlogs = async (
   preview = false
 ) => {
   try {
-    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs?populate[category][populate]=*&populate[sub_category][populate]=*&populate[author][populate]=*&populate[seo][populate]=*&populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&${preview ? 'status=draft' : ''}`;
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs?populate[category][populate]=*&populate[sub_category][populate]=*&populate[author][populate]=*&populate[seo][populate]=*&populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=createdAt:desc&${preview ? 'status=draft' : ''}`;
 
     if (category) {
       url += `&filters[category][name][$eq]=${encodeURIComponent(category)}`;
