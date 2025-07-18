@@ -109,14 +109,16 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
                 </div>
             </Suspense>
 
-            <Suspense fallback={<LoadingPlaceholder />}>
-                <div className="light-bg py-16" id='relatedCapabilities'>
-                    <div className="container">
-                        <h2 className='text-head mb-6'>Related Capabilities</h2>
-                        <StudyCarousel slides={relatedCard} slider="related-card" />
+            {relatedCard.length !== 0 && (
+                <Suspense fallback={<LoadingPlaceholder />}>
+                    <div className="light-bg py-16" id='relatedCapabilities'>
+                        <div className="container">
+                            <h2 className='text-head mb-6'>Related Capabilities</h2>
+                            <StudyCarousel slides={relatedCard} slider="related-card" />
+                        </div>
                     </div>
-                </div>
-            </Suspense>
+                </Suspense>
+            )}
         </>
     )
 }

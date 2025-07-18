@@ -54,7 +54,7 @@ const StudyCard = ({ imageSrc, title, description, href }) => {
                         </span>
                     </Link>
                 </div>
-                <p className="mt-2 text-con text-con-light">{description}</p>
+                <p className="mt-2 text-con text-con-light"> {description?.length > 80 ? `${description?.slice(0, 80)}...` : `${description}...`} </p>
             </div>
             <Link prefetch={false}  href={href} className="group flex items-center gap-2" aria-label="Learn More">
                 <span className="transition-transform transition-opacity duration-300 ease-in-out opacity-0 translate-x-0 group-hover:translate-x-2 group-hover:opacity-100">

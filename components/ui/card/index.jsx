@@ -38,7 +38,7 @@ const Card = ({ data = {}, className = "" }) => {
 
                 {data?.excerpt && (
                     <p className="text-[16px] mt-4">
-                        {data?.excerpt}
+                        {data?.excerpt?.length > 80 ? `${data?.excerpt?.slice(0, 80)}...` : `${data?.excerpt}...`}
                     </p>
                 )}
             </div>

@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 // import { Pagination } from 'swiper/modules';
 
 const StudyCarouselFallback = () => (
-  <div className="w-full h-[150px] bg-gray-200 flex items-center justify-center">
+  <div className="w-full h-[150px] flex items-center justify-center">
     No Post Found!
   </div>
 );

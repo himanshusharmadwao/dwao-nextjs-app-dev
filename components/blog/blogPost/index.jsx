@@ -84,10 +84,6 @@ const BlogPost = ({ filterItems, variant, preview }) => {
 
     // console.log("posts: ", posts)
 
-    const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    // console.log("sortedPosts: ", sortedPosts)
-
     return (
         <div className="container">
             {/* Filter blog */}
@@ -104,10 +100,10 @@ const BlogPost = ({ filterItems, variant, preview }) => {
                 </div>
             ) : (
                 <div className="flex gap-[30px] flex-wrap mb-14 border-b border-gray-300 pb-8">
-                    {variant === "blogPosts" && sortedPosts?.map((item, index) => (
+                    {variant === "blogPosts" && posts?.map((item, index) => (
                         <Card key={index} data={item} className="basis-full md:basis-[calc((100%-60px)/3)]" />
                     ))}
-                    {variant === "caseStudies" && sortedPosts?.map((item, index) => (
+                    {variant === "caseStudies" && posts?.map((item, index) => (
                         <OverlayCard key={index} data={item} className="basis-full md:basis-[calc((100%-60px)/3)]" />
                     ))}
                 </div>

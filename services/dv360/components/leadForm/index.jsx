@@ -88,6 +88,8 @@ const LeadForm = forwardRef((_, ref) => {
 
       toast("Form submission succeeded", toastStyle);
 
+      gtag_report_conversion();
+
       setFormData({
         fullName: "",
         email: "",
@@ -101,6 +103,21 @@ const LeadForm = forwardRef((_, ref) => {
       toast.error(errorMessage, toastStyle);
     }
   };
+
+  const gtag_report_conversion = (url) => {
+    var callback = function () {
+      if (typeof (url) !== 'undefined') {
+        window.location = url; 
+      }
+    };
+    gtag('event', 'conversion', {
+      'send_to': 'AW-643192894/B3WkCKTb0_IaEL6w2bIC',
+      'value': 1.0,
+      'currency': 'INR',
+      'event_callback': callback
+    });
+    return false;
+  }
 
 
   return (
