@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 const LeadForm = forwardRef((_, ref) => {
 
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -60,6 +61,8 @@ const LeadForm = forwardRef((_, ref) => {
       return;
     }
 
+    setLoading(true);
+
     try {
 
       const fullPhone = formData.countryCode + formData.phone;
@@ -82,13 +85,18 @@ const LeadForm = forwardRef((_, ref) => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      // if (!response.ok) {
+      //   throw new Error('Network response was not ok');
+      // }
+
+      var img = document.createElement('img');
+      img.src = "https://www.googleadservices.com/pagead/conversion/643192894/?value=1.0&currency_code=INR&label=B3WkCKTb0_IaEL6w2bIC&guid=ON&script=0";
+      img.height = 1;
+      img.width = 1;
+      img.style.display = "none";
+      document.body.appendChild(img);
 
       toast("Form submission succeeded", toastStyle);
-
-      gtag_report_conversion();
 
       setFormData({
         fullName: "",
@@ -101,23 +109,10 @@ const LeadForm = forwardRef((_, ref) => {
     } catch (error) {
       const errorMessage = error.message || "Form submission failed. Please try again.";
       toast.error(errorMessage, toastStyle);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const gtag_report_conversion = (url) => {
-    var callback = function () {
-      if (typeof (url) !== 'undefined') {
-        window.location = url; 
-      }
-    };
-    gtag('event', 'conversion', {
-      'send_to': 'AW-643192894/B3WkCKTb0_IaEL6w2bIC',
-      'value': 1.0,
-      'currency': 'INR',
-      'event_callback': callback
-    });
-    return false;
-  }
 
 
   return (
@@ -194,9 +189,9 @@ const LeadForm = forwardRef((_, ref) => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium" disabled={loading}
           >
-            Submit Request
+            {loading ? "Submitting Request..." : "Submit Request"}
           </button>
         </form>
       </div>

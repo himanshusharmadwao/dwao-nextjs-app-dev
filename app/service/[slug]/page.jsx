@@ -1,4 +1,4 @@
-import Dv360Service from '@/services/dv360';
+import Dv360Service from '@/service/dv360';
 import React from 'react';
 import { getServiceData } from '@/libs/apis/data/servicePage/dv360';
 import NotFound from '@/app/not-found';
