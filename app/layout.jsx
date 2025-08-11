@@ -1,8 +1,4 @@
-import Header from '@/components/layout/header'
-
 import '@/styles/global.css'
-import Footer from "@/components/layout/footer";
-import { getRegions } from '@/libs/apis/data/menu';
 
 export const metadata = {
   title: {
@@ -14,28 +10,10 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
 
-  const regions = await getRegions();
 
   return (
-    <html lang="en">
-      <head>
-        {regions?.data?.map(region => {
-          const hreflang = region?.hrefLang;
-          if (!hreflang || hreflang === "default") return null;
-          const url = `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${hreflang}`;
-          return (
-            <link
-              key={hreflang}
-              rel="alternate"
-              hrefLang={hreflang}
-              href={url}
-            />
-          );
-        })}
-      </head>
-      <body>
-        {children}
-      </body>
-    </html>
+    <>
+      {children}
+    </>
   );
 }
