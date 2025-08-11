@@ -197,7 +197,7 @@ export const getNormalizedPath = (pathname, regions) => {
 // check whether the regional data exists or not
 export const checkRegionData = async (regionSlug, currentPath) => {
 
-  console.log("regionSlug, currentPath: ", regionSlug, currentPath)
+  // console.log("regionSlug, currentPath: ", regionSlug, currentPath)
 
   let endpoint;
 
@@ -226,12 +226,12 @@ export const checkRegionData = async (regionSlug, currentPath) => {
     endpoint = `/homes`;
   }
 
-  console.log("endpoint: ", endpoint)
+  // console.log("endpoint: ", endpoint)
 
   // Build the minimal API URL to check for region-specific data
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}?filters[regions][slug][$eq]=${regionSlug}`;
 
-  console.log("url: ", url)
+  // console.log("url: ", url)
 
   try {
     const response = await fetch(url);
