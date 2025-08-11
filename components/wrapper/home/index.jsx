@@ -1,12 +1,13 @@
 import React, { Suspense } from 'react'
 import Banner from "@/components/home/banner";
 import { getClientTestimonials, getHome } from '@/libs/apis/data/home';
-import { getImageUrl } from '@/libs/utils';
+import { getImageUrl, buildRegionalPath } from '@/libs/utils';
 import { getAllInsightBlogs } from '@/libs/apis/data/insights';
 import dynamic from 'next/dynamic'
 import Image from 'next/image';
 import Link from 'next/link';
 import { headers } from 'next/headers';
+import { getRegions } from '@/libs/apis/data/menu';
 
 // Dynamically import components with correct settings for Server Components
 const ClientCarousel = dynamic(() => import("@/components/common/clientCarousel"), {
@@ -40,47 +41,17 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const HomeWrapper = async ({ preview }) => {
-
-    const requestHeaders = await headers();
-
-    // ============================ headers() returns a special iterable object, so we have to convert this into iterable object
-
-    // const headersObj = {};
-    // for (const [key, value] of requestHeaders.entries()) {
-    //     headersObj[key] = value;
-    // }
-    // console.log("Request Headers:", headersObj);
-
-    // ============================
-
-    const userAgent = requestHeaders.get('user-agent'); //User-Agent contains information about the client's browser and device
-    const isMobile = /mobile/i.test(userAgent || ""); //checks if the word "mobile" appears in the userAgent string.
-
-    // Fetch critical data for initial render
-    const homeResponse = await getHome(isMobile ? "mobile" : "desktop", preview);
-    const { data, error } = homeResponse;
-    // console.log(data)
-    if (error) {
-        return (
-            <div className='h-screen block'>
-                <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>{error}</h1>
-            </div>
-        )
-    }
-    if (!data) {
-        return (<div className='h-screen block'>
-            <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>Data Not Found!</h1>
-        </div>)
-    }
+const HomeWrapper = async ({ isMobile, data, preview, region }) => {
 
     // Fetch remaining data in parallel
     const [
         clientTestimonialResponse,
         insightBlogsResponse,
+        regions
     ] = await Promise.all([
-        getClientTestimonials(),
-        getAllInsightBlogs(),
+        getClientTestimonials(preview, region),
+        getAllInsightBlogs(1, 6, null, null, preview, region),
+        getRegions()
     ]);
 
     // console.log(clientTestimonialResponse)
@@ -92,20 +63,20 @@ const HomeWrapper = async ({ preview }) => {
             imageSrc={getImageUrl(card.thumbnail)}
             title={card.title}
             description={card.insightStatus}
-            href={`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`}
+            href={buildRegionalPath(`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`, region, regions?.data)}
         />
     ));
 
     // console.log("insightBlogsResponse: ",insightBlogsResponse)
 
-    const testimonialSlides = clientTestimonialResponse?.data?.map((testimonial, index) => (
+    const testimonialSlides = clientTestimonialResponse?.data[0]?.entity?.map((testimonial, index) => (
         <TestimonialCard
             key={index}
             rating={testimonial.rating}
-            quote={testimonial.quote}
+            quote={testimonial.content}
             name={testimonial.name}
             title={testimonial.title}
-            imageSrc={getImageUrl(testimonial.icon)}
+            imageSrc={testimonial.image.url}
         />
     ));
 
@@ -113,25 +84,25 @@ const HomeWrapper = async ({ preview }) => {
         <>
             {/* Critical first render component */}
             <div className="mb-14">
-                <Banner data={homeResponse?.data?.banner} isMobile={isMobile} />
+                <Banner data={data?.banner} isMobile={isMobile} region={region} regions={regions} />
             </div>
 
             <Suspense fallback={<LoadingPlaceholder />}>
                 {/* success story */}
                 <div className="container" id="clientStory">
                     <div className="mb-14">
-                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{homeResponse?.data?.storyHeading}</h2>
+                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{data?.storyHeading}</h2>
                         <div className="flex flex-col lg:flex-row items-center lg:gap-[10px]">
                             <div className="basis-full lg:basis-[65%]">
-                                <h3 className="text-con-dark text-[20px] lg:text-[25px] leading-[40px] mb-6">"{homeResponse?.data?.storyQuote}"</h3>
-                                <div className="text-[25px] text-con-dark"><span className="font-bold">{homeResponse?.data?.storyName},</span>{homeResponse?.data?.storyDesignition}</div>
+                                <h3 className="text-con-dark text-[20px] lg:text-[25px] leading-[40px] mb-6">"{data?.storyQuote}"</h3>
+                                <div className="text-[25px] text-con-dark"><span className="font-bold">{data?.storyName},</span>{data?.storyDesignition}</div>
                             </div>
                             <div className="relative basis-full lg:basis-[35%] mt-10 lg:mt-0">
                                 <div className="relative lg:order-2 order-1 basis-full md:basis-[calc((100%-60px)/3)]">
-                                    <Link prefetch={false} href={homeResponse?.data?.storyOverlay?.href || '#'} className="relative group w-full lg:inline inline-block">
-                                        {homeResponse?.data?.storyOverlay?.image?.url && (
+                                    <Link prefetch={false} href={buildRegionalPath(data?.storyOverlay?.href, region, regions?.data) || '#'} className="relative group w-full lg:inline inline-block">
+                                        {data?.storyOverlay?.image?.url && (
                                             <Image
-                                                src={homeResponse?.data?.storyOverlay?.image?.url}
+                                                src={data?.storyOverlay?.image?.url}
                                                 alt="Card Image"
                                                 width={394}
                                                 height={293}
@@ -141,11 +112,11 @@ const HomeWrapper = async ({ preview }) => {
                                         )}
 
                                         <div className="absolute top-0 left-0 text-white bg-black/40 pt-4 w-full h-full rounded-[10px] group-hover:bg-transparent group-hover:bg-black transition-bg duration-300">
-                                            <div className="text-[32px] px-[1rem]">{homeResponse?.data?.storyOverlay?.heading}</div>
+                                            <div className="text-[32px] px-[1rem]">{data?.storyOverlay?.heading}</div>
                                             <div className="absolute bottom-8 lg:mt-4 px-[1rem] lg:pt-[30px] pt-[22px]">
-                                                <p className="text-small-con">{homeResponse?.data?.storyOverlay?.category} | {homeResponse?.data?.storyOverlay?.subCategory}</p>
+                                                <p className="text-small-con">{data?.storyOverlay?.category} | {data?.storyOverlay?.subCategory}</p>
                                                 <p className="lg:text-[20px] text-[18px] mt-3 leading-[1.2]">
-                                                    {homeResponse?.data?.storyOverlay?.title}
+                                                    {data?.storyOverlay?.title}
                                                 </p>
                                             </div>
                                         </div>
@@ -162,7 +133,7 @@ const HomeWrapper = async ({ preview }) => {
                 {/* case studies carousel */}
                 <div className="mb-14">
                     <div className="container">
-                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{homeResponse?.data?.caseStudyHeading}</h2>
+                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{data?.caseStudyHeading}</h2>
                     </div>
                     <div className="px-5">
                         <StudyCarousel slides={studySlides} />
@@ -174,7 +145,7 @@ const HomeWrapper = async ({ preview }) => {
                 {/* our clients */}
                 <div className="light-bg lg:py-14 py-10">
                     <div className="container">
-                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{homeResponse?.data?.clientsHeading}</h2>
+                        <h2 className="text-start lg:text-center text-head text-con-dark mb-12">{data?.clientsHeading}</h2>
                     </div>
                     <ClientCarousel slides={data?.clientsSlides?.entity} />
                 </div>
@@ -185,9 +156,9 @@ const HomeWrapper = async ({ preview }) => {
                 <div className="relative w-full h-[600px] mb-14" id="pathToSuccess">
                     {isMobile ? (
                         <div className="lg:hidden absolute inset-0">
-                            {homeResponse?.data?.insightMobileImg?.url && (
+                            {data?.insightMobileImg?.url && (
                                 <Image
-                                    src={homeResponse?.data?.insightMobileImg?.url}
+                                    src={data?.insightMobileImg?.url}
                                     alt="Mobile Banner"
                                     fill
                                     className="object-cover"
@@ -197,9 +168,9 @@ const HomeWrapper = async ({ preview }) => {
                         </div>
                     ) : (
                         <div className="hidden lg:block absolute inset-0">
-                            {homeResponse?.data?.insightDeskImg?.url && (
+                            {data?.insightDeskImg?.url && (
                                 <Image
-                                    src={homeResponse?.data?.insightDeskImg?.url}
+                                    src={data?.insightDeskImg?.url}
                                     alt="Desktop Banner"
                                     fill
                                     className="object-cover"
@@ -212,9 +183,9 @@ const HomeWrapper = async ({ preview }) => {
                     <div className="relative z-10 h-full text-white bg-black/40">
                         <div className="lg:px-0 px-[5%] absolute lg:left-[40%] left-0 top-[50%] -translate-y-1/2 lg:w-1/2 w-full">
                             <h2 className="text-2xl lg:text-[3.2rem] mb-[1rem] leading-[1]">
-                                {homeResponse?.data?.insightHeading}
+                                {data?.insightHeading}
                             </h2>
-                            <ExtendLink title={homeResponse?.data?.insightLinkTitle} href={homeResponse?.data?.insightLinkHref} className="text-white" />
+                            <ExtendLink title={data?.insightLinkTitle} href={buildRegionalPath(data?.insightLinkHref, region, regions?.data)} className="text-white" />
                         </div>
                     </div>
                 </div>
@@ -224,7 +195,7 @@ const HomeWrapper = async ({ preview }) => {
                 {/* join our team */}
                 <div className="mb-14" id="joinTheTeam">
                     <div className="container">
-                        <JoinTheTeam />
+                        <JoinTheTeam preview={preview} region={region} regions={regions} />
                     </div>
                 </div>
             </Suspense>
@@ -233,7 +204,7 @@ const HomeWrapper = async ({ preview }) => {
                 {/* testimonial */}
                 <div className="light-bg py-14">
                     <div className="container">
-                        <h2 className="text-center text-head text-con-dark mb-12">{homeResponse?.data?.clientTestimonialHeading}</h2>
+                        <h2 className="text-center text-head text-con-dark mb-12">{data?.clientTestimonialHeading}</h2>
                         <TestimonialCarousel slides={testimonialSlides} />
                     </div>
                 </div>
@@ -243,11 +214,11 @@ const HomeWrapper = async ({ preview }) => {
                 {/* contact */}
                 <div className="flex flex-col lg:flex-row" id="howCanWeHelp">
                     <div className="lg:basis-[50%] basis-full bg-[var(--mainColor)] lg:p-[13%] p-[5rem]">
-                        <h2 className="text-center lg:text-start lg:text-[3.2rem] text-[19px] text-white leading-[1] lg:my-[1rem] my-[2rem]">{homeResponse?.data?.learningTitle}</h2>
-                        <LinkBtn linkTitle={homeResponse?.data?.learningLinkTitle} linkHref={homeResponse?.data?.learningLinkHref} className="border-white text-white hover:bg-white hover:text-[var(--mainColor)]" />
+                        <h2 className="text-center lg:text-start lg:text-[3.2rem] text-[19px] text-white leading-[1] lg:my-[1rem] my-[2rem]">{data?.learningTitle}</h2>
+                        <LinkBtn linkTitle={data?.learningLinkTitle} linkHref={buildRegionalPath(data?.learningLinkHref, region, regions?.data)} className="border-white text-white hover:bg-white hover:text-[var(--mainColor)]" />
                     </div>
                     <div className="lg:basis-[50%] basis-full lg:p-[13%] p-[5rem]">
-                        <h2 className="text-center lg:text-start lg:text-[3.2rem] text-[19px] leading-[1] lg:my-[1rem] my-[2rem]">{homeResponse?.data?.ReachOutFormTitle}</h2>
+                        <h2 className="text-center lg:text-start lg:text-[3.2rem] text-[19px] leading-[1] lg:my-[1rem] my-[2rem]">{data?.ReachOutFormTitle}</h2>
                         <ReachOut />
                     </div>
                 </div>

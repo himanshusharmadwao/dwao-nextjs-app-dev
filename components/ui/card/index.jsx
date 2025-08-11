@@ -1,8 +1,8 @@
-import { getImageUrl } from "@/libs/utils";
+import { getImageUrl, buildRegionalPath } from "@/libs/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-const Card = ({ data = {}, className = "" }) => {
+const Card = ({ data = {}, className = "", region, regions }) => {
     // console.log(data)
 
     // const slug = data.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '-'); 
@@ -10,7 +10,7 @@ const Card = ({ data = {}, className = "" }) => {
     return (
         <div className={`group rounded-lg overflow-hidden md:text-start text-center ${className}`}>
             <Link prefetch={false}  
-                href={`/blog/${data?.slug}` || "#"} 
+                href={buildRegionalPath(`/blog/${data?.slug}`, region, regions.data) || '#'}
                 className="relative overflow-hidden rounded-[10px] lg:h-[275px] h-[200px] w-full block"
             >
                 <Image
@@ -30,7 +30,7 @@ const Card = ({ data = {}, className = "" }) => {
                 ) : null}
 
                 <Link prefetch={false}  
-                    href={`/blog/${data?.slug}` || "#"} 
+                    href={buildRegionalPath(`/blog/${data?.slug}`, region, regions.data) || '#'}
                     className="text-[20px] font-bold text-gray-900 hover:text-[var(--mainColor)] transition-all duration-300"
                 >
                     {data?.title || "Untitled Post"}

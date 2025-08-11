@@ -1,4 +1,5 @@
 import { getCategory } from '@/libs/apis/data/blog';
+import { getRegions } from '@/libs/apis/data/menu';
 import dynamicImport from 'next/dynamic';
 import { Suspense } from 'react';
 
@@ -15,22 +16,24 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const BlogWrapper = async ({preview}) => {
+const BlogWrapper = async ({preview, region}) => {
 
-    const categoryResponse = await getCategory(preview);
+    const categoryResponse = await getCategory(preview, region);
 
     // console.log("categoryResponse: ", categoryResponse)
+
+    const regions = await getRegions();
 
     return (
         <>
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <BlogPost filterItems={categoryResponse?.data} variant="blogPosts" preview={preview} />
+                <BlogPost filterItems={categoryResponse?.data} variant="blogPosts" preview={preview} region={region} regions={regions}/>
             </Suspense>
 
             <Suspense fallback={<LoadingPlaceholder />}>
                 {/* Contact */}
-                <ReachOut />
+                <ReachOut preview={preview} region={region}/>
             </Suspense >
         </>
     );

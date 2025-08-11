@@ -25,29 +25,12 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const ContactWrapper = async ({ preview }) => {
-
-    const contactResponse = await getContact(preview);
-    const { data, error } = contactResponse;
-    if (error) {
-        return (
-            <div className='h-screen block'>
-                <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>{error}</h1>
-            </div>
-        )
-    }
-    if (!data) {
-        return (<div className='h-screen block'>
-            <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>Data Not Found!</h1>
-        </div>)
-    }
-
-    const contactData = contactResponse?.data;
+const ContactWrapper = async ({ data, preview, region }) => {
 
     const contactBanner = {
-        title: contactData.title,
-        deskImage: contactData.bannerDeskImage.url,
-        mobileImage: contactData.bannerMobileImage.url,
+        title: data.title,
+        deskImage: data.bannerDeskImage.url,
+        mobileImage: data.bannerMobileImage.url,
     };
 
     return (
@@ -64,9 +47,9 @@ const ContactWrapper = async ({ preview }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 mb-14">
                     <div>
                         <h2 className="text-head-large text-con-dark leading-[1] mb-10">
-                            {contactData?.officeHeading}
+                            {data?.officeHeading}
                         </h2>
-                        {contactData?.offices?.map((office, index) => (
+                        {data?.offices?.map((office, index) => (
                             <ul key={index} className="mb-14 w-[300px]">
                                 {office?.address && (
                                     <li className="flex gap-4 items-start mb-6">
@@ -126,7 +109,7 @@ const ContactWrapper = async ({ preview }) => {
             <div className="container">
                 <div className="mb-14">
                     <Image
-                        src={contactData?.officeMap?.[0]?.url || "/map.png"}
+                        src={data?.officeMap?.[0]?.url || "/map.png"}
                         height={600}
                         width={1000}
                         alt="Dwao Office Map"
@@ -137,7 +120,7 @@ const ContactWrapper = async ({ preview }) => {
 
             {/* contact */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <ReachOut />
+                <ReachOut preview={preview} region={region} />
             </Suspense>
             <Suspense fallback={<LoadingPlaceholder />}>
                 <ToastNotification />

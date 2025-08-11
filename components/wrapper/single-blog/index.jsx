@@ -1,9 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { Suspense } from 'react'
-import { getImageUrl } from '@/libs/utils'
+import { buildRegionalPath } from '@/libs/utils'
 import styles from "@/styles/markdown.module.css";
 import dynamic from 'next/dynamic';
+import { getRegions } from '@/libs/apis/data/menu';
 
 const ReachOut = dynamic(() => import('@/components/common/reachOut'), {
     loading: () => <div className="animate-pulse h-20 bg-gray-100 rounded"></div>
@@ -22,10 +23,12 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const SingleBlogWrapper = ({ pageData, relatedBlogs }) => {
+const SingleBlogWrapper = async ({ pageData, relatedBlogs, region, preview }) => {
     // console.log(pageData)
 
     // console.log(pageData.markdownContent)
+
+    const regions = await getRegions();
 
     return (
         <>
@@ -50,7 +53,8 @@ const SingleBlogWrapper = ({ pageData, relatedBlogs }) => {
                                 {relatedBlogs?.length > 0 ? (
                                     relatedBlogs?.map((item, index) => (
                                         <li key={index} className='w-full'>
-                                            <Link prefetch={false} href={`/blog/${item.slug}`} className="flex justify-between items-start group">
+                                            <Link prefetch={false}
+                                            href={buildRegionalPath(`/blog/${item.slug}`, region, regions.data)} className="flex justify-between items-start group">
                                                 <span className="group-hover:underline">{item.title}</span>
                                                 <div className="relative w-12 h-8">
                                                     <Image
@@ -96,7 +100,7 @@ const SingleBlogWrapper = ({ pageData, relatedBlogs }) => {
                 </div>
             </div>
             <Suspense fallback={<LoadingPlaceholder />}>
-                <ReachOut />
+                <ReachOut preview={preview} region={region}/>
             </Suspense>
         </>
     )

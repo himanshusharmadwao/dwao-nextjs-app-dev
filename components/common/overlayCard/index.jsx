@@ -1,16 +1,18 @@
-import { getImageUrl } from '@/libs/utils';
+import { getImageUrl, buildRegionalPath } from '@/libs/utils';
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-const OverlayCard = ({ data={}, className = "" }) => {
+const OverlayCard = ({ data={}, className = "", region, regions }) => {
     // console.log("industry: ",data?.stats?.industry?.toLowerCase())
     
     if (!data) return <div>Loading...</div>;
     // const slug = data.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '-');
     return (
         <div className={`relative lg:order-2 order-1 ${className}`}>
-            <Link prefetch={false}  href={`/case-studies/${data?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${data?.slug}` || "#"}  className="relative group w-full lg:inline inline-block">
+            <Link prefetch={false}
+            href={buildRegionalPath(`/case-studies/${data?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${data?.slug}`, region, regions.data) || '#'}
+            className="relative group w-full lg:inline inline-block">
                 <Image
                     src={getImageUrl(data?.thumbnail) || "/featured-thumb-airtel.webp"}
                     alt="Card Image"

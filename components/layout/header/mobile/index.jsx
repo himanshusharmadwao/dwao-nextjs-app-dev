@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import styles from '../Header.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
+import { buildRegionalPath } from '@/libs/utils';
 
-const MobileHeader = ({ MenuStructure, isMenuOpen, toggleMenu }) => {
+const MobileHeader = ({ MenuStructure, isMenuOpen, toggleMenu, region, regions }) => {
   const [stackedSubMenu, setStackedSubMenu] = useState([]);
   const [openSubSubMenu, setOpenSubSubMenu] = useState(null);
 
@@ -46,7 +47,7 @@ const MobileHeader = ({ MenuStructure, isMenuOpen, toggleMenu }) => {
           {MenuStructure.map((mainItem) => (
             <li key={mainItem.id} className={styles.mobileMenuItem}>
               <div className={styles.mobileMenuItemContent}>
-                <Link prefetch={false}  href={mainItem.linkHref || '#'} onClick={toggleMenu}>
+                <Link prefetch={false}  href={buildRegionalPath(mainItem.linkHref, region, regions?.data) || '#'} onClick={toggleMenu}>
                   {mainItem.linkTitle}
                 </Link>
                 {mainItem.subMenu.length > 0 && (
@@ -75,7 +76,7 @@ const MobileHeader = ({ MenuStructure, isMenuOpen, toggleMenu }) => {
               {stackedSubMenu.map((item) => (
                 <li key={item.id}>
                   <div className={styles.mobileMenuItemContent}>
-                    <Link prefetch={false}  href={item.linkHref || '#'} onClick={toggleMenu}>
+                    <Link prefetch={false}  href={buildRegionalPath(item.linkHref, region, regions?.data) || '#'} onClick={toggleMenu}>
                       {item.linkTitle}
                     </Link>
                     {item.subSubMenu?.length > 0 && openSubSubMenu !== item.id && (
@@ -105,7 +106,7 @@ const MobileHeader = ({ MenuStructure, isMenuOpen, toggleMenu }) => {
                         <ul className="flex flex-col gap-[14px]">
                           {item.subSubMenu.map((subSubItem) => (
                             <li key={subSubItem.id}>
-                              <Link prefetch={false}  href={subSubItem.linkHref || '#'} onClick={toggleMenu}>
+                              <Link prefetch={false}  href={buildRegionalPath(subSubItem.linkHref, region, regions?.data) || '#'} onClick={toggleMenu}>
                                 {subSubItem.linkTitle}
                               </Link>
                             </li>

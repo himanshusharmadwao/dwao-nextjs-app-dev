@@ -1,12 +1,13 @@
-import { getMenu, getSecondaryMenu } from "@/libs/apis/data/menu";
+import { getMenu, getRegions, getSecondaryMenu } from "@/libs/apis/data/menu";
 import HeaderWrapper from "./HeaderWrapper";
 
-const Header = async ({ pathname }) => {
+const Header = async ({ preview, region }) => {
 
-  const headerData = await getMenu();
-  const secMenu = await getSecondaryMenu();
+  const headerData = await getMenu(preview, region);
+  const secMenu = await getSecondaryMenu(preview, region);
+  const regions = await getRegions(preview);
 
-  return <HeaderWrapper pathname={pathname} headerData={headerData} secMenu={secMenu} />;
+  return <HeaderWrapper region={region} headerData={headerData} secMenu={secMenu} regions={regions} />;
 };
 
 export default Header;

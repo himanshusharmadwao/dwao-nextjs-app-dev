@@ -1,19 +1,23 @@
+import { getRegions } from '@/libs/apis/data/menu';
 import LinkBtn from '../../ui/link';
 import { getReachOutUI } from '@/libs/apis/data/about';
+import { buildRegionalPath } from '@/libs/utils';
 
-const ReachOut = async () => {
+const ReachOut = async ({ preview, region }) => {
+
+  const regions = await getRegions()
+
   let data = null;
 
   try {
-    const response = await getReachOutUI();
+    const response = await getReachOutUI(preview, region);
     data = response.data[0];
   } catch (error) {
     console.error('Failed to fetch ReachOut UI data:', error);
-    // Optionally handle fallback UI or throw error
   }
 
   if (!data) {
-    return null; // or return fallback UI for server component
+    return null;
   }
 
   return (
@@ -24,7 +28,7 @@ const ReachOut = async () => {
         </h2>
         <LinkBtn
           linkTitle={data.primaryLinkTitle}
-          linkHref={data.primaryLinkHref}
+          linkHref={buildRegionalPath(data.primaryLinkHref, region, regions.data)}
           className="border-white text-white hover:bg-white hover:text-[var(--mainColor)]"
         />
       </div>
@@ -34,7 +38,7 @@ const ReachOut = async () => {
         </h2>
         <LinkBtn
           linkTitle={data.secondaryLinkTitle}
-          linkHref={data.secondaryLinkHref}
+          linkHref={buildRegionalPath(data.secondaryLinkHref, region, regions.data)}
           className="border-[var(--mainColor)] text-[var(--mainColor)] hover:bg-[var(--mainColor)] hover:text-white"
         />
       </div>

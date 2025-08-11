@@ -1,50 +1,69 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-export const getAboutData = async (preview = false) => {
+export const getAboutData = async (preview = false, region = "default") => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/about?populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=valueVisual&populate[3]=intro.image&populate[4]=workPlace.image&populate[5]=partner.image&populate[6]=service.image&populate[7]=industry.image&populate[8]=impact.image&populate[9]=expert.image&populate[10]=demoOverlay.image&populate[11]=seo&populate[12]=seo.openGraph&populate[13]=seo.openGraph.ogImage&populate[14]=clientsSlide&populate[15]=clientsSlide.entity&populate[16]=clientsSlide.entity.logo&${preview ? 'status=draft' : ''}`,
-      {
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/abouts?` +
+      `populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=valueVisual` +
+      `&populate[3]=intro.image&populate[4]=workPlace.image&populate[5]=partner.image` +
+      `&populate[6]=service.image&populate[7]=industry.image&populate[8]=impact.image` +
+      `&populate[9]=expert.image&populate[10]=demoOverlay.image&populate[11]=seo` +
+      `&populate[12]=seo.openGraph&populate[13]=seo.openGraph.ogImage` +
+      `&populate[14]=clientsSlide&populate[15]=clientsSlide.entity` +
+      `&populate[16]=clientsSlide.entity.logo` +
+      `&populate[17]=regions`;
+
+    if (preview) url += `&status=draft`;
+    if (region) url += `&filters[regions][slug][$eq]=${region}`;
+
+    let response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      response = await fetch(url.replace(region, "default"), {
         next: { revalidate: getRevalidateTime(preview) },
-      }
-    );
+      });
+      finalResponse = await response.json();
+    }
 
-    const finalResponse = await response.json();
-
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
       return { data: null, error: finalResponse?.error?.message || "Unknown error" };
     }
 
-    return { data: finalResponse?.data, error: null };
+    return { data: finalResponse?.data || null, error: null };
   } catch (error) {
     return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
-export const getReachOutUI = async (preview = false) => {
+export const getReachOutUI = async (preview = false, region = "default") => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/reach-out-uis`,
-      {
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/reach-out-uis`;
+
+    if (region) {
+      url += `?filters[regions][hrefLang][$eq]=${region}`;
+    }
+
+    let response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      response = await fetch(url.replace(region, "default"), {
         next: { revalidate: getRevalidateTime(preview) },
-      }
-    );
+      });
+      finalResponse = await response.json();
+    }
 
-    const finalResponse = await response.json();
-
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
       return { data: null, error: finalResponse?.error?.message || "Unknown error" };
     }
 
-    return { data: finalResponse?.data, error: null };
+    return { data: finalResponse?.data || null, error: null };
   } catch (error) {
     return { data: null, error: error.message || "Something went wrong" };
   }

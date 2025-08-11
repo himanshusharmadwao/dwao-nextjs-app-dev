@@ -68,7 +68,7 @@
 }
 
 .cssmenu>ul>li>a {
-    padding: 30px 28px;
+    padding: 30px 15px;
     font-size: 17px;
     letter-spacing: 1px;
     text-decoration: none;
@@ -87,6 +87,21 @@
 .header.active .cssmenu>ul>li>a.active {
     color: var(--mainColor);
     text-decoration: underline;
+}
+
+.regionTrigger {
+    max-width: 116px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* .header.active .regionTrigger */
+.secondaryPage .regionTrigger,
+.header .regionTrigger {
+    background-color: var(--color-con-dark);
+    padding: 4px;
+    border-radius: 4px;
 }
 
 .cssmenu>ul>li:hover>a {
@@ -462,4 +477,24 @@
 .subSubMenuStack.open {
     max-height: 1000px;
     transform: translateY(0);
+}
+
+/* ========region style */
+
+.regionList {
+    overflow-y: auto;
+}
+
+.regionList::-webkit-scrollbar {
+    width: 8px;  
+}
+
+.regionList::-webkit-scrollbar-thumb {
+    background-color: #aeaeae;  
+    border-radius: 7px;
+}
+
+.regionList::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 7px;
 }

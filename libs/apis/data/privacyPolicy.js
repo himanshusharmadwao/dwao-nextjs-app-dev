@@ -1,24 +1,41 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-export const getPolicy = async (preview = false) => {
+export const getPolicy = async (preview = false, region = "default") => {
+
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/privacy-policy?populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=seo&populate[3]=seo.openGraph&populate[4]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/privacy-policies?` +
+      `populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=seo` +
+      `&populate[3]=seo.openGraph&populate[4]=seo.openGraph.ogImage`;
 
-    const finalResponse = await response.json();
+    if (preview) url += `&status=draft`;
+    if (region) url += `&filters[regions][slug][$eq]=${region}`;
 
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
-      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    let response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      response = await fetch(url.replace(region, "default"), {
+        next: { revalidate: getRevalidateTime(preview) },
+      });
+      finalResponse = await response.json();
     }
 
-    return { data: finalResponse?.data, error: null };
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+      return {
+        data: null,
+        error: finalResponse?.error?.message || "Unknown error",
+      };
+    }
+
+    return { data: finalResponse?.data || null, error: null };
   } catch (error) {
-    return { data: null, error: error.message || "Something went wrong" };
+    console.error("Error:", error);
+    return {
+      data: null,
+      error: error.message || "Something went wrong",
+    };
   }
 };

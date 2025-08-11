@@ -1,15 +1,16 @@
+import { buildRegionalPath } from '@/libs/utils';
 import Link from 'next/link';
 
-const Column = ({ data, title }) => {
+const Column = ({ data, title, regions, region }) => {
     return (
         <div>
             <h3 className="font-semibold lg:mb-4 mb-1">{title}</h3>
             <ul className="lg:space-y-4 space-y-1 text-con">
                 {data.map((link, index) => (
                     <li key={index}>
-                        <Link prefetch={false} 
+                        <Link
                             className="transition-all duration-100 text-[var(--color-con-gray)] hover:text-white"
-                            href={link.linkHref}
+                            href={buildRegionalPath(link.linkHref, region, regions.data)}
                         >
                             {link.linkTitle}
                         </Link>

@@ -1,49 +1,50 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-export const getPartner = async (preview = false, slug = '') => {
-  // console.log("slug: ", slug);
+export const getPartner = async (preview = false, slug = '', region = "default") => {
+  
   try {
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[section][populate][visual][populate]=*&populate[section][populate][content][populate]=*&populate[seo][populate]=*&filters[slug][$eq]=${slug}&${preview ? 'status=draft' : ''}`,
-    //   {
-    //     next: { revalidate: getRevalidateTime(preview) },
-    //   }
-    // );
+    let baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?` +
+      `populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category` +
+      `&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content` +
+      `&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage`;
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage${slug !== undefined ? `&filters[slug][$eq]=${slug}` : ''}${preview ? '&status=draft' : ''}`,
-      {
+    if (slug) baseUrl += `&filters[slug][$eq]=${slug}`;
+    if (preview) baseUrl += `&status=draft`;
+    if (region) baseUrl += `&filters[regions][slug][$eq]=${region}`;
+
+    let response = await fetch(baseUrl, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+    let mainCapability = finalResponse?.data?.[0];
+
+    if (!mainCapability) {
+      response = await fetch(baseUrl.replace(region, "default"), {
         next: { revalidate: getRevalidateTime(preview) },
-      }
-    );
+      });
+      finalResponse = await response.json();
+      mainCapability = finalResponse?.data?.[0];
+    }
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    if (!finalResponse?.data) return null;
 
-    const capabilityData = await response.json();
-
-    const mainCapability = capabilityData?.data?.[0];
-    if (!mainCapability) return null;
-
-    // 2. Extract the category of the main capability
-    const categorySlug = mainCapability.category.slug;
-
-    // 3. Fetch related capabilities (same category, different slug)
+    const categorySlug = mainCapability?.category?.slug;
     let related = [];
+
     if (categorySlug) {
-      // const relatedResponse = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[thumbnail][populate]=*&populate[featuredImage][populate]=*&populate[category][populate]=*&populate[sub_category][populate]=*&populate[section][populate][visual][populate]=*&populate[section][populate][content][populate]=*&populate[seo][populate]=*&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`,
-      //   {
-      //     next: { revalidate: getRevalidateTime(preview) },
-      //   }
-      // );
+      let relatedUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?` +
+        `populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category` +
+        `&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content` +
+        `&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage` +
+        `&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`;
 
-      const relatedResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`,
-        {
-          next: { revalidate: getRevalidateTime(preview) },
-        }
-      );
+      if (region) relatedUrl += `&filters[regions][slug][$eq]=${region}`;
+      if (preview) relatedUrl += `&status=draft`;
 
+      const relatedResponse = await fetch(relatedUrl, {
+        next: { revalidate: getRevalidateTime(preview) },
+      });
 
       if (relatedResponse.ok) {
         const relatedData = await relatedResponse.json();

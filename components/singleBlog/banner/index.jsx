@@ -9,9 +9,7 @@ import { toast } from 'react-toastify';
 
 const Banner = ({ data }) => {
 
-    // console.log(data)
-
-    const date = new Date(data.publishedAt);
+    const date = new Date(data?.publishedAt);
     const formattedDate = new Intl.DateTimeFormat("en-US", {
         month: "short",
         day: "2-digit",

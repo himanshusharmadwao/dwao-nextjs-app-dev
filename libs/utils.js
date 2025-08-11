@@ -165,3 +165,81 @@ const REVALIDATE_TIME = 300;
 export function getRevalidateTime(preview) {
   return preview ? 0 : REVALIDATE_TIME;
 }
+
+// for preserving regional url
+export const buildRegionalPath = (targetPath, slug, regions = []) => {
+
+  const cleanedTarget = targetPath.startsWith("/") ? targetPath.slice(1) : targetPath;
+
+  const validRegionCodes = regions
+    .map(region => region?.slug)
+    .filter(code => typeof code === "string" && code.trim() !== "");
+
+  const isValidRegion = validRegionCodes.includes(slug);
+
+  const regionToUse = (slug === "default" || !isValidRegion) ? "" : slug;
+
+  return regionToUse
+    ? `/${regionToUse}/${cleanedTarget}`
+    : `/${cleanedTarget}`;
+};
+
+// for removing the regional path from url
+export const getNormalizedPath = (pathname, regions) => {
+  const parts = pathname.split('/').filter(Boolean);
+  const regionSlugs = regions?.data?.map((region) => region.slug) || [];
+  if (parts.length && regionSlugs.includes(parts[0])) {
+    parts.shift();
+  }
+  return `/${parts.join('/')}`;
+};
+
+// check whether the regional data exists or not
+export const checkRegionData = async (regionSlug, currentPath) => {
+
+  console.log("regionSlug, currentPath: ", regionSlug, currentPath)
+
+  let endpoint;
+
+  // Define which API endpoint to call based on the current path
+  if (currentPath.startsWith('/about/culture')) {
+    endpoint = `/cultures`; 
+  } else if (currentPath.startsWith('/about')) {
+    endpoint = `/abouts`; 
+  } else if (currentPath.startsWith('/blog')) {
+    endpoint = `/blogs`; 
+  } else if (currentPath.startsWith('/case-studies')) {
+    endpoint = `/insight-blogs`;
+  } else if (currentPath.startsWith('/contact')) {
+    endpoint = `/contacts`; 
+  } else if (currentPath.startsWith('/privacy-policy')) {
+    endpoint = `/privacy-policies`; 
+  } else if (currentPath.startsWith('/services')) {
+    endpoint = `/capabilities`; 
+  } else if (currentPath.startsWith('/partners')) {
+    endpoint = `/capabilities`; 
+  } else if (currentPath.startsWith('/reviews')) {
+    endpoint = `/reviews-mats`; 
+  } else if (currentPath.startsWith('/service')) {
+    endpoint = `/service-pages`; 
+  } else {
+    endpoint = `/homes`;
+  }
+
+  console.log("endpoint: ", endpoint)
+
+  // Build the minimal API URL to check for region-specific data
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}?filters[regions][slug][$eq]=${regionSlug}`;
+
+  console.log("url: ", url)
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    return data?.data?.length > 0; 
+  } catch (error) {
+    console.error("Error fetching region data:", error);
+    return false;
+  }
+};

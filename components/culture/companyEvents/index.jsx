@@ -3,12 +3,14 @@
 import React, { useState } from 'react'
 import ImgCarousel from '../ImgCarousel';
 
-const CompanyEvents = ({data, secondaryData}) => {
+const CompanyEvents = ({data}) => {
+
+    const events = data?.event?.event
 
     const [activeTab, setActiveTab] = useState("all");
 
     // Group the flat data array by category
-    const groupedData = data?.reduce((acc, item) => {
+    const groupedData = events?.reduce((acc, item) => {
         const cat = item.category || "uncategorized";
         if (!acc[cat]) acc[cat] = [];
         acc[cat].push(item);
@@ -17,13 +19,13 @@ const CompanyEvents = ({data, secondaryData}) => {
 
     // Slides to show
     const eventSlide = activeTab === "all"
-        ? data
+        ? events
         : groupedData[activeTab] || [];
 
     return (
         <>
             <div className="flex flex-col md:flex-row md:justify-between md:items-start items-center mb-12">
-                <h2 className='text-head font-[500] text-center mb-4 lg:mb-0'>{secondaryData?.data?.eventsHeading}</h2>
+                <h2 className='text-head font-[500] text-center mb-4 lg:mb-0'>{data?.eventsHeading}</h2>
                 <ul className='text-con-light text-small-con space-x-4 space-y-4 md:space-y-0 md:text-start text-center'>
                     {["all", "annual_meet", "awards", "sports_day"].map((tab) => (
                         <li

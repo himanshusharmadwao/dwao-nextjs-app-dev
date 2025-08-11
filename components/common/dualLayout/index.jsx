@@ -3,7 +3,7 @@ import { getImageUrl } from '@/libs/utils'
 import Image from 'next/image'
 import React from 'react'
 
-const DualLayout = ({ data }) => {
+const DualLayout = ({ data, region, regions }) => {
     const { heading = "", visual = "", content = "", variant = "primary" } = data
 
     return (
@@ -30,7 +30,7 @@ const DualLayout = ({ data }) => {
                     {content.map((item, index) => {
                         return (
                             <div key={index}>
-                                <Accordion data={item} />
+                                <Accordion data={item} region={region} regions={regions} />
                             </div>
                         )
                     })}

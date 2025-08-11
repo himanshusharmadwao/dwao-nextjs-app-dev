@@ -9,8 +9,9 @@ import remarkGfm from 'remark-gfm'; // for features like strikethrough and table
 import rehypeRaw from 'rehype-raw'; // for raw html 
 import styles from "./Accordion.module.css";
 import markStyles from "@/styles/markdown.module.css";
+import { buildRegionalPath } from "@/libs/utils";
 
-const Accordion = ({ data }) => {
+const Accordion = ({ data, region, regions }) => {
   // console.log(data)
   const [isOpen, setIsOpen] = useState(false);
 
@@ -51,7 +52,7 @@ const Accordion = ({ data }) => {
               </ReactMarkdown>
             </div>
             <Link prefetch={false}
-              href={data?.linkHref || '/'}
+              href={buildRegionalPath(data?.linkHref, region, regions.data) || "#"}
               className="mt-4 flex gap-2 items-center group hover:text-[var(--mainColor)] uppercase"
               aria-label="Learn more about our services"
             >

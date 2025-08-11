@@ -1,63 +1,37 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-export const getContact = async (preview = false) => {
+export const getContact = async (preview = false, region = "default") => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/contact?populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=offices&populate[3]=officeMap&populate[4]=seo&populate[5]=seo.openGraph&populate[6]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
+    let baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/contacts?` +
+      `populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=offices` +
+      `&populate[3]=officeMap&populate[4]=seo&populate[5]=seo.openGraph&populate[6]=seo.openGraph.ogImage`;
 
-    const finalResponse = await response.json();
+    const buildUrl = (region) => `${baseUrl}&filters[regions][slug][$eq]=${region}${preview ? '&status=draft' : ''}`;
+
+    let response = await fetch(buildUrl(region), {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      response = await fetch(buildUrl("default"), { next: { revalidate: getRevalidateTime(preview) } });
+      finalResponse = await response.json();
+    }
 
     if (
-      finalResponse?.data === null &&
       finalResponse?.error &&
       Object.keys(finalResponse?.error).length > 0
     ) {
       return { data: null, error: finalResponse?.error?.message || "Unknown error" };
     }
 
-    return { data: finalResponse?.data, error: null };
+    return { data: finalResponse?.data || null, error: null };
   } catch (error) {
     return { data: null, error: error.message || "Something went wrong" };
   }
 };
 
-// console.log("getContact: ", getContact())
-
-// Fetch Offices
-// export const getOffices = async (preview = false) => {
-//   try {
-//     const response = await fetch(
-//       `${process.env.NEXT_PUBLIC_API_BASE_URL}/offices`,
-//       { next: { revalidate: getRevalidateTime(preview) } }
-//     );
-
-//     if (!response.ok) throw new Error(`Failed: ${response.status}`);
-
-//     return await response.json();
-//   } catch (error) {
-//     console.error("Error:", error);
-//     throw error;
-//   }
-// };
-
-// Fetch Office Map
-// export const getOfficeMap = async (preview = false) => {
-//   try {
-//     const response = await fetch(
-//       `${process.env.NEXT_PUBLIC_API_BASE_URL}/office-maps?populate[0]=image`,
-//       { next: { revalidate: getRevalidateTime(preview) } }
-//     );
-
-//     if (!response.ok) throw new Error(`Failed: ${response.status}`);
-
-//     return await response.json();
-//   } catch (error) {
-//     console.error("Error:", error);
-//     throw error;
-//   }
-// };
 
 // Submit Contact Form
 export const submitContactForm = async (formData) => {

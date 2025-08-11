@@ -4,7 +4,7 @@ import React from 'react';
 
 const Card = ({ data }) => {
 
-    const { icon, title, description } = data;
+    const { icon, title, content } = data;
 
     return (
         <div className="text-center">
@@ -15,7 +15,7 @@ const Card = ({ data }) => {
             <h3 className="text-[20px] mb-2">{title}</h3>
 
             <p className="text-gray-600 text-sm leading-relaxed">
-                {description}
+                {content}
             </p>
         </div>
     );

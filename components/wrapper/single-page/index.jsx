@@ -1,7 +1,7 @@
 "use client"
 
 import React, { Suspense } from 'react'
-import { getImageUrl } from '@/libs/utils'
+import { getImageUrl, buildRegionalPath } from '@/libs/utils'
 import Image from 'next/image'
 import dynamic from 'next/dynamic';
 
@@ -34,7 +34,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
+const SinglePageWrapper = ({ pageData, relatedCapabilities, region, regions }) => {
 
     // console.log(pageData)
 
@@ -43,7 +43,8 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
     const relatedCard = relatedCapabilities?.map((item, index) => {
         return (
             <div className='' key={index}>
-                <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.title} linkHref={`/services/${item.category.slug}/${item.slug}`} />
+                <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.title}
+                    linkHref={buildRegionalPath(`/services/${item.category.slug}/${item.slug}`, region, regions.data)} />
             </div>
         )
     })
@@ -83,11 +84,11 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
                         <div className="absolute inset-0 bg-black/30 flex items-center">
                             <div className="container">
                                 <div className="text-left py-5">
-                                    <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{pageData.title}</h1>
+                                    <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{pageData?.title}</h1>
                                     <p className="text-[17px] text-white mt-[2rem]">{pageData?.description}</p>
                                     <Suspense fallback={<LoadingPlaceholder />}>
                                         {pageData?.linkTitle && pageData?.linkHref && (
-                                            <ExtendLink title={pageData?.linkTitle} href={pageData?.linkHref} className="text-white text-[20px]" />
+                                            <ExtendLink title={pageData?.linkTitle} href={buildRegionalPath(pageData?.linkHref, region, regions.data)} className="text-white text-[20px]" />
                                         )}
                                     </Suspense>
                                 </div>
@@ -102,7 +103,7 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities }) => {
                     {dualLayout?.map((item, index) => {
                         return (
                             <div key={index} className="mb-20" id={`layout${index + 1}`}>
-                                <DualLayout data={item} />
+                                <DualLayout data={item} region={region} regions={regions} />
                             </div>
                         )
                     })}

@@ -9,24 +9,9 @@ import styles from "@/styles/markdown.module.css";
 import Image from 'next/image';
 import { breakTitle } from '@/libs/utils';
 
-const PrivacyPolicyWrapper = async ({ preview }) => {
+const PrivacyPolicyWrapper = async ({ policyResponse, preview, region }) => {
 
-    const policyResponse = await getPolicy(preview);
-    const { data, error } = policyResponse;
-    if (error) {
-        return (
-            <div className='h-screen block'>
-                <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>{error}</h1>
-            </div>
-        )
-    }
-    if (!data) {
-        return (<div className='h-screen block'>
-            <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>Data Not Found!</h1>
-        </div>)
-    }
-
-    const content = policyResponse?.data?.markdownContent;
+    const content = policyResponse?.markdownContent;
     // console.log(content)
 
     return (
@@ -38,7 +23,7 @@ const PrivacyPolicyWrapper = async ({ preview }) => {
                         <div className="relative w-full h-[410px]">
                             <div className="aspect-[7/10] hidden lg:block">
                                 <Image
-                                    src={policyResponse?.data?.bannerDeskImage?.url}
+                                    src={policyResponse?.bannerDeskImage?.url}
                                     alt="Desktop Banner"
                                     fill
                                     priority
@@ -47,7 +32,7 @@ const PrivacyPolicyWrapper = async ({ preview }) => {
                             </div>
                             <div className="aspect-[15/7] lg:hidden">
                                 <Image
-                                    src={policyResponse?.data?.bannerMobileImage?.url}
+                                    src={policyResponse?.bannerMobileImage?.url}
                                     alt="Mobile Banner"
                                     fill
                                     priority
@@ -57,14 +42,14 @@ const PrivacyPolicyWrapper = async ({ preview }) => {
                             <div className="absolute inset-0 bg-black/30 flex items-center">
                                 <div className="container">
                                     <div className="text-left py-5 ">
-                                        <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{breakTitle(policyResponse?.data?.title)}</h1>
+                                        <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">{breakTitle(policyResponse?.title)}</h1>
                                         <div className="text-[17px] text-white mt-[2rem]">
                                             <ReactMarkdown
                                                 remarkPlugins={[remarkGfm]}
                                                 rehypePlugins={[rehypeRaw]}
                                                 transform={(html) => DOMPurify.sanitize(html)}
                                             >
-                                                {policyResponse?.data?.bannerContent}
+                                                {policyResponse?.bannerContent}
                                             </ReactMarkdown>
                                         </div>
                                     </div>
@@ -90,7 +75,7 @@ const PrivacyPolicyWrapper = async ({ preview }) => {
             </div>
 
             {/* Contact */}
-            <ReachOut />
+            <ReachOut preview={preview} region={region} />
         </>
     );
 };

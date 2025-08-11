@@ -2,13 +2,14 @@ import React, { Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 // import insightData from "@/data/insights-and-case-studies/insightData.json"
-import { getImageUrl } from '@/libs/utils'
+import { getImageUrl, buildRegionalPath } from '@/libs/utils'
 import ReactMarkdown from 'react-markdown';
 import DOMPurify from 'dompurify';
 import remarkGfm from 'remark-gfm'; // for features like strikethrough and tables
 import rehypeRaw from 'rehype-raw'; // for raw html 
 import styles from "./Insight.module.css";
 import dynamic from "next/dynamic";
+import { getRegions } from '@/libs/apis/data/menu';
 
 // Dynamic imports with loading placeholders
 const ReachOut = dynamic(() => import('@/components/common/reachOut'), {
@@ -36,9 +37,11 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
+const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region }) => {
 
     // console.log("Pagedata: ", pageData)
+
+    const regions = await getRegions();
 
     const studySlides = relatedInsightBlogs?.map((card, index) => {
         return (
@@ -47,7 +50,7 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                 imageSrc={getImageUrl(card.thumbnail)}
                 title={card.title}
                 description={card.title}
-                href={`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`}
+                href={buildRegionalPath(`/case-studies/${card?.stats?.industry?.toLowerCase().replace(/\s+/g, '-')}/${card?.slug}`, region, regions.data)}
             />
         )
     });
@@ -197,13 +200,13 @@ const SingleBlogWrapper = ({ pageData, relatedInsightBlogs }) => {
                         </div>
                     </Suspense>
                     <div className="text-center">
-                        <Link prefetch={false} href="/case-studies" className="border-[1px] border-[#333] rounded-[10px] inline-block text-[#333] text-center py-[0.5rem] px-[3rem] transition-all duration-300 text-[1.2rem] hover:text-[var(--mainColor)] hover:border-[var(--mainColor)]">View all case studies</Link>
+                        <Link prefetch={false} href={buildRegionalPath("/case-studies", region, regions.data)} className="border-[1px] border-[#333] rounded-[10px] inline-block text-[#333] text-center py-[0.5rem] px-[3rem] transition-all duration-300 text-[1.2rem] hover:text-[var(--mainColor)] hover:border-[var(--mainColor)]">View all case studies</Link>
                     </div>
                 </div>
             </div>
 
             <Suspense fallback={<LoadingPlaceholder />}>
-                <ReachOut />
+                <ReachOut region={region} />
             </Suspense>
         </>
     )

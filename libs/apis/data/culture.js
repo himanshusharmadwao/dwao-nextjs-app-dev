@@ -1,145 +1,28 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-// Fetch Culture
-export const getCulture = async (preview = false) => {
+export const getCulture = async (preview = false, region = "default") => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/culture?populate[0]=introVisuals&populate[1]=missionImage&populate[2]=growthImage&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&${preview ? 'status=draft' : ''}`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/cultures?populate[0]=introVisuals&populate[1]=missionImage&populate[2]=growthImage&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=event&populate[6]=event.event.image&populate[7]=event.event.thumbnail&populate[8]=event.regions&populate[9]=social_responsibility&populate[10]=social_responsibility.entity.image&populate[11]=social_responsibility.regions&populate[12]=teams_and_collaboration&populate[13]=teams_and_collaboration.entity.image&populate[14]=teams_and_collaboration.entity.thumbnail&populate[15]=teams_and_collaboration.regions&populate[16]=benefits_and_perk&populate[17]=benefits_and_perk.entity.icon&populate[18]=benefits_and_perk.regions&populate[19]=employee_testimonial&populate[20]=employee_testimonial.entity.image&populate[21]=employee_testimonial.regions&populate[22]=regions`;
 
-    const finalResponse = await response.json();
+    if (preview) url += `&status=draft`;
+    if (region) url += `&filters[regions][slug][$eq]=${region}`;
 
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
+    let response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      response = await fetch(url.replace(region, "default"), { next: { revalidate: getRevalidateTime(preview) } });
+      finalResponse = await response.json();
+    }
+
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
       return { data: null, error: finalResponse?.error?.message || "Unknown error" };
     }
 
-    return { data: finalResponse?.data, error: null };
+    return { data: finalResponse.data || null, error: null };
   } catch (error) {
-    return { data: null, error: error.message || "Something went wrong" };
-  }
-};
-
-// Fetch Benefits and Perks
-export const getBenefitAndPerks = async (preview = false) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/benefits-and-perks?populate=*`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
-
-    const finalResponse = await response.json();
-
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
-      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
-    }
-
-    return { data: finalResponse?.data, error: null };
-  } catch (error) {
-    return { data: null, error: error.message || "Something went wrong" };
-  }
-};
-
-// Fetch Testimonials
-export const getTestimonials = async (preview = false) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/employee-testimonials?populate=*`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
-
-    const finalResponse = await response.json();
-
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
-      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
-    }
-
-    return { data: finalResponse?.data, error: null };
-  } catch (error) {
-    return { data: null, error: error.message || "Something went wrong" };
-  }
-};
-
-// Fetch Teams and Collaborations
-export const getTeams = async (preview = false) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/teams-and-collaborations?populate=*`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
-
-    const finalResponse = await response.json();
-
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
-      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
-    }
-
-    return { data: finalResponse?.data, error: null };
-  } catch (error) {
-    return { data: null, error: error.message || "Something went wrong" };
-  }
-};
-
-// Fetch Events
-export const getEvents = async (preview = false) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/events?populate=*`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
-
-    const finalResponse = await response.json();
-
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
-      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
-    }
-
-    return { data: finalResponse?.data, error: null };
-  } catch (error) {
-    return { data: null, error: error.message || "Something went wrong" };
-  }
-};
-
-// Fetch Social Responsibility
-export const getSocialResponsibility = async (preview = false) => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-responsibilities?populate=*`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
-
-    const finalResponse = await response.json();
-
-    if (
-      finalResponse?.data === null &&
-      finalResponse?.error &&
-      Object.keys(finalResponse?.error).length > 0
-    ) {
-      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
-    }
-
-    return { data: finalResponse?.data, error: null };
-  } catch (error) {
+    console.error("Error:", error);
     return { data: null, error: error.message || "Something went wrong" };
   }
 };

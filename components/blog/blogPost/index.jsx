@@ -8,7 +8,7 @@ import OverlayCard from '@/components/common/overlayCard';
 import { getAllBlogs } from '@/libs/apis/data/blog';
 import { getAllInsightBlogs } from '@/libs/apis/data/insights';
 
-const BlogPost = ({ filterItems, variant, preview }) => {
+const BlogPost = ({ filterItems, variant, preview, region, regions }) => {
     // console.log(filterItems)
     const [selectedFilter, setSelectedFilter] = useState({ category: null, sub_category: null });
     const [currentPage, setCurrentPage] = useState(1);
@@ -48,7 +48,8 @@ const BlogPost = ({ filterItems, variant, preview }) => {
                     itemsPerPage,
                     selectedFilter.category,
                     selectedFilter.sub_category,
-                    preview
+                    preview,
+                    region
                 );
             } else if (variant === 'caseStudies') {
                 response = await getAllInsightBlogs(
@@ -56,7 +57,8 @@ const BlogPost = ({ filterItems, variant, preview }) => {
                     itemsPerPage,
                     selectedFilter.category,
                     selectedFilter.sub_category,
-                    preview
+                    preview,
+                    region
                 );
             } else {
                 throw new Error(`Unknown variant: ${variant}`);
@@ -101,10 +103,10 @@ const BlogPost = ({ filterItems, variant, preview }) => {
             ) : (
                 <div className="flex gap-[30px] flex-wrap mb-14 border-b border-gray-300 pb-8">
                     {variant === "blogPosts" && posts?.map((item, index) => (
-                        <Card key={index} data={item} className="basis-full md:basis-[calc((100%-60px)/3)]" />
+                        <Card key={index} data={item}  region={region} regions={regions} className="basis-full md:basis-[calc((100%-60px)/3)]" />
                     ))}
                     {variant === "caseStudies" && posts?.map((item, index) => (
-                        <OverlayCard key={index} data={item} className="basis-full md:basis-[calc((100%-60px)/3)]" />
+                        <OverlayCard key={index} data={item}  region={region} regions={regions} className="basis-full md:basis-[calc((100%-60px)/3)]" />
                     ))}
                 </div>
             )}

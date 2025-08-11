@@ -1,62 +1,96 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-export const getInsightCategory = async (preview = false) => {
+// Fetch Insight Categories (with optional region filter)
+export const getInsightCategory = async (preview = false, region = "default") => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-categories?populate=*`,
-      { next: { revalidate: getRevalidateTime(preview) } }
-    );
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-categories?populate=*`;
 
-    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+    if (preview) url += `&status=draft`;
+    if (region) url += `&filters[regions][slug][$eq]=${region}`;
 
-    return await response.json();
+    let response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      response = await fetch(url.replace(region, "default"), {
+        next: { revalidate: getRevalidateTime(preview) },
+      });
+      finalResponse = await response.json();
+    }
+
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data || null, error: null };
   } catch (error) {
     console.error("Error:", error);
     throw error;
   }
 };
 
-export const getInsightBlog = async (preview = false, industry = '', slug = '') => {
+// Fetch Single Insight Blog with Related (region-aware)
+export const getInsightBlog = async (preview = false, industry = '', slug = '', region = "default") => {
   try {
-    // Use Promise.all to fetch main and related content in parallel
-    const mainResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[0]=brandLogo&populate[1]=category&populate[2]=sub_category&populate[3]=thumbnail&populate[4]=featuredImage&populate[5]=stats&populate[6]=background&populate[7]=valueVisual&populate[8]=objective&populate[9]=solution&populate[10]=insightVisual&populate[11]=result.resultStats&populate[12]=insightTestimonial&populate[13]=insightTestimonial.image&populate[14]=seo&populate[15]=seo.openGraph&populate[16]=seo.openGraph.ogImage&filters[slug][$eq]=${slug}&filters[stats][industry][$eqi]=${industry.replace(/-/g, ' ')}&${preview ? 'status=draft' : ''}`,
-      { 
+    let mainUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?` +
+      `populate[0]=brandLogo&populate[1]=category&populate[2]=sub_category&populate[3]=thumbnail` +
+      `&populate[4]=featuredImage&populate[5]=stats&populate[6]=background&populate[7]=valueVisual` +
+      `&populate[8]=objective&populate[9]=solution&populate[10]=insightVisual` +
+      `&populate[11]=result.resultStats&populate[12]=insightTestimonial&populate[13]=insightTestimonial.image` +
+      `&populate[14]=seo&populate[15]=seo.openGraph&populate[16]=seo.openGraph.ogImage` +
+      `&filters[slug][$eq]=${slug}` +
+      `&filters[stats][industry][$eqi]=${industry.replace(/-/g, ' ')}`;
+
+    if (region) mainUrl += `&filters[regions][slug][$eq]=${region}`;
+    if (preview) mainUrl += `&status=draft`;
+
+    let response = await fetch(mainUrl, {
+      next: { revalidate: getRevalidateTime(preview) },
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!response.ok) throw new Error(`Failed: ${response.status}`);
+
+    const insight = await response.json();
+    let mainInsight = insight?.data?.[0];
+
+    if (!mainInsight) {
+      response = await fetch(mainUrl.replace(region, "default"), {
         next: { revalidate: getRevalidateTime(preview) },
-        // Add timeout to prevent hanging requests
-        signal: AbortSignal.timeout(10000) // 10 second timeout
-      }
-    );
+        signal: AbortSignal.timeout(10000),
+      });
+      const fallbackInsight = await response.json();
+      if (!fallbackInsight?.data?.[0]) return null;
+      mainInsight = fallbackInsight?.data?.[0];
+    }
 
-    if (!mainResponse.ok) throw new Error(`Failed: ${mainResponse.status}`);
-
-    const insight = await mainResponse.json();
-    const mainInsight = insight?.data?.[0];
-    if (!mainInsight) return null;
-
-    // Extract the category slug of the main capability
     const categorySlug = mainInsight?.category?.slug;
 
-    // Fetch related insights in parallel if we have a category
     let related = [];
     if (categorySlug) {
       try {
-        // Only fetch basic fields for related items to reduce payload
-        const relatedResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?populate[0]=thumbnail&populate[1]=stats&populate[2]=category&fields[0]=title&fields[1]=slug&fields[2]=createdAt&pagination[pageSize]=4&filters[category][slug][$eq]=${categorySlug}&filters[slug][$ne]=${slug}`,
-          {
-            next: { revalidate: getRevalidateTime(preview) },
-            signal: AbortSignal.timeout(5000) // 5 second timeout for related
-          }
-        );
+        let relatedUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?` +
+          `populate[0]=thumbnail&populate[1]=stats&populate[2]=category&fields[0]=title&fields[1]=slug` +
+          `&fields[2]=createdAt&pagination[pageSize]=4&filters[category][slug][$eq]=${categorySlug}` +
+          `&filters[slug][$ne]=${slug}`;
+
+        if (region) relatedUrl += `&filters[regions][slug][$eq]=${region}`;
+        if (preview) relatedUrl += `&status=draft`;
+
+        const relatedResponse = await fetch(relatedUrl, {
+          next: { revalidate: getRevalidateTime(preview) },
+          signal: AbortSignal.timeout(5000),
+        });
 
         if (relatedResponse.ok) {
           const relatedData = await relatedResponse.json();
           related = relatedData?.data || [];
         }
       } catch (relatedError) {
-        // Don't fail the main request if related items fail
-        console.warn('Failed to fetch related insights:', relatedError);
+        console.warn("Failed to fetch related insights:", relatedError);
       }
     }
 
@@ -70,12 +104,14 @@ export const getInsightBlog = async (preview = false, industry = '', slug = '') 
   }
 };
 
+// Fetch All Insight Blogs (region-aware)
 export const getAllInsightBlogs = async (
   page = 1,
   pageSize = 6,
   category = null,
   subCategory = null,
-  preview = false
+  preview = false,
+  region = "default"
 ) => {
   try {
     let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/insight-blogs?` +
@@ -94,37 +130,47 @@ export const getAllInsightBlogs = async (
       'populate[result][populate][resultStats]=*&' +
       'populate[insightTestimonial][populate]=*&' +
       'populate[seo][populate]=*&' +
-      `pagination[page]=${page}&pagination[pageSize]=${pageSize}&` +
-      `${preview ? 'status=draft' : ''}`;
+      `pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
 
     if (category) {
       url += `&filters[category][name][$eq]=${encodeURIComponent(category)}`;
     }
+
     if (subCategory) {
       url += `&filters[sub_category][name][$eq]=${encodeURIComponent(subCategory)}`;
     }
 
-    // console.log('Fetching insight blogs with URL:', url); 
-    // console.log("Preview value: ", preview)
+    if (region) {
+      url += `&filters[regions][slug][$eq]=${region}`;
+    }
 
-    const response = await fetch(url, {
+    if (preview) {
+      url += `&status=draft`;
+    }
+
+    let response = await fetch(url, {
       next: { revalidate: getRevalidateTime(preview) },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed: ${response.status} - ${response.statusText}`);
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      response = await fetch(url.replace(region, "default"), {
+        next: { revalidate: getRevalidateTime(preview) },
+      });
+      finalResponse = await response.json();
     }
 
-    const data = await response.json();
-    // console.log('API response:', data); 
-    // console.log("Preview value: ", preview)
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
 
     return {
-      data: data.data || [],
-      meta: data.meta || { pagination: { total: 0 } },
+      data: finalResponse?.data || [],
+      meta: finalResponse?.meta || { pagination: { total: 0 } },
     };
   } catch (error) {
-    console.error('Error fetching insight blogs:', error);
+    console.error("Error fetching insight blogs:", error);
     throw error;
   }
 };
