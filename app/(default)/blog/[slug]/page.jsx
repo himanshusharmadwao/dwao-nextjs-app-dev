@@ -60,8 +60,8 @@ const SingleBlog = async ({ params, searchParams }) => {
 
     const blogsResponse = await getBlog(preview, resolvedParams.slug, region);
 
-    if (!blogsResponse) {
-        return <NotFound />
+    if (blogsResponse.data == null) {
+        return <NotFound />;
     }
 
     return (
