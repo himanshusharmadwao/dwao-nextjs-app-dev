@@ -34,9 +34,7 @@ export default async function RootLayout({ children }) {
         })}
       </head>
       <body>
-        <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );
