@@ -322,7 +322,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
               ))}
             </ul>
 
-            <div ref={regionRef} className="region relative inline-block text-left text-[15px]">
+            <div ref={regionRef} className="region relative inline-block text-left text-[15px] z-[99999]">
               {/* Trigger */}
               <div
                 className={`flex gap-2 items-center text-white cursor-pointer ${styles.regionTrigger}`}
@@ -344,7 +344,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
               </div>
               {/* Dropdown */}
               {isRegionOpen && (
-                <div className={`absolute right-[0px] mt-2 z-50 bg-white w-60 h-64 overflow-y-auto rounded-md shadow-md border border-gray-200 space-y-2 p-3 ${styles.regionList}`}>
+                <div className={`absolute right-[0px] mt-2 z-50 bg-white w-60 max-h-64 overflow-y-auto rounded-md shadow-md border border-gray-200 space-y-2 p-3 ${styles.regionList}`}>
                   {[...regions.data]
                     .sort((a, b) => (a.slug === "default" ? -1 : b.slug === "default" ? 1 : 0))
                     .map((region) => (
