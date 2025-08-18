@@ -24,12 +24,13 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <head>
         {regions?.data?.map(region => {
+          const slug = region?.slug;
           const hreflang = region?.hrefLang;
           if (!hreflang) return null;
           const url =
             hreflang === "default"
               ? process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL
-              : `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${hreflang}`;
+              : `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${slug}`;
           return (
             <link
               key={hreflang}
