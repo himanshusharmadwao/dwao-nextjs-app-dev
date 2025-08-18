@@ -8,6 +8,8 @@ import Image from "next/image";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 import { usePathname, useRouter } from "next/navigation";
 import { getNormalizedPath, buildRegionalPath } from "@/libs/utils";
+import { GoGlobe } from "react-icons/go";
+import { RxCaretDown } from "react-icons/rx";
 
 const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
 
@@ -257,20 +259,10 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
                 className={`flex gap-2 items-center justify-center text-white cursor-pointer ${styles.regionTrigger}`}
                 onClick={() => setIsRegionOpen((prev) => !prev)}
               >
-                <Image
-                  src="/icons/globe-white.svg"
-                  height={18}
-                  width={18}
-                  alt="Expand"
-                />
+                <GoGlobe />
                 <span className="lg:inline-block hidden">{selectedRegion?.name}</span>
                 <span className="inline-block lg:hidden">{selectedRegion?.slug}</span>
-                <Image
-                  src="/icons/caret-down-white.svg"
-                  height={20}
-                  width={20}
-                  alt="Expand"
-                />
+                <RxCaretDown size={22}/>
               </div>
               {/* Dropdown */}
               <div className={`absolute right-[0px] z-50 bg-white w-60 overflow-y-auto border border-gray-200 space-y-4 p-6 ${styles.regionList}`}>

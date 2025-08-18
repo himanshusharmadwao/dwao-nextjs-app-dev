@@ -80,7 +80,8 @@
 }
 
 .header.active .cssmenu>ul>li>a,
-.secondaryPage .cssmenu>ul>li>a {
+.secondaryPage .cssmenu>ul>li>a,
+.header.active .regionTrigger {
     color: var(--color-con-dark);
 }
 
@@ -99,9 +100,13 @@
 /* .header.active .regionTrigger */
 .secondaryPage .regionTrigger,
 .header .regionTrigger {
-    background-color: var(--color-con-dark);
-    padding: 4px;
+    font-size: 17px;
+    padding: 30px 0px 30px 15px;
     border-radius: 4px;
+}
+
+.secondaryPage .regionTrigger{
+    color: var(--color-con-dark);
 }
 
 .cssmenu>ul>li:hover>a {
