@@ -101,7 +101,7 @@
 .secondaryPage .regionTrigger,
 .header .regionTrigger {
     font-size: 17px;
-    padding: 30px 0px 30px 15px;
+    padding: 30px 0px 30px 0px;
     border-radius: 4px;
 }
 
