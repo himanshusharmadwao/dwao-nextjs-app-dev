@@ -90,7 +90,7 @@
 }
 
 .regionTrigger {
-    max-width: 116px;
+    /* width: 142px; */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -483,18 +483,37 @@
 
 .regionList {
     overflow-y: auto;
+    max-height: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: transform 0.4s ease-in-out, max-height 0.4s ease-in-out;
+    background-color: #f4f4f4;
+}
+
+.regionList span {
+    border-bottom: 1.5px solid transparent;
+}
+
+.regionList span:hover {
+    border-bottom: 1.5px solid var(--mainColor);
+}
+
+.dropdownOpen .regionList {
+    max-height: 300px;
+    visibility: visible;
+    opacity: 1;
 }
 
 .regionList::-webkit-scrollbar {
-    width: 8px;  
+    display: none;
 }
 
-.regionList::-webkit-scrollbar-thumb {
-    background-color: #aeaeae;  
+/* .regionList::-webkit-scrollbar-thumb {
+    background-color: #aeaeae;
     border-radius: 7px;
 }
 
 .regionList::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #f1f1f1;
     border-radius: 7px;
-}
+} */

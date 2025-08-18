@@ -194,52 +194,10 @@ export const getNormalizedPath = (pathname, regions) => {
   return `/${parts.join('/')}`;
 };
 
-// check whether the regional data exists or not
-export const checkRegionData = async (regionSlug, currentPath) => {
-
-  // console.log("regionSlug, currentPath: ", regionSlug, currentPath)
-
-  let endpoint;
-
-  // Define which API endpoint to call based on the current path
-  if (currentPath.startsWith('/about/culture')) {
-    endpoint = `/cultures`; 
-  } else if (currentPath.startsWith('/about')) {
-    endpoint = `/abouts`; 
-  } else if (currentPath.startsWith('/blog')) {
-    endpoint = `/blogs`; 
-  } else if (currentPath.startsWith('/case-studies')) {
-    endpoint = `/insight-blogs`;
-  } else if (currentPath.startsWith('/contact')) {
-    endpoint = `/contacts`; 
-  } else if (currentPath.startsWith('/privacy-policy')) {
-    endpoint = `/privacy-policies`; 
-  } else if (currentPath.startsWith('/services')) {
-    endpoint = `/capabilities`; 
-  } else if (currentPath.startsWith('/partners')) {
-    endpoint = `/capabilities`; 
-  } else if (currentPath.startsWith('/reviews')) {
-    endpoint = `/reviews-mats`; 
-  } else if (currentPath.startsWith('/service')) {
-    endpoint = `/service-pages`; 
-  } else {
-    endpoint = `/homes`;
-  }
-
-  // console.log("endpoint: ", endpoint)
-
-  // Build the minimal API URL to check for region-specific data
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}?filters[regions][slug][$eq]=${regionSlug}`;
-
-  // console.log("url: ", url)
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    return data?.data?.length > 0; 
-  } catch (error) {
-    console.error("Error fetching region data:", error);
+export const checkRegionValidity = (region, regions) => {
+  if (!regions || !Array.isArray(regions.data)) {
     return false;
   }
+
+  return regions?.data?.some(item => item.slug === region);
 };

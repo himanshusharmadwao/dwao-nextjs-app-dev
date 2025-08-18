@@ -3,10 +3,10 @@ import LegalLinks from './legalLinks/index';
 import SocialIcons from './socialIcons/index';
 import QuickLinks from './quickLinks/index';
 import CompanyInfo from './companyInfo';
-import { getMenu, getRegions } from '@/libs/apis/data/menu';
+import { getLegalMenu, getMenu, getQuickLinks, getRegions } from '@/libs/apis/data/menu';
 import Newsletter from './newsletter';
 
-const Footer = async ({preview, region}) => {
+const Footer = async ({ preview, region }) => {
 
   const regions = await getRegions();
 
@@ -17,6 +17,9 @@ const Footer = async ({preview, region}) => {
   } catch (error) {
     console.error("Failed to fetch menu data:", error);
   }
+
+  const legalMenu = await getLegalMenu(preview, region);
+  const quickLinks = await getQuickLinks(preview, region);
 
   const socialLinks = [
     {
@@ -47,11 +50,7 @@ const Footer = async ({preview, region}) => {
             <div className="grid grid-cols-5">
               {/* Second Column */}
               <div className='col-span-2'>
-                {menuData.data.map((item) =>
-                  item.name === "quickLinks" && (
-                    <QuickLinks key={item.id} data={item.menu} regions={regions} region={region} />
-                  )
-                )}
+                <QuickLinks data={quickLinks?.data[0]?.menu} regions={regions} region={region} />
               </div>
 
               {/* Third Column */}
@@ -59,7 +58,7 @@ const Footer = async ({preview, region}) => {
                 {menuData.data.flatMap(item =>
                   item.menu.filter(nestedItem => nestedItem.linkTitle === "Capabilities")
                 ).map(nestedItem => (
-                  <Column key={nestedItem.id} title="Capabilities" data={nestedItem.subMenu}  regions={regions} region={region}/>
+                  <Column key={nestedItem.id} title="Capabilities" data={nestedItem.subMenu} regions={regions} region={region} />
                 ))}
               </div>
 
@@ -77,11 +76,7 @@ const Footer = async ({preview, region}) => {
 
         {/* Legal and Social Links */}
         <div className="mt-14 border-t border-gray-700 pt-4 grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
-          {menuData.data.map((item) =>
-            item.name === "legal" && (
-              <LegalLinks key={item.id} data={item.menu} regions={regions} region={region} />
-            )
-          )}
+          <LegalLinks data={legalMenu?.data[0]?.menu} regions={regions} region={region} />
 
           <SocialIcons links={socialLinks} />
         </div>
@@ -90,4 +85,4 @@ const Footer = async ({preview, region}) => {
   );
 };
 
-export default Footer;
+export default Footer

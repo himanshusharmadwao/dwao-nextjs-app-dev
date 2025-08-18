@@ -2,6 +2,8 @@ import NotFound from "@/app/(regional)/[region]/not-found"
 import StructuredData from "@/components/StructuredData";
 import SingleBlogWrapper from "@/components/wrapper/single-blog"
 import { getBlog } from "@/libs/apis/data/blog";
+import { getRegions } from "@/libs/apis/data/menu";
+import { checkRegionValidity } from "@/libs/utils";
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
@@ -9,6 +11,17 @@ export async function generateMetadata({ params, searchParams }) {
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
     const region = resolvedParams.region || "default";
+
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+        return {
+            title: "Page Not Found",
+            description: "Invalid region specified.",
+        };
+    }
+
     const blogsResponse = await getBlog(preview, resolvedParams.slug, region);
 
     if (!blogsResponse) {
@@ -53,16 +66,26 @@ const SingleBlog = async ({ params, searchParams }) => {
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
     const region = resolvedParams.region || "default";
-    const blogsResponse = await getBlog(preview, resolvedParams.slug, region);
-    
-    if (blogsResponse.data == null) {
+
+    const regions = await getRegions();
+
+    const validRegion = checkRegionValidity(region, regions);
+    if (!validRegion) {
         return <NotFound />
+    }
+
+    const blogsResponse = await getBlog(preview, resolvedParams.slug, region);
+
+    if (blogsResponse.status === "error") {
+        return <div className="">Something went wrong!! Please try again later.</div>;
+    } else if (blogsResponse.status === "not_found") {
+        return redirect('/');
     }
 
     return (
         <>
             <StructuredData data={blogsResponse?.data?.[0]?.seo?.structuredData} />
-            <SingleBlogWrapper pageData={blogsResponse?.data[0]} relatedBlogs={blogsResponse?.related} region={region} preview={preview} />
+            <SingleBlogWrapper pageData={blogsResponse?.data[0]} relatedBlogs={blogsResponse?.related} preview={preview} />
         </>
     )
 }

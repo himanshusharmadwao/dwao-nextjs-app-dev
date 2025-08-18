@@ -3,6 +3,8 @@ import NotFound from "@/app/(regional)/[region]/not-found";
 import StructuredData from "@/components/StructuredData";
 import SingleBlogWrapper from "@/components/wrapper/insight-single-blog"
 import { getInsightBlog } from "@/libs/apis/data/insights";
+import { getRegions } from '@/libs/apis/data/menu';
+import { checkRegionValidity } from '@/libs/utils';
 
 // Use edge runtime for faster responses
 export const runtime = 'nodejs'; // Keep nodejs for now due to dependencies
@@ -18,6 +20,17 @@ export async function generateMetadata({ params, searchParams }) {
     const { industry, slug, region } = await params;
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
+
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+        return {
+            title: "Page Not Found",
+            description: "Invalid region specified.",
+        };
+    }
+
     const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug, region || "default");
 
     if (!insightBlogsResponse) {
@@ -65,12 +78,19 @@ const SingleBlog = async ({ params, searchParams }) => {
     const { industry, slug, region } = await params;
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
+
+    const regions = await getRegions();
+
+    const validRegion = checkRegionValidity(region, regions);
+    if (!validRegion) {
+        return <NotFound />
+    }
+
     const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug, region || "default");
 
     if (!insightBlogsResponse) {
         return <NotFound />
     }
-
 
 
     return (

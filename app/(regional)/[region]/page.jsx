@@ -1,13 +1,27 @@
 import StructuredData from "@/components/StructuredData";
 import HomeWrapper from "@/components/wrapper/home";
 import { getHome } from "@/libs/apis/data/home";
+import { getRegions } from "@/libs/apis/data/menu";
+import { checkRegionValidity } from "@/libs/utils";
 import { headers } from "next/headers";
+import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   const paramsValue = await searchParams;
   const preview = paramsValue?.preview === "true";
   const region = params?.region ?? "default"
+
+  const regions = await getRegions();
+  const validRegion = checkRegionValidity(region, regions);
+
+  if (!validRegion) {
+    return {
+      title: "Page Not Found",
+      description: "Invalid region specified.",
+    };
+  }
+
   const homeResponse = await getHome(preview, region);
 
   if (!homeResponse) {
@@ -48,6 +62,13 @@ export default async function Home({ params, searchParams }) {
   const paramsValue = await searchParams;
   const preview = paramsValue?.preview === "true";
   const region = params?.region ?? "default"
+
+  const regions = await getRegions();
+
+  const validRegion = checkRegionValidity(region, regions);
+  if (!validRegion) {
+    return <NotFound />
+  }
 
   const requestHeaders = await headers();
 

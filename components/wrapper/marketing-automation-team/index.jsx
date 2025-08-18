@@ -5,10 +5,9 @@ import TestimonialCarousel from '@/components/home/testimonialCarousel'
 import React from 'react'
 import CompanyEvents from '@/components/culture/companyEvents'
 import { buildRegionalPath } from '@/libs/utils'
-import { getReviews } from '@/libs/apis/data/reviews'
 import { getRegions } from '@/libs/apis/data/menu'
 
-const ReviewWrapper = async ({ reviewResponse, preview, region }) => {
+const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
 
     const regions = await getRegions();
 

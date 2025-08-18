@@ -8,7 +8,6 @@ import DOMPurify from 'dompurify';
 import remarkGfm from 'remark-gfm'; // for features like strikethrough and tables
 import rehypeRaw from 'rehype-raw'; // for raw html
 import styles from './culture.module.css'
-import { getRegions } from '@/libs/apis/data/menu';
 
 const Card = dynamic(() => import('@/components/culture/Card'), {
     loading: () => <div className="animate-pulse h-40 bg-gray-100 rounded"></div>,
@@ -39,7 +38,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const CultureWrapper = async ({ data, region, regions }) => {
+const CultureWrapper = async ({ data, regions, region = "default" }) => {
 
     const testimonialSlides = data?.employee_testimonial?.entity?.slice(0, 7).map((testimonial, index) => (
         <TestimonialCard

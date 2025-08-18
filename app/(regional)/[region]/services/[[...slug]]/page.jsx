@@ -6,12 +6,23 @@ import { getCapability } from '@/libs/apis/data/capabilities';
 import StructuredData from '@/components/StructuredData';
 import { getRegions } from '@/libs/apis/data/menu';
 import NotFound from '@/app/(regional)/[region]/not-found';
+import { checkRegionValidity } from '@/libs/utils';
 
 export async function generateMetadata({ params, searchParams }) {
   const resolvedParams = await params;
   // console.log("Params: ", resolvedParams)
 
   const region = resolvedParams?.region ?? "default"
+
+  const regions = await getRegions();
+  const validRegion = checkRegionValidity(region, regions);
+
+  if (!validRegion) {
+    return {
+      title: "Page Not Found",
+      description: "Invalid region specified.",
+    };
+  }
 
   try {
     // const { type, slug } = resolvedParams;
@@ -37,8 +48,7 @@ export async function generateMetadata({ params, searchParams }) {
       }),
       alternates: {
         canonical: seo?.canonicalURL ||
-          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-          }/services/${resolvedParams.slug[0]}/${resolvedParams.slug[1]}`
+          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/services/${resolvedParams?.slug?.[0]}${resolvedParams?.slug?.[1] ? `/${resolvedParams.slug[1]}` : ""}`
       },
       openGraph: {
         title: seo?.openGraph?.ogTitle,
@@ -109,6 +119,13 @@ const DynamicPages = async ({ params, searchParams }) => {
 
   const region = resolvedParams?.region ?? "default"
 
+  const regions = await getRegions();
+
+  const validRegion = checkRegionValidity(region, regions);
+  if (!validRegion) {
+    return <NotFound />
+  }
+
   const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1], region);
   // console.log("capabilityResponse: ", capabilityResponse)
 
@@ -116,12 +133,16 @@ const DynamicPages = async ({ params, searchParams }) => {
     return <NotFound />;
   }
 
-  const regions = await getRegions();
+  if (capabilityResponse.status === "error") {
+    return <div className="">Something went wrong!! Please try again later.</div>;
+  } else if (capabilityResponse.status === "not_found") {
+    return redirect('/');
+  }
 
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} region={region} regions={regions} />
+      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} />
     </>
   );
 };

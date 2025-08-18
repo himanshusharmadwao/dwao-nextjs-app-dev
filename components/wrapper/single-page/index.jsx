@@ -34,7 +34,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const SinglePageWrapper = ({ pageData, relatedCapabilities, region, regions }) => {
+const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "default" }) => {
 
     // console.log(pageData)
 

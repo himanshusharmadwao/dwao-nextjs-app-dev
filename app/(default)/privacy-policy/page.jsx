@@ -3,11 +3,10 @@ import PrivacyPolicyWrapper from "@/components/wrapper/privacy-policy";
 import { getPolicy } from "@/libs/apis/data/privacyPolicy";
 
 // Generate dynamic metadata
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata({ searchParams }) {
   const paramsValue = await searchParams;
   const preview = paramsValue?.preview === "true";
-  const region = params?.region ?? "default"
-  const policyResponse = await getPolicy(preview, region);
+  const policyResponse = await getPolicy(preview);
 
   if (!policyResponse) {
     return {
@@ -25,8 +24,7 @@ export async function generateMetadata({ params, searchParams }) {
     keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
     alternates: {
       canonical: seo?.canonicalURL ||
-        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-        }/privacy-policy`
+        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/privacy-policy`
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
@@ -45,12 +43,11 @@ export async function generateMetadata({ params, searchParams }) {
   };
 }
 
-const PrivacyPolicy = async ({ params, searchParams }) => {
+const PrivacyPolicy = async ({ searchParams }) => {
   const paramsValue = await searchParams;
   const preview = paramsValue?.preview === "true";
-  const region = params?.region ?? "default"
 
-  const policyResponse = await getPolicy(preview, region);
+  const policyResponse = await getPolicy(preview);
   const { data, error } = policyResponse;
   if (error) {
     return (

@@ -3,11 +3,10 @@ import ReviewWrapper from "@/components/wrapper/marketing-automation-team"
 import { getReviews } from "@/libs/apis/data/reviews";
 
 // Generate dynamic metadata
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata({ searchParams }) {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
-    const region = params?.region ?? "default"
-    const reviewResponse = await getReviews(preview, region);
+    const reviewResponse = await getReviews(preview);
 
     if (!reviewResponse) {
         return {
@@ -26,8 +25,7 @@ export async function generateMetadata({ params, searchParams }) {
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||
-                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-                }/reviews/marketing-automation-team`
+                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/reviews/marketing-automation-team`
         },
         openGraph: {
             title: seo?.openGraph?.ogTitle,
@@ -46,14 +44,12 @@ export async function generateMetadata({ params, searchParams }) {
     };
 }
 
-const Culture = async ({ params, searchParams }) => {
+const Culture = async ({ searchParams }) => {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
     // console.log("preview: ", preview)
 
-    const region = params?.region ?? "default"
-
-    const reviewResponse = await getReviews(preview, region);
+    const reviewResponse = await getReviews(preview);
 
     const { data, error } = reviewResponse;
     if (error) {
@@ -72,7 +68,7 @@ const Culture = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={reviewResponse?.data?.seo?.structuredData} />
-            <ReviewWrapper reviewResponse={reviewResponse?.data[0]} preview={preview} region={region} />
+            <ReviewWrapper reviewResponse={reviewResponse?.data[0]}/>
         </>
     )
 }

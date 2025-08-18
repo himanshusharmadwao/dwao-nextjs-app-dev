@@ -70,7 +70,7 @@
   margin: 0 auto;
   padding: 0;
 }
- 
+
 :root {
   --mainColor: #4969bb;
 
@@ -101,4 +101,13 @@ body {
     --text-head: 19px;
     --text-head-large: 2rem;
   }
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

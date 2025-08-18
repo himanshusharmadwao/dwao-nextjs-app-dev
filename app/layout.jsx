@@ -1,4 +1,8 @@
+import Header from '@/components/layout/header'
+
 import '@/styles/global.css'
+import Footer from "@/components/layout/footer";
+import { getRegions } from '@/libs/apis/data/menu';
 
 export const metadata = {
   title: {

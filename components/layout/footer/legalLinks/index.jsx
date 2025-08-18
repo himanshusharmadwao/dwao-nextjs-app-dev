@@ -5,10 +5,10 @@ const LegalLinks = ({ data, regions, region }) => {
     // console.log(data)
     return (
         <div className="flex flex-wrap justify-center lg:justify-start items-center text-[var(--color-con-gray)]">
-            {data.map((link, index) => (
+            {data?.map((link, index) => (
                 <div key={index}>
                     <Link prefetch={false}
-                        href={buildRegionalPath(link.linkHref, region, regions.data)}
+                        href={buildRegionalPath(link?.linkHref, region, regions.data)}
                         className="transition ease-in-out duration-300 hover:text-white text-con"
                     >
                         {link.linkTitle}

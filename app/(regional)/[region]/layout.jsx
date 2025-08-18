@@ -3,6 +3,7 @@ import Header from '@/components/layout/header'
 import '@/styles/global.css'
 import Footer from "@/components/layout/footer";
 import { getRegions } from '@/libs/apis/data/menu';
+import { headers } from 'next/headers';
 
 export const metadata = {
   title: {
@@ -12,10 +13,10 @@ export const metadata = {
   description: "DWAO offers digital transformation and marketing services, including analytics, CRO, performance marketing, CDP, marketing automation, SEO, and more, helping businesses enhance their online presence, optimize performance, and drive growth."
 };
 
-export default async function RootLayout({ children, params, searchParams }) {
+export default async function RootLayout({ children, params }) {
 
-  const paramsValue = await searchParams;
-  const preview = paramsValue?.preview === "true";
+  const h = headers();
+  const preview = h.get('x-preview') === '1';
 
   const regions = await getRegions();
 
@@ -24,8 +25,11 @@ export default async function RootLayout({ children, params, searchParams }) {
       <head>
         {regions?.data?.map(region => {
           const hreflang = region?.hrefLang;
-          if (!hreflang || hreflang === "default") return null;
-          const url = `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${hreflang}`;
+          if (!hreflang) return null;
+          const url =
+            hreflang === "default"
+              ? process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL
+              : `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${hreflang}`;
           return (
             <link
               key={hreflang}

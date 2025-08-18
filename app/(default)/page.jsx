@@ -4,11 +4,10 @@ import { getHome } from "@/libs/apis/data/home";
 import { headers } from "next/headers";
 
 // Generate dynamic metadata
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata({ searchParams }) {
   const paramsValue = await searchParams;
   const preview = paramsValue?.preview === "true";
-  const region = params?.region ?? "default"
-  const homeResponse = await getHome(preview, region);
+  const homeResponse = await getHome(preview);
 
   if (!homeResponse) {
     return {
@@ -25,7 +24,7 @@ export async function generateMetadata({ params, searchParams }) {
     description: seo?.metaDescription || homeResponse?.data[0]?.excerpt,
     keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
     alternates: {
-      canonical: seo?.canonicalURL || `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""}`
+      canonical: seo?.canonicalURL || `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}`
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
@@ -44,17 +43,16 @@ export async function generateMetadata({ params, searchParams }) {
   };
 }
 
-export default async function Home({ params, searchParams }) {
+export default async function Home({ searchParams }) {
   const paramsValue = await searchParams;
   const preview = paramsValue?.preview === "true";
-  const region = params?.region ?? "default"
 
   const requestHeaders = await headers();
 
   const userAgent = requestHeaders.get('user-agent'); //User-Agent contains information about the client's browser and device
   const isMobile = /mobile/i.test(userAgent || ""); //checks if the word "mobile" appears in the userAgent string.
 
-  const homeResponse = await getHome(isMobile ? "mobile" : "desktop", preview, region);
+  const homeResponse = await getHome(isMobile ? "mobile" : "desktop", preview);
 
   const { data, error } = homeResponse;
 
@@ -74,7 +72,7 @@ export default async function Home({ params, searchParams }) {
   return (
     <>
       <StructuredData data={homeResponse?.data[0]?.seo?.structuredData} />
-      <HomeWrapper isMobile={isMobile} data={homeResponse?.data[0]} preview={preview} region={region} />
+      <HomeWrapper isMobile={isMobile} data={homeResponse?.data[0]} preview={preview} />
     </>
   );
 }

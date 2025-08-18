@@ -20,9 +20,11 @@ export const getPartner = async (preview = false, slug = '', region = "default")
     let mainCapability = finalResponse?.data?.[0];
 
     if (!mainCapability) {
-      response = await fetch(baseUrl.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      baseUrl = baseUrl.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(baseUrl, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
       mainCapability = finalResponse?.data?.[0];
     }

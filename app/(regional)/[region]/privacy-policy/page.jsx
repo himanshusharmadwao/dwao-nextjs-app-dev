@@ -1,12 +1,26 @@
 import StructuredData from "@/components/StructuredData";
 import PrivacyPolicyWrapper from "@/components/wrapper/privacy-policy";
+import { getRegions } from "@/libs/apis/data/menu";
 import { getPolicy } from "@/libs/apis/data/privacyPolicy";
+import { checkRegionValidity } from "@/libs/utils";
+import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   const paramsValue = await searchParams;
   const preview = paramsValue?.preview === "true";
   const region = params?.region ?? "default"
+
+  const regions = await getRegions();
+  const validRegion = checkRegionValidity(region, regions);
+
+  if (!validRegion) {
+    return {
+      title: "Page Not Found",
+      description: "Invalid region specified.",
+    };
+  }
+
   const policyResponse = await getPolicy(preview, region);
 
   if (!policyResponse) {
@@ -25,8 +39,8 @@ export async function generateMetadata({ params, searchParams }) {
     keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
     alternates: {
       canonical: seo?.canonicalURL ||
-                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-                }/privacy-policy`
+        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
+        }/privacy-policy`
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
@@ -50,6 +64,13 @@ const PrivacyPolicy = async ({ params, searchParams }) => {
   const preview = paramsValue?.preview === "true";
 
   const region = params?.region ?? "default"
+
+  const regions = await getRegions();
+
+  const validRegion = checkRegionValidity(region, regions);
+  if (!validRegion) {
+    return <NotFound />
+  }
 
   const policyResponse = await getPolicy(preview, region);
   const { data, error } = policyResponse;

@@ -15,9 +15,11 @@ export const getMenu = async (preview = false, region = "default") => {
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 
@@ -31,6 +33,76 @@ export const getMenu = async (preview = false, region = "default") => {
     return { data: null, error: error.message || "Something went wrong" };
   }
 };
+
+// Get Legal Menu with region support
+export const getLegalMenu = async (preview = false, region = "default") => {
+
+  try {
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/legal-menus/?populate[menu][populate][subMenu][populate]=subSubMenu&populate=regions`;
+
+    if (preview) url += `&status=draft`;
+    if (region) url += `&filters[regions][slug][$eq]=${region}`;
+
+    let response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
+      finalResponse = await response.json();
+    }
+
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data || null, error: null };
+  } catch (error) {
+    console.error("Error:", error);
+    return { data: null, error: error.message || "Something went wrong" };
+  }
+};
+
+// Get Quick Links with region support
+export const getQuickLinks = async (preview = false, region = "default") => {
+  try {
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/quick-links/?populate[menu][populate][subMenu][populate]=subSubMenu&populate=regions`;
+
+    if (preview) url += `&status=draft`;
+    if (region) url += `&filters[regions][slug][$eq]=${region}`;
+
+    let response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    let finalResponse = await response.json();
+
+    if (!finalResponse?.data || finalResponse?.data?.length === 0) {
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
+      finalResponse = await response.json();
+    }
+
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+      return { data: null, error: finalResponse?.error?.message || "Unknown error" };
+    }
+
+    return { data: finalResponse?.data || null, error: null };
+  } catch (error) {
+    console.error("Error:", error);
+    return { data: null, error: error.message || "Something went wrong" };
+  }
+};
+
 
 // Get Secondary Menu with region support
 export const getSecondaryMenu = async (preview = false, region = "default") => {
@@ -47,9 +119,11 @@ export const getSecondaryMenu = async (preview = false, region = "default") => {
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 

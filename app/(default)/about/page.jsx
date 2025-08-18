@@ -1,14 +1,13 @@
 import StructuredData from "@/components/StructuredData";
-import AboutWrapper from "@/components/wrapper/about"
+import AboutWrapper from "@/components/wrapper/about";
 import { getAboutData } from "@/libs/apis/data/about";
 import { getRegions } from "@/libs/apis/data/menu";
 
 // Generate dynamic metadata
-export async function generateMetadata({params, searchParams }) {
+export async function generateMetadata({searchParams }) {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
-    const region = params?.region ?? "default"
-    const aboutResponse = await getAboutData(preview, region);
+    const aboutResponse = await getAboutData(preview);
 
     if (!aboutResponse) {
         return {
@@ -25,7 +24,7 @@ export async function generateMetadata({params, searchParams }) {
         description: seo?.metaDescription || aboutResponse?.data[0]?.excerpt,
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
-            canonical: seo?.canonicalURL || `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""}/about`
+            canonical: seo?.canonicalURL || `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/about`
         },
         openGraph: {
             title: seo?.openGraph?.ogTitle,
@@ -44,15 +43,13 @@ export async function generateMetadata({params, searchParams }) {
     };
 }
 
-const About = async ({ params, searchParams }) => {
+const About = async ({ searchParams }) => {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
 
-    const region = params?.region ?? "default"
+    const regions = await getRegions();
 
-    const regions = await getRegions()
-
-    const aboutResponse = await getAboutData(preview, region);
+    const aboutResponse = await getAboutData(preview);
 
     const { data, error } = aboutResponse;
 
@@ -72,7 +69,7 @@ const About = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={aboutResponse?.data[0]?.seo?.structuredData} />
-            <AboutWrapper data={aboutResponse?.data[0]} region={region} regions={regions} preview={preview} />
+            <AboutWrapper data={aboutResponse?.data[0]} regions={regions} preview={preview} />
         </>
     )
 }

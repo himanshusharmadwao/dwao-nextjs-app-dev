@@ -3,11 +3,10 @@ import ContactWrapper from "@/components/wrapper/contact"
 import { getContact } from "@/libs/apis/data/contact";
 
 // Generate dynamic metadata
-export async function generateMetadata({params, searchParams }) {
+export async function generateMetadata({ searchParams }) {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
-    const region = params?.region ?? "default";
-    const contactResponse = await getContact(preview, region);
+    const contactResponse = await getContact(preview);
 
     if (!contactResponse) {
         return {
@@ -25,8 +24,7 @@ export async function generateMetadata({params, searchParams }) {
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||
-                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-                }/contact`
+                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/contact`
         },
         openGraph: {
             title: seo?.openGraph?.ogTitle,
@@ -45,14 +43,12 @@ export async function generateMetadata({params, searchParams }) {
     };
 }
 
-const Contact = async ({ params, searchParams }) => {
+const Contact = async ({ searchParams }) => {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
     // console.log("preview: ", preview)
 
-    const region = params?.region ?? "default";
-
-    const contactResponse = await getContact(preview, region);
+    const contactResponse = await getContact(preview);
 
     const { data, error } = contactResponse;
     if (error) {
@@ -71,7 +67,7 @@ const Contact = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={contactResponse?.data[0]?.seo?.structuredData} />
-            <ContactWrapper data={contactResponse?.data[0]} preview={preview} region={region} />
+            <ContactWrapper data={contactResponse?.data[0]} preview={preview} />
         </>
     )
 }

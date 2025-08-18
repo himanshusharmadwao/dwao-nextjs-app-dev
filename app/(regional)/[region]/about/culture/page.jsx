@@ -1,13 +1,26 @@
+import NotFound from "@/app/(regional)/[region]/not-found"
 import StructuredData from "@/components/StructuredData";
 import CultureWrapper from "@/components/wrapper/culture"
 import { getCulture } from "@/libs/apis/data/culture";
 import { getRegions } from "@/libs/apis/data/menu";
+import { checkRegionValidity } from "@/libs/utils";
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
     const region = params?.region ?? "default"
+
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+        return {
+            title: "Page Not Found",
+            description: "Invalid region specified.",
+        };
+    }
+
     const cultureResponse = await getCulture(preview, region);
 
     if (!cultureResponse) {
@@ -52,13 +65,15 @@ const Culture = async ({ params, searchParams }) => {
 
     const region = params?.region ?? "default"
 
-    const [
-        cultureResponse,
-        regions
-    ] = await Promise.all([
-        getCulture(preview, region),
-        getRegions()
-    ]);
+    const regions = await getRegions();
+
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+        return <NotFound />
+    }
+
+    const cultureResponse = await getCulture(preview, region);
 
     const { data, error } = cultureResponse;
 

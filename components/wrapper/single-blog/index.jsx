@@ -23,7 +23,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const SingleBlogWrapper = async ({ pageData, relatedBlogs, region, preview }) => {
+const SingleBlogWrapper = async ({ pageData, relatedBlogs, preview, region = "default" }) => {
     // console.log(pageData)
 
     // console.log(pageData.markdownContent)
@@ -54,7 +54,7 @@ const SingleBlogWrapper = async ({ pageData, relatedBlogs, region, preview }) =>
                                     relatedBlogs?.map((item, index) => (
                                         <li key={index} className='w-full'>
                                             <Link prefetch={false}
-                                            href={buildRegionalPath(`/blog/${item.slug}`, region, regions.data)} className="flex justify-between items-start group">
+                                                href={buildRegionalPath(`/blog/${item.slug}`, region, regions.data)} className="flex justify-between items-start group">
                                                 <span className="group-hover:underline">{item.title}</span>
                                                 <div className="relative w-12 h-8">
                                                     <Image
@@ -100,7 +100,7 @@ const SingleBlogWrapper = async ({ pageData, relatedBlogs, region, preview }) =>
                 </div>
             </div>
             <Suspense fallback={<LoadingPlaceholder />}>
-                <ReachOut preview={preview} region={region}/>
+                <ReachOut preview={preview} region={region} />
             </Suspense>
         </>
     )

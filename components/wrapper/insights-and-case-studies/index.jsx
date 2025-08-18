@@ -17,7 +17,7 @@ const LoadingPlaceholder = () => (
 );
 
 
-const InsightCaseWrapper = async ({ preview, region }) => {
+const InsightCaseWrapper = async ({ preview, region = "default" }) => {
 
     const insightCategoryResponse = await getInsightCategory(preview, region);
 

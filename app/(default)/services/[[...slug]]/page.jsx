@@ -15,8 +15,7 @@ export async function generateMetadata({ params, searchParams }) {
     // const { type, slug } = resolvedParams;
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
-    const region = resolvedParams?.region ?? "default"
-    const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1], region);
+    const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1]);
 
 
     if (!capabilityResponse) {
@@ -36,8 +35,7 @@ export async function generateMetadata({ params, searchParams }) {
       }),
       alternates: {
         canonical: seo?.canonicalURL ||
-          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-          }/services/${resolvedParams.slug[0]}/${resolvedParams.slug[1]}`
+          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/services/${resolvedParams?.slug?.[0]}${resolvedParams?.slug?.[1] ? `/${resolvedParams.slug[1]}` : "" }`
       },
       openGraph: {
         title: seo?.openGraph?.ogTitle,
@@ -106,9 +104,7 @@ const DynamicPages = async ({ params, searchParams }) => {
   const resolvedSearchParams = await searchParams;
   const preview = resolvedSearchParams?.preview === "true"; //exact comparison because of js non-empty string logic
 
-  const region = resolvedParams?.region ?? "default"
-
-  const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1], region);
+  const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1]);
 
   if (capabilityResponse.data == null) {
     return <NotFound />;
@@ -119,7 +115,7 @@ const DynamicPages = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} region={region} regions={regions} />
+      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} />
     </>
   );
 };

@@ -16,7 +16,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const BlogWrapper = async ({preview, region}) => {
+const BlogWrapper = async ({preview, region = "default"}) => {
 
     const categoryResponse = await getCategory(preview, region);
 

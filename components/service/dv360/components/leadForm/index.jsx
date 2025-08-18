@@ -3,6 +3,7 @@
 import { toastStyle } from '@/components/toastNotification';
 import React, { forwardRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import CountryCodeSelect from '../countryCode/CountryCodeSelect';
 
 const LeadForm = forwardRef((_, ref) => {
 
@@ -10,7 +11,7 @@ const LeadForm = forwardRef((_, ref) => {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    countryCode: "+91",
+    countryCode: "+1",
     email: "",
     message: "",
   });
@@ -151,19 +152,12 @@ const LeadForm = forwardRef((_, ref) => {
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Phone Number</label>
             <div className="flex gap-2">
-              <select
+              <CountryCodeSelect
                 name="countryCode"
                 id="countryCode"
-                className="w-1/4 px-4 py-2 border border-[#e4e4e4] text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onChange={handleChange}
                 value={formData.countryCode}
-              >
-                <option value="+91">+91 (IN)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+61">+61 (AU)</option>
-                <option value="+86">+86 (CN)</option>
-              </select>
+                onChange={handleChange}
+              />
               <input
                 type="tel"
                 name="phone"

@@ -2,12 +2,25 @@ import StructuredData from "@/components/StructuredData";
 import AboutWrapper from "@/components/wrapper/about"
 import { getAboutData } from "@/libs/apis/data/about";
 import { getRegions } from "@/libs/apis/data/menu";
+import { checkRegionValidity } from "@/libs/utils";
+import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
-    const region = params?.region ?? "default"
+    const region = params?.region ?? "default";
+
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+        return {
+            title: "Page Not Found",
+            description: "Invalid region specified.",
+        };
+    }
+
     const aboutResponse = await getAboutData(preview, region);
 
     if (!aboutResponse) {
@@ -49,12 +62,17 @@ const About = async ({ params, searchParams }) => {
     const preview = paramsValue?.preview === "true";
     // console.log("preview: ", preview)
 
-    const region = params.region;
+    const region = params?.region ?? "default";
 
     const regions = await getRegions();
 
+    const validRegion = checkRegionValidity(region, regions);
+    if (!validRegion) {
+        return <NotFound />
+    }
+
     const aboutResponse = await getAboutData(preview, region);
-    
+
     const { data, error } = aboutResponse;
 
     if (error) {
@@ -73,7 +91,7 @@ const About = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={aboutResponse?.data[0]?.seo?.structuredData} />
-            <AboutWrapper data={aboutResponse?.data[0]} region={region} regions={regions} preview={preview} />
+            <AboutWrapper data={aboutResponse?.data[0]} regions={regions} preview={preview} region={region} />
         </>
     )
 }

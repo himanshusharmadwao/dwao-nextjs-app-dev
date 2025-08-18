@@ -1,12 +1,26 @@
 import StructuredData from "@/components/StructuredData";
 import ReviewWrapper from "@/components/wrapper/marketing-automation-team"
+import { getRegions } from "@/libs/apis/data/menu";
 import { getReviews } from "@/libs/apis/data/reviews";
+import { checkRegionValidity } from "@/libs/utils";
+import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
     const region = params?.region ?? "default"
+
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+        return {
+            title: "Page Not Found",
+            description: "Invalid region specified.",
+        };
+    }
+
     const reviewResponse = await getReviews(preview, region);
 
     if (!reviewResponse) {
@@ -54,6 +68,13 @@ const reviewMat = async ({ params, searchParams }) => {
 
     const region = params?.region ?? "default"
 
+    const regions = await getRegions();
+
+    const validRegion = checkRegionValidity(region, regions);
+    if (!validRegion) {
+        return <NotFound />
+    }
+
     const reviewResponse = await getReviews(preview, region);
 
     const { data, error } = reviewResponse;
@@ -73,7 +94,7 @@ const reviewMat = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={reviewResponse?.data?.seo?.structuredData} />
-            <ReviewWrapper reviewResponse={reviewResponse?.data[0]} preview={preview} region={region} />
+            <ReviewWrapper reviewResponse={reviewResponse?.data[0]} region={region} />
         </>
     )
 }

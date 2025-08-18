@@ -1,12 +1,26 @@
+import NotFound from "@/app/(regional)/[region]/not-found"
 import BlogWrapper from "@/components/wrapper/blog";
+import { getRegions } from "@/libs/apis/data/menu";
+import { checkRegionValidity } from "@/libs/utils";
 
 export async function generateMetadata({ params }) {
     const region = params?.region ?? "default";
 
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+        return {
+            title: "Page Not Found",
+            description: "Invalid region specified.",
+        };
+    }
+
+
     return {
         title: "Blogs",
         alternates: {
-            canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : "" }/blog`
+            canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""}/blog`
         }
     };
 }
@@ -17,7 +31,14 @@ const Blog = async ({ params, searchParams }) => {
 
     // console.log("preview level 1: ", preview)
 
-    const region = params.region;
+    const region = params?.region ?? "default";
+
+    const regions = await getRegions();
+
+    const validRegion = checkRegionValidity(region, regions);
+    if (!validRegion) {
+        return <NotFound />
+    }
 
     return (
         <>

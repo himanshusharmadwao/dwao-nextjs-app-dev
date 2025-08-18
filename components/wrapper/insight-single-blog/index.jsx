@@ -37,7 +37,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region }) => {
+const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region = "default" }) => {
 
     // console.log("Pagedata: ", pageData)
 

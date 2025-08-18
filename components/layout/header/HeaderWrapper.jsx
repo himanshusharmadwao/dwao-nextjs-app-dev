@@ -7,7 +7,7 @@ import MobileHeader from "./mobile";
 import Image from "next/image";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 import { usePathname, useRouter } from "next/navigation";
-import { checkRegionData, getNormalizedPath, buildRegionalPath } from "@/libs/utils";
+import { getNormalizedPath, buildRegionalPath } from "@/libs/utils";
 
 const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
 
@@ -27,134 +27,26 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  // add near other refs
-  const isCheckingRef = useRef(false);
-
   useEffect(() => {
-    if (!regions?.data?.length || !pathname || isCheckingRef.current) return;
+    const slugFromUrl = pathname.split('/')[1];
 
-    const doCheck = async () => {
-      isCheckingRef.current = true;
-      try {
-        const normalized = getNormalizedPath(pathname, regions); 
-        const slugFromUrl = pathname.split('/')[1] || null;
-        const regionList = regions.data;
-        const knownSlugs = new Set(regionList.map(r => r.slug));
+    const matchedRegion = regions?.data?.find((region) => region.slug === slugFromUrl);
 
-        if (slugFromUrl && knownSlugs.has(slugFromUrl)) {
-          if (slugFromUrl === "in-en") {
-            router.replace(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}/${normalized.replace(/^\//, "")}`);
-            return;
-          }
+    if (matchedRegion) {
 
-          const matched = regionList.find(r => r.slug === slugFromUrl);
-          const exists = await checkRegionData(slugFromUrl, normalized);
-
-          if (!exists) {
-            router.replace(normalized);
-            setSelectedRegion(regionList.find(r => r.slug === "default") || null);
-          } else {
-            setSelectedRegion(matched || null);
-          }
-          return;
-        }
-
-        const defaultRegion = regionList.find(r => r.slug === "default") || null;
-        setSelectedRegion(defaultRegion);
-      } catch (e) {
-      } finally {
-        isCheckingRef.current = false;
+      if (matchedRegion.slug === "in-en") {
+        router.push(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}${getNormalizedPath(pathname, regions)}`)
+        return;
       }
-    };
 
-    void doCheck();
-  }, [pathname, regions, router]);
-
-
-  // useEffect(() => {
-  //   const slugFromUrl = pathname.split('/')[1];
-
-  //   const matchedRegion = regions?.data?.find((region) => region.slug === slugFromUrl);
-
-  //   if (matchedRegion) {
-
-  //     if (matchedRegion.slug === "in-en") {
-  //       router.push(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}/${getNormalizedPath(pathname, regions)}`)
-  //       return;
-  //     }
-
-  //     setSelectedRegion(matchedRegion);
-  //   } else {
-  //     const defaultRegion = regions?.data?.find(region => region.slug === "default");
-
-  //     setSelectedRegion(defaultRegion || null);
-  //   }
-
-  // }, [pathname, regions]);
-
-  // const handleSelectRegion = (region) => {
-
-  //   if (region.slug === "in-en") {
-  //     router.push(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}/${getNormalizedPath(pathname, regions)}`)
-  //     return;
-  //   }
-
-  //   setSelectedRegion(region);
-  //   setIsRegionOpen(false);
-
-  //   const currentPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
-
-  //   const regionsHref = regions.data.map(r => r.slug);
-  //   const pathParts = currentPath.split("/").filter(Boolean);
-
-  //   const isRegionPrefixed = regionsHref.includes(pathParts[0]);
-  //   const cleanedPath = isRegionPrefixed ? pathParts.slice(1).join("/") : pathParts.join("/");
-
-  //   const newPath =
-  //     !region.slug || region.slug.toLowerCase() === "default"
-  //       ? `/${cleanedPath}`
-  //       : `/${region.slug}${cleanedPath ? `/${cleanedPath}` : ""}`;
-
-  //   router.push(newPath);
-  // };
-
-  const handleSelectRegion = async (region) => {
-
-    // If region is "in-en", handle domestic URL redirection
-    if (region.slug === "in-en") {
-      router.push(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}/${getNormalizedPath(pathname, regions).replace(/^\//, "")}`);
-      return;
-    }
-
-    setIsRegionOpen(false);
-
-    const currentPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
-
-    console.log("currentPath: ", currentPath)
-    console.log("normalizedPath: ", `${getNormalizedPath(pathname, regions)}`)
-
-
-
-    // Check if the region-specific data exists
-    const dataExists = await checkRegionData(region.slug, `${getNormalizedPath(pathname, regions)}`);
-
-    console.log("dataExists: ", dataExists)
-
-    // If region-specific data exists, update the URL to include the region
-    if (dataExists) {
-      setSelectedRegion(region);
-      const normalized = getNormalizedPath(pathname, regions);
-      const regionPrefix = region.slug === "default" ? "" : `/${region.slug}`;
-      const newPath = `${regionPrefix}${normalized}`;
-      router.push(newPath);
+      setSelectedRegion(matchedRegion);
     } else {
-      const cleanedPath = getNormalizedPath(pathname, regions)
-        .split("/")
-        .filter(Boolean)
-        .join("/");
-      router.push(`/${cleanedPath}`);
+      const defaultRegion = regions?.data?.find(region => region.slug === "default");
+
+      setSelectedRegion(defaultRegion || null);
     }
-  };
+
+  }, [pathname, regions]);
 
   const normalizedPath = getNormalizedPath(pathname, regions);
 
@@ -163,7 +55,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
   const isBlogPage = normalizedPath === "/blog";
   const isInsightsCaseStudies = normalizedPath === "/case-studies";
   const isReview = normalizedPath.includes("/reviews");
-  const isPartner = normalizedPath === "/partners";
+  const isPartner = normalizedPath.includes("/partners");
 
   // to get capabilities hrefs - memoized for performance
   const getCapabilitiesHrefs = useCallback((headerData) => {
@@ -197,6 +89,40 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
   // to toggle menu
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+  const isBlogForRegion = normalizedPath.includes("/blog");
+  const isInsightsCaseStudiesForRegion = normalizedPath.includes("/case-studies");
+
+  const handleSelectRegion = (region) => {
+    if (region.slug === "in-en") {
+      if (isCulturePage || isBlogForRegion || isInsightsCaseStudiesForRegion || isCapability || isPartner) {
+        router.push(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}`);
+      } else {
+        router.push(
+          `${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}${getNormalizedPath(pathname, regions)}`
+        );
+      }
+      return;
+    }
+
+    setSelectedRegion(region);
+    setIsRegionOpen(false);
+
+    const currentPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
+
+    const regionsHref = regions.data.map(r => r.slug);
+    const pathParts = currentPath.split("/").filter(Boolean);
+
+    const isRegionPrefixed = regionsHref.includes(pathParts[0]);
+    const cleanedPath = isRegionPrefixed ? pathParts.slice(1).join("/") : pathParts.join("/");
+
+    const newPath =
+      !region.slug || region.slug.toLowerCase() === "default"
+        ? `/${cleanedPath}`
+        : `/${region.slug}${cleanedPath ? `/${cleanedPath}` : ""}`;
+
+    router.push(newPath);
   };
 
   // Memoize handleScroll to prevent recreating on every render
@@ -243,7 +169,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
     if (normalizedPath === '/about') return 'about';
     if (normalizedPath.includes('/case-studies')) return 'insights';
     if (normalizedPath.includes('/reviews')) return '';
-    if (normalizedPath === '/partners') return '';
+    if (normalizedPath.includes('/partners')) return 'partners';
     if (isCapability) return 'capability';
 
     return '';
@@ -322,10 +248,13 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
               ))}
             </ul>
 
-            <div ref={regionRef} className="region relative inline-block text-left text-[15px] z-[99999]">
+            <div ref={regionRef} className={`region relative inline-block text-left text-[15px] z-[99999] ${isRegionOpen ? styles.dropdownOpen : ''}`}
+              onMouseEnter={() => setIsRegionOpen(true)}
+              onMouseLeave={() => setIsRegionOpen(false)}
+            >
               {/* Trigger */}
               <div
-                className={`flex gap-2 items-center text-white cursor-pointer ${styles.regionTrigger}`}
+                className={`flex gap-2 items-center justify-center text-white cursor-pointer ${styles.regionTrigger}`}
                 onClick={() => setIsRegionOpen((prev) => !prev)}
               >
                 <Image
@@ -334,7 +263,8 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
                   width={18}
                   alt="Expand"
                 />
-                <span>{selectedRegion?.slug}</span>
+                <span className="lg:inline-block hidden">{selectedRegion?.name}</span>
+                <span className="inline-block lg:hidden">{selectedRegion?.slug}</span>
                 <Image
                   src="/icons/caret-down-white.svg"
                   height={20}
@@ -343,22 +273,21 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
                 />
               </div>
               {/* Dropdown */}
-              {isRegionOpen && (
-                <div className={`absolute right-[0px] mt-2 z-50 bg-white w-60 max-h-64 overflow-y-auto rounded-md shadow-md border border-gray-200 space-y-2 p-3 ${styles.regionList}`}>
-                  {[...regions.data]
-                    .sort((a, b) => (a.slug === "default" ? -1 : b.slug === "default" ? 1 : 0))
-                    .map((region) => (
-                      <span
-                        key={region.id}
-                        className="block text-gray-700 cursor-pointer hover:bg-gray-100 border-b-[0.2px] px-2 py-1"
-                        onClick={() => handleSelectRegion(region)}
-                      >
-                        {region.name}
-                      </span>
-                    ))}
-                </div>
-              )}
+              <div className={`absolute right-[0px] z-50 bg-white w-60 overflow-y-auto border border-gray-200 space-y-4 p-6 ${styles.regionList}`}>
+                {[...regions.data]
+                  .sort((a, b) => (a.slug === "default" ? -1 : b.slug === "default" ? 1 : 0))
+                  .map((region) => (
+                    <span
+                      key={region.id}
+                      className="block w-fit text-gray-700 hover:text-[var(--mainColor)] cursor-pointer"
+                      onClick={() => handleSelectRegion(region)}
+                    >
+                      {region.name}
+                    </span>
+                  ))}
+              </div>
             </div>
+
           </nav>
         </div>
 

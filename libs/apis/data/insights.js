@@ -15,9 +15,11 @@ export const getInsightCategory = async (preview = false, region = "default") =>
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 
@@ -58,10 +60,11 @@ export const getInsightBlog = async (preview = false, industry = '', slug = '', 
     let mainInsight = insight?.data?.[0];
 
     if (!mainInsight) {
-      response = await fetch(mainUrl.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-        signal: AbortSignal.timeout(10000),
-      });
+      mainUrl = mainUrl.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(mainUrl, { next: { revalidate: getRevalidateTime(preview) }, signal: AbortSignal.timeout(10000), });
       const fallbackInsight = await response.json();
       if (!fallbackInsight?.data?.[0]) return null;
       mainInsight = fallbackInsight?.data?.[0];
@@ -155,9 +158,11 @@ export const getAllInsightBlogs = async (
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 

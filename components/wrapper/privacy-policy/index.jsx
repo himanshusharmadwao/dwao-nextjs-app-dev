@@ -9,7 +9,7 @@ import styles from "@/styles/markdown.module.css";
 import Image from 'next/image';
 import { breakTitle } from '@/libs/utils';
 
-const PrivacyPolicyWrapper = async ({ policyResponse, preview, region }) => {
+const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default" }) => {
 
     const content = policyResponse?.markdownContent;
     // console.log(content)

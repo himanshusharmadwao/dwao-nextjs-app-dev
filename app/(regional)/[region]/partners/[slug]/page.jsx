@@ -6,6 +6,7 @@ import SinglePageWrapper from '@/components/wrapper/single-page';
 import { getPartner } from '@/libs/apis/data/partners';
 import StructuredData from '@/components/StructuredData';
 import { getRegions } from '@/libs/apis/data/menu';
+import { checkRegionValidity } from '@/libs/utils';
 
 export async function generateMetadata({ params, searchParams }) {
   try {
@@ -13,6 +14,17 @@ export async function generateMetadata({ params, searchParams }) {
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
     const region = params?.region ?? "default"
+
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+
+    if (!validRegion) {
+      return {
+        title: "Page Not Found",
+        description: "Invalid region specified.",
+      };
+    }
+
     const capabilityResponse = await getPartner(preview, slug, region);
 
     if (!capabilityResponse) {
@@ -102,19 +114,24 @@ const DynamicPages = async ({ params, searchParams }) => {
   const { region, slug } = await params;
   const resolvedSearchParams = await searchParams;
   const preview = resolvedSearchParams?.preview === "true"; //exact comparison because of js non-empty string logic
-  const capabilityResponse = await getPartner(preview, slug, region);
 
+  const regions = await getRegions();
+
+  const validRegion = checkRegionValidity(region, regions);
+  if (!validRegion) {
+    return <NotFound />
+  }
+
+  const capabilityResponse = await getPartner(preview, slug, region);
 
   if (!capabilityResponse) {
     return <NotFound />
   }
 
-  const regions = await getRegions()
-
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse.data[0]} relatedCapabilities={capabilityResponse.related} region={region} regions={regions} />
+      <SinglePageWrapper pageData={capabilityResponse.data[0]} relatedCapabilities={capabilityResponse.related} regions={regions} region={region} />
     </>
   );
 };

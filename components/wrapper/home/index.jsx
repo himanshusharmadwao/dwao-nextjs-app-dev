@@ -41,7 +41,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const HomeWrapper = async ({ isMobile, data, preview, region }) => {
+const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
 
     // Fetch remaining data in parallel
     const [

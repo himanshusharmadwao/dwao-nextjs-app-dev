@@ -33,20 +33,23 @@ export const getCapability = async (preview = false, type, slug, region = "defau
     let finalResponse = await response.json();
     let mainCapability = finalResponse?.data?.[0];
 
-    if (!finalResponse?.data || finalResponse.data.length === 0) {
-      return { data: null, message: "Not Found" };
-    }
-
     if (!mainCapability) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
       mainCapability = finalResponse?.data?.[0];
     }
 
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+      return { data: null, error: finalResponse?.error?.message || "Something went wrong", status: "error" };
+    }
 
-    if (!finalResponse?.data) return null;
+    if (!finalResponse?.data || finalResponse.data.length === 0) {
+      return { data: null, message: "Not Found", status: "not_found" };
+    }
 
     const categorySlug = mainCapability?.category?.slug;
     let related = [];

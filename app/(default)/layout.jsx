@@ -3,6 +3,7 @@ import Header from '@/components/layout/header'
 import '@/styles/global.css'
 import Footer from "@/components/layout/footer";
 import { getRegions } from '@/libs/apis/data/menu';
+import { headers } from 'next/headers';
 
 export const metadata = {
   title: {
@@ -14,6 +15,9 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
 
+  const h = headers();
+  const preview = h.get('x-preview') === '1';
+
   const regions = await getRegions();
 
   return (
@@ -21,8 +25,11 @@ export default async function RootLayout({ children }) {
       <head>
         {regions?.data?.map(region => {
           const hreflang = region?.hrefLang;
-          if (!hreflang || hreflang === "default") return null;
-          const url = `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${hreflang}`;
+          if (!hreflang) return null;
+          const url =
+            hreflang === "default"
+              ? process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL
+              : `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${hreflang}`;
           return (
             <link
               key={hreflang}
@@ -34,9 +41,9 @@ export default async function RootLayout({ children }) {
         })}
       </head>
       <body>
-        <Header />
+        <Header preview={preview} />
         {children}
-        <Footer />
+        <Footer preview={preview} />
       </body>
     </html>
   );

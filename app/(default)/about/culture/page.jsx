@@ -4,11 +4,10 @@ import { getCulture } from "@/libs/apis/data/culture";
 import { getRegions } from "@/libs/apis/data/menu";
 
 // Generate dynamic metadata
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata({ searchParams }) {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
-    const region = params?.region ?? "default"
-    const cultureResponse = await getCulture(preview, region);
+    const cultureResponse = await getCulture(preview);
 
     if (!cultureResponse) {
         return {
@@ -26,8 +25,7 @@ export async function generateMetadata({ params, searchParams }) {
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||
-                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-                }/about/culture`
+                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/about/culture`
         },
         openGraph: {
             title: seo?.openGraph?.ogTitle,
@@ -46,17 +44,15 @@ export async function generateMetadata({ params, searchParams }) {
     };
 }
 
-const Culture = async ({ params, searchParams }) => {
+const Culture = async ({ searchParams }) => {
     const paramsValue = await searchParams;
     const preview = paramsValue?.preview === "true";
-
-    const region = params?.region ?? "default"
 
     const [
         cultureResponse,
         regions
     ] = await Promise.all([
-        getCulture(preview, region),
+        getCulture(preview),
         getRegions()
     ]);
 
@@ -78,7 +74,7 @@ const Culture = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={cultureResponse?.data[0]?.seo?.structuredData} />
-            <CultureWrapper data={cultureResponse?.data[0]} region={region} regions={regions} />
+            <CultureWrapper data={cultureResponse?.data[0]} regions={regions} />
         </>
     )
 }

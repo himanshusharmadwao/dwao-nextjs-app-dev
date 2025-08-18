@@ -9,16 +9,16 @@ export const runtime = 'nodejs'; // Keep nodejs for now due to dependencies
 export const preferredRegion = 'auto';
 
 // Cache the API call to prevent duplicate requests
-const getCachedInsightBlog = cache(async (preview, industry, slug, region) => {
-    return await getInsightBlog(preview, industry, slug, region || "default");
+const getCachedInsightBlog = cache(async (preview, industry, slug) => {
+    return await getInsightBlog(preview, industry, slug);
 });
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-    const { industry, slug, region } = await params;
+    const { industry, slug } = await params;
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
-    const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug, region || "default");
+    const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug);
 
     // const insightBlog = insightBlogsResponse.data.find(post => post.slug === params.slug);
 
@@ -39,8 +39,7 @@ export async function generateMetadata({ params, searchParams }) {
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||
-                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-                }/case-studies/${industry}/${slug}`
+                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/case-studies/${industry}/${slug}`
         },
         openGraph: {
             title: seo?.openGraph?.ogTitle,
@@ -60,16 +59,14 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 
-
-
 const SingleBlog = async ({ params, searchParams }) => {
 
-    const { industry, slug, region } = await params;
+    const { industry, slug } = await params;
     // console.log("params:", industry, slug);
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
     // console.log("preview: ", preview)
-    const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug, region || "default");
+    const insightBlogsResponse = await getCachedInsightBlog(preview, industry, slug);
     // console.log("insightBlogsResponse: ", insightBlogsResponse)
 
     // const insightBlog = insightBlogsResponse.data.find(post => post.slug === resolvedParams.slug);
@@ -81,7 +78,7 @@ const SingleBlog = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={insightBlogsResponse?.data?.[0]?.seo?.structuredData} />
-            <SingleBlogWrapper pageData={insightBlogsResponse.data[0]} relatedInsightBlogs={insightBlogsResponse.related} region={region} />
+            <SingleBlogWrapper pageData={insightBlogsResponse.data[0]} relatedInsightBlogs={insightBlogsResponse.related} />
         </>
     )
 

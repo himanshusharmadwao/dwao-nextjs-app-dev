@@ -35,8 +35,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const AboutWrapper = async ({ data, region, regions, preview }) => {
-
+const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
     return (
         <>
             {/* banner */}

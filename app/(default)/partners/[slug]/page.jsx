@@ -9,10 +9,10 @@ import { getRegions } from '@/libs/apis/data/menu';
 
 export async function generateMetadata({ params, searchParams }) {
   try {
-    const { slug, region } = await params;
+    const { slug } = await params;
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
-    const capabilityResponse = await getPartner(preview, slug, region || "default");
+    const capabilityResponse = await getPartner(preview, slug);
 
     if (!capabilityResponse) {
       return {
@@ -32,8 +32,7 @@ export async function generateMetadata({ params, searchParams }) {
       }),
       alternates: {
         canonical: seo?.canonicalURL ||
-          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-          }/partners/${slug}`
+          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/partners/${slug}`
       },
       openGraph: {
         title: seo?.openGraph?.ogTitle,
@@ -112,7 +111,7 @@ const DynamicPages = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} region={region} regions={regions} />
+      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} />
     </>
   );
 };

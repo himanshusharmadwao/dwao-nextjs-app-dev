@@ -19,9 +19,11 @@ export const getHome = async (device = "desktop", preview = false, region = "def
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 
@@ -50,9 +52,11 @@ export const getClients = async (preview = false, region = "default") => {
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 
@@ -81,9 +85,11 @@ export const getClientTestimonials = async (preview = false, region = "default")
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 
@@ -112,9 +118,11 @@ export const getJoinTheTeam = async (preview = false, region = "default") => {
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 

@@ -1,12 +1,25 @@
 import StructuredData from "@/components/StructuredData";
 import ContactWrapper from "@/components/wrapper/contact"
 import { getContact } from "@/libs/apis/data/contact";
+import { getRegions } from "@/libs/apis/data/menu";
+import { checkRegionValidity } from "@/libs/utils";
+import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Generate dynamic metadata
 export async function generateMetadata({ searchParams }) {
     const params = await searchParams;
     const preview = params?.preview === "true";
-    const region = params?.region ?? "default";
+    const region = params?.region;
+
+    const regions = await getRegions();
+    const validRegion = checkRegionValidity(region, regions);
+    if (!validRegion) {
+        return {
+            title: "Page Not Found",
+            description: "Invalid region specified.",
+        };
+    }
+
     const contactResponse = await getContact(preview, region);
 
     if (!contactResponse) {
@@ -51,6 +64,14 @@ const Contact = async ({ params, searchParams }) => {
     // console.log("preview: ", preview)
 
     const region = params?.region ?? "default";
+
+    const regions = await getRegions();
+
+    const validRegion = checkRegionValidity(region, regions);
+    if (!validRegion) {
+        return <NotFound />
+    }
+
 
     const contactResponse = await getContact(preview, region);
 

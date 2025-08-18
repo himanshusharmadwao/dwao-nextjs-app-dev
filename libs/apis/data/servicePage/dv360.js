@@ -24,9 +24,11 @@ export const getServiceData = async (preview = false, slug, region = "default") 
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 

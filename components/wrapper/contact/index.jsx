@@ -25,7 +25,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const ContactWrapper = async ({ data, preview, region }) => {
+const ContactWrapper = async ({ data, preview, region = "default" }) => {
 
     const contactBanner = {
         title: data.title,

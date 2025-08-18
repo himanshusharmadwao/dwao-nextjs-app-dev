@@ -22,9 +22,11 @@ export const getAboutData = async (preview = false, region = "default") => {
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 
@@ -43,7 +45,7 @@ export const getReachOutUI = async (preview = false, region = "default") => {
     let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/reach-out-uis`;
 
     if (region) {
-      url += `?filters[regions][hrefLang][$eq]=${region}`;
+      url += `?filters[regions][slug][$eq]=${region}`;
     }
 
     let response = await fetch(url, {
@@ -53,9 +55,11 @@ export const getReachOutUI = async (preview = false, region = "default") => {
     let finalResponse = await response.json();
 
     if (!finalResponse?.data || finalResponse?.data?.length === 0) {
-      response = await fetch(url.replace(region, "default"), {
-        next: { revalidate: getRevalidateTime(preview) },
-      });
+      url = url.replace(
+        `filters[regions][slug][$eq]=${region}`,
+        `filters[regions][slug][$eq]=default`
+      );
+      response = await fetch(url, { next: { revalidate: getRevalidateTime(preview) } });
       finalResponse = await response.json();
     }
 

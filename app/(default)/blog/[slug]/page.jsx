@@ -2,14 +2,14 @@ import NotFound from "@/app/(default)/not-found";
 import StructuredData from "@/components/StructuredData";
 import SingleBlogWrapper from "@/components/wrapper/single-blog"
 import { getBlog } from "@/libs/apis/data/blog";
+import { redirect } from "next/navigation";
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
     const resolvedParams = await params;
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
-    const region = resolvedParams.region || "default";
-    const blogsResponse = await getBlog(preview, resolvedParams.slug, region);
+    const blogsResponse = await getBlog(preview, resolvedParams.slug);
 
     if (!blogsResponse) {
         return {
@@ -27,9 +27,7 @@ export async function generateMetadata({ params, searchParams }) {
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||
-                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
-                    region !== "default" ? `/${region}` : ""
-                }/blog/${resolvedParams.slug}`
+                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/blog/${resolvedParams.slug}`
         },
         openGraph: {
             title: seo?.openGraph?.ogTitle,
@@ -56,18 +54,18 @@ const SingleBlog = async ({ params, searchParams }) => {
 
     const preview = resolvedSearchParams?.preview === "true";
 
-    const region = resolvedParams.region || "default";
+    const blogsResponse = await getBlog(preview, resolvedParams.slug);
 
-    const blogsResponse = await getBlog(preview, resolvedParams.slug, region);
-
-    if (blogsResponse.data == null) {
-        return <NotFound />;
+    if (blogsResponse.status === "error") {
+        return <div className="">Something went wrong!! Please try again later.</div>;
+    } else if (blogsResponse.status === "not_found") {
+        return redirect('/');
     }
 
     return (
         <>
             <StructuredData data={blogsResponse?.data?.[0]?.seo?.structuredData} />
-            <SingleBlogWrapper pageData={blogsResponse?.data[0]} relatedBlogs={blogsResponse?.related} region={region} preview={preview}/>
+            <SingleBlogWrapper pageData={blogsResponse?.data[0]} relatedBlogs={blogsResponse?.related} preview={preview} />
         </>
     )
 }
