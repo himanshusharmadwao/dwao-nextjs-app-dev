@@ -53,7 +53,7 @@ export const getBlog = async (preview = false, slug, region = "default") => {
     let finalResponse = await response.json();
     let mainBlog = finalResponse?.data?.[0];
 
-    console.log("finalResponse: ", finalResponse)
+    // console.log("finalResponse: ", finalResponse)
 
 
     if (!mainBlog) {

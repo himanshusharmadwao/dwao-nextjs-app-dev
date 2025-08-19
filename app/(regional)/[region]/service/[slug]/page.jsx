@@ -1,8 +1,10 @@
-import Dv360Service from '@/components/service/dv360';
+import ServicePage from '@/components/service';
 import React from 'react';
 import { getServiceData } from '@/libs/apis/data/servicePage/dv360';
 import NotFound from "@/app/(regional)/[region]/not-found";
 import StructuredData from '@/components/StructuredData';
+import { getRegions } from '@/libs/apis/data/menu';
+import { checkRegionValidity } from '@/libs/utils';
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
@@ -11,6 +13,17 @@ export async function generateMetadata({ params, searchParams }) {
   const preview = resolvedSearchParams?.preview === "true";
   // console.log(resolvedParams)
   const region = resolvedParams?.region ?? "default"
+
+  const regions = await getRegions();
+  const validRegion = checkRegionValidity(region, regions);
+
+  if (!validRegion) {
+    return {
+      title: "Page Not Found",
+      description: "Invalid region specified.",
+    };
+  }
+
   const serviceResponse = await getServiceData(preview, resolvedParams.slug, region);
   // console.log("serviceResponse: ", serviceResponse)
 
@@ -54,6 +67,14 @@ const DV360 = async ({ params, searchParams }) => {
 
   const region = resolvedParams?.region ?? "default"
 
+  const regions = await getRegions();
+
+  const validRegion = checkRegionValidity(region, regions);
+
+  if (!validRegion) {
+    return <NotFound />
+  }
+
   const serviceResponse = await getServiceData(preview, resolvedParams.slug, region);
 
   const { data, error } = serviceResponse;
@@ -74,7 +95,7 @@ const DV360 = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={serviceResponse?.data?.[0]?.seo?.structuredData} />
-      <Dv360Service serviceData={serviceResponse?.data[0]} />
+      <ServicePage serviceData={serviceResponse?.data[0]} />
     </>
   );
 };

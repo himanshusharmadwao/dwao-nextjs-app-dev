@@ -1,4 +1,4 @@
-import Dv360Service from '@/components/service/dv360';
+import ServicePage from '@/components/service';
 import React from 'react';
 import { getServiceData } from '@/libs/apis/data/servicePage/dv360';
 import NotFound from "@/app/(default)/not-found";
@@ -72,7 +72,7 @@ const DV360 = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={serviceResponse?.data?.[0]?.seo?.structuredData} />
-      <Dv360Service serviceData={serviceResponse?.data[0]} />
+      <ServicePage serviceData={serviceResponse?.data[0]} />
     </>
   );
 };

@@ -58,6 +58,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
   const isInsightsCaseStudies = normalizedPath === "/case-studies";
   const isReview = normalizedPath.includes("/reviews");
   const isPartner = normalizedPath.includes("/partners");
+  const isService = normalizedPath.includes("/service");
 
   // to get capabilities hrefs - memoized for performance
   const getCapabilitiesHrefs = useCallback((headerData) => {
@@ -98,7 +99,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
 
   const handleSelectRegion = (region) => {
     if (region.slug === "in-en") {
-      if (isCulturePage || isBlogForRegion || isInsightsCaseStudiesForRegion || isCapability || isPartner) {
+      if (isCulturePage || isBlogForRegion || isInsightsCaseStudiesForRegion || isCapability || isPartner || isService) {
         router.push(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}`);
       } else {
         router.push(
