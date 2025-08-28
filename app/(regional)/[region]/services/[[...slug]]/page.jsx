@@ -142,7 +142,7 @@ const DynamicPages = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} />
+      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} type="services"/>
     </>
   );
 };

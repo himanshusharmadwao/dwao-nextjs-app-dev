@@ -34,7 +34,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "default" }) => {
+const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "default", type }) => {
 
     // console.log(pageData)
 
@@ -43,8 +43,11 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "d
     const relatedCard = relatedCapabilities?.map((item, index) => {
         return (
             <div className='' key={index}>
+                {/* <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.title}
+                    linkHref={buildRegionalPath(`/services/${item.category.slug}/${item.slug}`, region, regions.data)} /> */}
+
                 <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.title}
-                    linkHref={buildRegionalPath(`/services/${item.category.slug}/${item.slug}`, region, regions.data)} />
+                    linkHref={buildRegionalPath(`/${type === "services" ? "services/" : ""}${item?.category?.slug}/${item?.slug}`, region, regions.data)} />
             </div>
         )
     })

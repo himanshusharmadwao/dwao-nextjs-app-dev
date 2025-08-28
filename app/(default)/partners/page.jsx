@@ -1,31 +1,16 @@
 import React from 'react';
 import qs from 'qs';
-// import { notFound, redirect } from 'next/navigation';
-import NotFound from "@/app/(regional)/[region]/not-found";
+import NotFound from "@/app/not-found.jsx";
 import SinglePageWrapper from '@/components/wrapper/single-page';
 import { getPartner } from '@/libs/apis/data/partners';
 import StructuredData from '@/components/StructuredData';
 import { getRegions } from '@/libs/apis/data/menu';
-import { checkRegionValidity } from '@/libs/utils';
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata({ searchParams }) {
   try {
-    const { slug } = await params;
     const resolvedSearchParams = await searchParams;
     const preview = resolvedSearchParams?.preview === "true";
-    const region = params?.region ?? "default"
-
-    const regions = await getRegions();
-    const validRegion = checkRegionValidity(region, regions);
-
-    if (!validRegion) {
-      return {
-        title: "Page Not Found",
-        description: "Invalid region specified.",
-      };
-    }
-
-    const capabilityResponse = await getPartner(preview, slug, region);
+    const capabilityResponse = await getPartner(preview);
 
     if (!capabilityResponse) {
       return {
@@ -45,8 +30,7 @@ export async function generateMetadata({ params, searchParams }) {
       }),
       alternates: {
         canonical: seo?.canonicalURL ||
-          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
-          }/partners/${slug}`
+          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/partners`
       },
       openGraph: {
         title: seo?.openGraph?.ogTitle,
@@ -72,66 +56,22 @@ export async function generateMetadata({ params, searchParams }) {
   }
 }
 
-export const loadPage = async (slug) => {
-  const query = qs.stringify({
-    filters: {
-      slug: {
-        $contains: slug
-      }
-    },
-    populate: {
-      Header: {
-        populate: "*" // Populate all components inside the dynamic zone
-      }
-    }
-  }, { encode: false });
+const DynamicPages = async ({ searchParams }) => {
 
-  // console.log(query, "query");
-
-  // try {
-  //   const getPageApi = await fetch(`http://localhost:1337/api/pages?${query}`);
-
-  //   if (!getPageApi.ok) {
-  //     console.error(`API responded with status: ${getPageApi.status}`);
-  //     return null;
-  //   }
-
-  //   const page = await getPageApi.json();
-
-  //   if (!page.data || page.data.length === 0) {
-  //     return null;
-  //   }
-
-  //   return page;
-  // } catch (error) {
-  //   console.error("Error fetching page data:", error);
-  //   return null;
-  // }
-};
-
-const DynamicPages = async ({ params, searchParams }) => {
-
-  const { region, slug } = await params;
   const resolvedSearchParams = await searchParams;
   const preview = resolvedSearchParams?.preview === "true"; //exact comparison because of js non-empty string logic
-
-  const regions = await getRegions();
-
-  const validRegion = checkRegionValidity(region, regions);
-  if (!validRegion) {
-    return <NotFound />
-  }
-
-  const capabilityResponse = await getPartner(preview, slug, region);
+  const capabilityResponse = await getPartner(preview);
 
   if (capabilityResponse.data == null) {
     return <NotFound />;
   }
 
+  const regions = await getRegions()
+
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse.data[0]} relatedCapabilities={capabilityResponse.related} regions={regions} region={region} type="partners" />
+      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} type="partners" />
     </>
   );
 };

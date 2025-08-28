@@ -1,12 +1,15 @@
 import { getRevalidateTime } from "@/libs/utils";
 
-export const getPartner = async (preview = false, slug = '', region = "default") => {
-  
+export const getPartner = async (preview = false, slug = 'partners-global', region = "default") => {
+
+  console.log(preview, slug, region)
+
   try {
     let baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?` +
       `populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category` +
       `&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content` +
-      `&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage`;
+      `&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage` +
+      `&filters[category][slug][$eq]=partners`;
 
     if (slug) baseUrl += `&filters[slug][$eq]=${slug}`;
     if (preview) baseUrl += `&status=draft`;
@@ -29,7 +32,13 @@ export const getPartner = async (preview = false, slug = '', region = "default")
       mainCapability = finalResponse?.data?.[0];
     }
 
-    if (!finalResponse?.data) return null;
+    if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+      return { data: null, error: finalResponse?.error?.message || "Something went wrong", status: "error" };
+    }
+
+    if (!finalResponse?.data || finalResponse.data.length === 0) {
+      return { data: null, message: "Not Found", status: "not_found" };
+    }
 
     const categorySlug = mainCapability?.category?.slug;
     let related = [];

@@ -102,8 +102,8 @@ const DynamicPages = async ({ params, searchParams }) => {
   const preview = resolvedSearchParams?.preview === "true"; //exact comparison because of js non-empty string logic
   const capabilityResponse = await getPartner(preview, slug, region || "default");
 
-  if (!capabilityResponse) {
-    return <NotFound />
+  if (capabilityResponse.data == null) {
+    return <NotFound />;
   }
 
   const regions = await getRegions()
@@ -111,7 +111,7 @@ const DynamicPages = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} />
+      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} type="partners" />
     </>
   );
 };
