@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import { breakTitle, buildRegionalPath } from '@/libs/utils'
+import { breakTitle, buildRegionalPath, getImageUrl } from '@/libs/utils'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown';
 import DOMPurify from 'dompurify';
@@ -46,7 +46,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                             <div className="aspect-[7/10] hidden lg:block">
                                 {data?.bannerDeskImage?.url && (
                                     <Image
-                                        src={data?.bannerDeskImage?.url}
+                                        src={getImageUrl(data?.bannerDeskImage)}
                                         alt="Desktop Banner"
                                         fill
                                         priority
@@ -57,7 +57,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                             <div className="aspect-[15/7] lg:hidden">
                                 {data?.bannerMobileImage?.url && (
                                     <Image
-                                        src={data?.bannerMobileImage?.url}
+                                        src={getImageUrl(data?.bannerMobileImage)}
                                         alt="Mobile Banner"
                                         fill
                                         priority
@@ -111,7 +111,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                     <div className="grid grid-cols-1 lg:grid-cols-2">
                         {data?.workPlace?.image?.url && (
                             <Image
-                                src={data?.workPlace?.image?.url}
+                                src={getImageUrl(data?.workPlace?.image)}
                                 alt="missing image"
                                 width={476}
                                 height={268}
@@ -138,7 +138,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
             <div id='believe'>
                 {data?.valueVisual?.url && (
                     <Image
-                        src={data?.valueVisual?.url}
+                        src={getImageUrl(data?.valueVisual)}
                         alt='missing image'
                         width={500}
                         height={620}
@@ -165,7 +165,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                     <div className="grid grid-cols-1 lg:grid-cols-2">
                         {data?.partner?.image?.url && (
                             <Image
-                                src={data?.partner?.image?.url}
+                                src={getImageUrl(data?.partner?.image)}
                                 alt="missing image"
                                 width={476}
                                 height={268}
@@ -260,7 +260,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                                     href={buildRegionalPath("/case-studies/airtel-case-study.html", region, regions?.data)} className="relative group w-full lg:inline inline-block">
                                     {data?.demoOverlay?.image?.url && (
                                         <Image
-                                            src={data?.demoOverlay?.image?.url}
+                                            src={getImageUrl(data?.demoOverlay?.image)}
                                             alt="Card Image"
                                             width={394}
                                             height={293}

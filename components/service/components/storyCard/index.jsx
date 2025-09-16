@@ -1,3 +1,4 @@
+import { getImageUrl } from '@/libs/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -20,7 +21,7 @@ const StoryCard = ({ logo, metric, metricLabel, title, description, stats, caseS
           {stats.map((stat, index) => (
             <div key={index} className="flex items-center">
               <div className={`w-12 h-12 ${stat.bgColor} rounded-full flex items-center justify-center mr-4`}>
-                <Image src={stat.icon.url} alt="Icon Image" height={20} width={20} />
+                <Image src={getImageUrl(stat.icon)} alt="Icon Image" height={20} width={20} />
               </div>
               <div>
                 <span className="block font-bold text-gray-900">{stat.title}</span>

@@ -103,7 +103,7 @@ const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region = "defa
                 (
                     <div className="relative w-full aspect-[1400/690]">
                         <Image
-                            src={pageData?.valueVisual?.url}
+                            src={getImageUrl(pageData?.valueVisual)}
                             fill
                             sizes="100vw"
                             alt="Axis MaxLife Insurance Case Study"
@@ -131,7 +131,7 @@ const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region = "defa
                         <div className="lg:col-span-2 col-span-1">
                             <div className="relative lg:h-[700px] lg:w-[450px] h-[500px] w-full">
                                 {pageData?.insightVisual?.url && (
-                                    <Image src={pageData?.insightVisual?.url || ''} fill alt="missing image" objectFit='cover' />
+                                    <Image src={getImageUrl(pageData?.insightVisual) || ''} fill alt="missing image" objectFit='cover' />
                                 )}
                             </div>
                         </div>
@@ -164,7 +164,7 @@ const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region = "defa
                             {pageData?.insightTestimonial?.image && (
                                 <div className='w-[45%] hidden lg:block'>
                                     <Image
-                                        src={pageData?.insightTestimonial?.image?.url}
+                                        src={getImageUrl(pageData?.insightTestimonial?.image)}
                                         alt='Testimonial Image'
                                         height={455}
                                         width={696}

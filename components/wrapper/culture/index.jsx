@@ -47,7 +47,7 @@ const CultureWrapper = async ({ data, regions, region = "default" }) => {
             quote={testimonial.content}
             name={testimonial.name}
             title={testimonial.title}
-            imageSrc={testimonial.image.url}
+            imageSrc={getImageUrl(testimonial.image)}
         />
     ));
 
@@ -75,7 +75,7 @@ const CultureWrapper = async ({ data, regions, region = "default" }) => {
                                 >
                                     {src?.url && (
                                         <Image
-                                            src={src?.url}
+                                            src={getImageUrl(src)}
                                             width={210}
                                             height={230}
                                             alt="missing image"
@@ -113,7 +113,7 @@ const CultureWrapper = async ({ data, regions, region = "default" }) => {
                         <div className="relative w-full h-[250px] md:h-full">
                             {data?.missionImage?.url && (
                                 <Image
-                                    src={data?.missionImage?.url}
+                                    src={getImageUrl(data?.missionImage)}
                                     alt="missing image"
                                     fill
                                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -159,7 +159,7 @@ const CultureWrapper = async ({ data, regions, region = "default" }) => {
                         <h2 className="text-head text-con-dark mb-12">{data?.teamsAndCollaborationHeading}</h2>
                     </div>
                     <div className='container'>
-                        <ImgCarousel slides={data?.teams_and_collaboration?.entity} resConf={{ mobile: "1", tab: "2", desktop: "3.1" }} slider={"team_collaboration"} />
+                        <ImgCarousel slides={data?.teams_and_collaboration?.entity?.url} resConf={{ mobile: "1", tab: "2", desktop: "3.1" }} slider={"team_collaboration"} />
                     </div>
                 </div>
             </Suspense>
@@ -188,7 +188,7 @@ const CultureWrapper = async ({ data, regions, region = "default" }) => {
                     <div className="basis-full md:basis-1/2 relative">
                         {data?.growthImage?.url && (
                             <Image
-                                src={data?.growthImage?.url}
+                                src={getImageUrl(data?.growthImage)}
                                 alt="missing image"
                                 width={500}
                                 height={400}

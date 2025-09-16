@@ -43,6 +43,8 @@ const LoadingPlaceholder = () => (
 
 const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
 
+    // console.log("data: ", data)
+
     // Fetch remaining data in parallel
     const [
         clientTestimonialResponse,
@@ -76,7 +78,7 @@ const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
             quote={testimonial.content}
             name={testimonial.name}
             title={testimonial.title}
-            imageSrc={testimonial.image.url}
+            imageSrc={getImageUrl(testimonial.image)}
         />
     ));
 
@@ -102,7 +104,7 @@ const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
                                     <Link prefetch={false} href={buildRegionalPath(data?.storyOverlay?.href, region, regions?.data) || '#'} className="relative group w-full lg:inline inline-block">
                                         {data?.storyOverlay?.image?.url && (
                                             <Image
-                                                src={data?.storyOverlay?.image?.url}
+                                                src={getImageUrl(data?.storyOverlay?.image)}
                                                 alt="Card Image"
                                                 width={394}
                                                 height={293}
@@ -158,7 +160,7 @@ const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
                         <div className="lg:hidden absolute inset-0">
                             {data?.insightMobileImg?.url && (
                                 <Image
-                                    src={data?.insightMobileImg?.url}
+                                    src={getImageUrl(data?.insightMobileImg)}
                                     alt="Mobile Banner"
                                     fill
                                     className="object-cover"
@@ -170,7 +172,7 @@ const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
                         <div className="hidden lg:block absolute inset-0">
                             {data?.insightDeskImg?.url && (
                                 <Image
-                                    src={data?.insightDeskImg?.url}
+                                    src={getImageUrl(data?.insightDeskImg)}
                                     alt="Desktop Banner"
                                     fill
                                     className="object-cover"

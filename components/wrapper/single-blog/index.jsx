@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { Suspense } from 'react'
-import { buildRegionalPath } from '@/libs/utils'
+import { buildRegionalPath, getImageUrl } from '@/libs/utils'
 import styles from "@/styles/markdown.module.css";
 import dynamic from 'next/dynamic';
 import { getRegions } from '@/libs/apis/data/menu';
@@ -86,7 +86,7 @@ const SingleBlogWrapper = async ({ pageData, relatedBlogs, preview, region = "de
                 <div className="container">
                     <h2 className='font-bold text-[28px] mb-12'>Authors</h2>
                     {pageData?.author?.image?.url && (
-                        <Image src={pageData?.author?.image?.url} height={130} width={190} alt="missing image" className='mb-5 mx-auto lg:mx-[unset]' />
+                        <Image src={getImageUrl(pageData?.author?.image)} height={130} width={190} alt="missing image" className='mb-5 mx-auto lg:mx-[unset]' />
                     )}
                     <h3 className='font-semibold text-[22px]'>{pageData?.author?.name}</h3>
                     {pageData?.author?.designition && (

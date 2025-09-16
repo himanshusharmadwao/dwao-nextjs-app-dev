@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 import ExtendLink from '../../ui/extendLink'
 import Image from 'next/image'
 import { getJoinTheTeam } from '@/libs/apis/data/home';
-import { breakTitle, buildRegionalPath } from '@/libs/utils';
+import { breakTitle, buildRegionalPath, getImageUrl } from '@/libs/utils';
 
 const JoinTheTeam = async ({ preview, region, regions }) => {
 
@@ -23,7 +23,7 @@ const JoinTheTeam = async ({ preview, region, regions }) => {
                 <div className="lg:w-auto w-[350px] lg:inline inline-block">
                     {joinTheTeamResponse?.data?.[0]?.image?.url && (
                         <Image
-                            src={joinTheTeamResponse?.data?.[0]?.image?.url}
+                            src={getImageUrl(joinTheTeamResponse?.data?.[0]?.image)}
                             alt="Card Image"
                             width={394}
                             height={293}

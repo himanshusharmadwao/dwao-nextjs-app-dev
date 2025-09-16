@@ -13,6 +13,7 @@ import TestimonialCarousel from '@/components/home/testimonialCarousel';
 import LeadForm from './components/leadForm';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import { getImageUrl } from '@/libs/utils';
 
 const ServiceWrapper = ({ serviceData }) => {
 
@@ -44,7 +45,7 @@ const ServiceWrapper = ({ serviceData }) => {
             quote={testimonial.content}
             name={testimonial.name}
             title={testimonial.designition}
-            imageSrc={testimonial.image.url}
+            imageSrc={getImageUrl(testimonial.image)}
         />
     ));
 
@@ -80,7 +81,7 @@ const ServiceWrapper = ({ serviceData }) => {
                                 <div className="flex flex-wrap items-center gap-8">
                                     {serviceData?.banner?.trustedBrands.map((item, index) => (
                                         <div key={index} className="bg-white/10 p-3 rounded-lg">
-                                            <Image src={item.url} alt="Brand Image" height={30} width={30} loading="lazy" />
+                                            <Image src={getImageUrl(item)} alt="Brand Image" height={30} width={30} loading="lazy" />
                                         </div>
                                     ))}
                                 </div>
@@ -106,7 +107,7 @@ const ServiceWrapper = ({ serviceData }) => {
                         {serviceData?.section?.[0]?.card.map((item, index) => (
                             <IntroCard
                                 key={index}
-                                icon={item.icon.url}
+                                icon={getImageUrl(item.icon)}
                                 title={item.title}
                                 description={item.content}
                             />
@@ -128,7 +129,7 @@ const ServiceWrapper = ({ serviceData }) => {
                         {serviceData?.section?.[1]?.card.map((item, index) => (
                             <ServiceCard
                                 key={index}
-                                icon={item.icon.url}
+                                icon={getImageUrl(item.icon)}
                                 title={item.title}
                                 description={item.content}
                             />
@@ -158,7 +159,7 @@ const ServiceWrapper = ({ serviceData }) => {
                         {serviceData?.section?.[2]?.card.map((item, index) => (
                             <ValueCard
                                 key={index}
-                                icon={item.icon.url}
+                                icon={getImageUrl(item.icon)}
                                 title={item.title}
                                 description={item.content}
                             />
@@ -180,7 +181,7 @@ const ServiceWrapper = ({ serviceData }) => {
                         {serviceData?.InfoPanel?.InfoPanel?.map((story, index) => (
                             <StoryCard
                                 key={index}
-                                logo={story.logo.url}
+                                logo={getImageUrl(story.logo)}
                                 metric={story.statFigure}
                                 metricLabel={story.statStatus}
                                 title={story.statTitle}
@@ -231,7 +232,7 @@ const ServiceWrapper = ({ serviceData }) => {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
                         {serviceData?.clientsSlide?.entity?.map((item, index) => (
                             <div key={index} className="bg-white p-6 rounded-xl shadow-sm flex items-center justify-center h-32">
-                                <Image src={item.logo.url} alt="Icon Image" height={50} width={50} />
+                                <Image src={getImageUrl(item.logo)} alt="Icon Image" height={50} width={50} />
                             </div>
                         ))}
                     </div>

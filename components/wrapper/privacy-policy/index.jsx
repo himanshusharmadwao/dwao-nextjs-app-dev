@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm'; // for features like strikethrough and table
 import rehypeRaw from 'rehype-raw'; // for raw html 
 import styles from "@/styles/markdown.module.css";
 import Image from 'next/image';
-import { breakTitle } from '@/libs/utils';
+import { breakTitle, getImageUrl } from '@/libs/utils';
 
 const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default" }) => {
 
@@ -23,7 +23,7 @@ const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default
                         <div className="relative w-full h-[410px]">
                             <div className="aspect-[7/10] hidden lg:block">
                                 <Image
-                                    src={policyResponse?.bannerDeskImage?.url}
+                                    src={getImageUrl(policyResponse?.bannerDeskImage)}
                                     alt="Desktop Banner"
                                     fill
                                     priority
@@ -32,7 +32,7 @@ const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default
                             </div>
                             <div className="aspect-[15/7] lg:hidden">
                                 <Image
-                                    src={policyResponse?.bannerMobileImage?.url}
+                                    src={getImageUrl(policyResponse?.bannerMobileImage)}
                                     alt="Mobile Banner"
                                     fill
                                     priority

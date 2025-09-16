@@ -24,7 +24,7 @@ const Banner = ({ data }) => {
 
     return (
         <>
-            <div className="bg-cover bg-no-repeat bg-center w-full h-[50vh] lg:h-[90vh] relative" style={data?.featuredImage?.url && { backgroundImage: `url(${data?.featuredImage?.url})` }}> 
+            <div className="bg-cover bg-no-repeat bg-center w-full h-[50vh] lg:h-[90vh] relative" style={data?.featuredImage?.url && { backgroundImage: `url(${getImageUrl(data?.featuredImage)})` }}> 
                 <div className="absolute top-0 left-0 bg-black/55  w-full h-full "></div>
                 <div className='flex items-center absolute top-1/2 left-[5%] w-[90%] transform -translate-y-1/2'>
                     <div className="basis-1/2 hidden lg:block">
@@ -33,7 +33,7 @@ const Banner = ({ data }) => {
                             <div className="bg-[var(--mainColor)] text-white p-6 flex items-center justify-center">
                                 {data?.brandLogo && (
                                     <Image
-                                        src={data?.brandLogo?.url}
+                                        src={getImageUrl(data?.brandLogo)}
                                         alt="missing image"
                                         height={80}
                                         width={80}

@@ -1,5 +1,6 @@
 'use client';
 
+import { getImageUrl } from '@/libs/utils';
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import Image from 'next/image';
 
@@ -75,7 +76,7 @@ const CustomBlocksRenderer = ({ content }) => {
                 image: ({ image }) => (
                     <div className="my-6">
                         <Image
-                            src={image.url}
+                            src={getImageUrl(image)}
                             alt={image.alternativeText || 'Blog image'}
                             width={image.width}
                             height={image.height}

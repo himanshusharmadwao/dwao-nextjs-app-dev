@@ -107,10 +107,15 @@ export const formatDateOrDaysLeft = (dateString) => {
 // to get image url
 
 export const getImageUrl = (image) => {
-  // const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL.replace("/api", "");
-  // console.log(image?.url)
-  // return image?.url ? baseURL + image.url : "";
-  return image?.url;
+  if (!image?.url) return "";
+
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:1337";
+
+  if (image.url.startsWith("http")) {
+    return image.url;
+  }
+
+  return `${baseURL}${image.url}`;
 };
 
 // helper function for breaking the title

@@ -4,7 +4,7 @@ import TestimonialCard from '@/components/home/testimonialCard'
 import TestimonialCarousel from '@/components/home/testimonialCarousel'
 import React from 'react'
 import CompanyEvents from '@/components/culture/companyEvents'
-import { buildRegionalPath } from '@/libs/utils'
+import { buildRegionalPath, getImageUrl } from '@/libs/utils'
 import { getRegions } from '@/libs/apis/data/menu'
 
 const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
@@ -20,7 +20,7 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
             quote={testimonial?.content}
             name={testimonial?.name}
             title={testimonial?.title}
-            imageSrc={testimonial?.image?.url}
+            imageSrc={getImageUrl(testimonial?.image)}
         />
     ));
 
@@ -31,7 +31,7 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
             quote={testimonial?.content}
             name={testimonial?.name}
             title={testimonial?.title}
-            imageSrc={testimonial?.image?.url}
+            imageSrc={getImageUrl(testimonial?.image)}
         />
     ));
 

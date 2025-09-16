@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { getContact } from "@/libs/apis/data/contact";
+import { getImageUrl } from "@/libs/utils";
 
 // Dynamic imports with loading placeholders
 const CommonBanner = dynamic(() => import("@/components/common/banner"), {
@@ -29,8 +30,8 @@ const ContactWrapper = async ({ data, preview, region = "default" }) => {
 
     const contactBanner = {
         title: data.title,
-        deskImage: data.bannerDeskImage.url,
-        mobileImage: data.bannerMobileImage.url,
+        deskImage: getImageUrl(data.bannerDeskImage),
+        mobileImage: getImageUrl(data.bannerMobileImage),
     };
 
     return (
@@ -109,7 +110,7 @@ const ContactWrapper = async ({ data, preview, region = "default" }) => {
             <div className="container">
                 <div className="mb-14">
                     <Image
-                        src={data?.officeMap?.[0]?.url || "/map.png"}
+                        src={getImageUrl(data?.officeMap?.[0]) || "/map.png"}
                         height={600}
                         width={1000}
                         alt="Dwao Office Map"
