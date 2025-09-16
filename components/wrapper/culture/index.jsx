@@ -159,7 +159,7 @@ const CultureWrapper = async ({ data, regions, region = "default" }) => {
                         <h2 className="text-head text-con-dark mb-12">{data?.teamsAndCollaborationHeading}</h2>
                     </div>
                     <div className='container'>
-                        <ImgCarousel slides={data?.teams_and_collaboration?.entity?.url} resConf={{ mobile: "1", tab: "2", desktop: "3.1" }} slider={"team_collaboration"} />
+                        <ImgCarousel slides={data?.teams_and_collaboration?.entity} resConf={{ mobile: "1", tab: "2", desktop: "3.1" }} slider={"team_collaboration"} />
                     </div>
                 </div>
             </Suspense>

@@ -66,7 +66,7 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
                     <h2 className="text-head text-con-dark mb-12">{reviewResponse?.teamCollabHeading}</h2>
                 </div>
                 <div className='container'>
-                    <ImgCarousel slides={reviewResponse.data?.teams_and_collaboration?.entity} resConf={{ mobile: "1", tab: "2", desktop: "3.1" }} slider={"team_collaboration"} />
+                    <ImgCarousel slides={reviewResponse?.teams_and_collaboration?.entity} resConf={{ mobile: "1", tab: "2", desktop: "3.1" }} slider={"team_collaboration"} />
                 </div>
             </div>
 
@@ -80,7 +80,7 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
             {/* company events and celebrations */}
             <div className="container">
                 <div className="mb-14">
-                    <CompanyEvents data={reviewResponse?.event?.event} secondaryData={reviewResponse} />
+                    <CompanyEvents data={reviewResponse} />
                 </div>
             </div>
 
