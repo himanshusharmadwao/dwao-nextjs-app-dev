@@ -174,6 +174,10 @@ export function getRevalidateTime(preview) {
 // for preserving regional url
 export const buildRegionalPath = (targetPath, slug, regions = []) => {
 
+  if (!targetPath || typeof targetPath !== "string") {
+    return "";
+  }
+
   const cleanedTarget = targetPath.startsWith("/") ? targetPath.slice(1) : targetPath;
 
   const validRegionCodes = regions
