@@ -7,7 +7,7 @@ const RelatedCard = ({ imageSrc = "", linkTitle = "", linkHref = "" }) => {
     return (
         <Link prefetch={false}  href={linkHref} className='group'>
             <div className='h-[280px] relative rounded-[10px] overflow-hidden transition-all duration-300 group-hover:shadow-[0_10px_20px_0_rgba(0,0,0,0.15)]'>
-                <Image src={getImageUrl(imageSrc)} fill alt="missing image" objectFit='cover' />
+                <Image src={getImageUrl(imageSrc)} fill alt="missing image" style={{ objectFit: 'cover' }} />
             </div>
             <span
                 className="mt-4 flex gap-2 items-center group-hover:text-[var(--mainColor)]"

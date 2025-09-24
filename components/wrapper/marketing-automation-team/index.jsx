@@ -13,7 +13,7 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
 
     const half = Math.ceil(reviewResponse?.employee_testimonial?.entity?.length / 2);
 
-    const firstHalfSlides = reviewResponse?.employee_testimonial?.entity?.slice(7, half).map((testimonial, index) => (
+    const firstHalfSlides = reviewResponse?.employee_testimonial?.entity?.slice(0, half).map((testimonial, index) => (
         <TestimonialCard
             key={`first-${index}`}
             rating={testimonial?.rating}

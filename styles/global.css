@@ -1,5 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+
+/* Apply Roboto font globally */
+body {
+  font-family: var(--font-roboto), 'Roboto', system-ui, -apple-system, sans-serif;
+}
 
 /* Custom fonts */
 /* @font-face {

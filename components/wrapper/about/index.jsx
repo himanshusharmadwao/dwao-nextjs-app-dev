@@ -50,7 +50,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                                         alt="Desktop Banner"
                                         fill
                                         priority
-                                        objectFit="cover"
+                                        style={{ objectFit: 'cover' }}
                                     />
                                 )}
                             </div>
@@ -61,7 +61,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                                         alt="Mobile Banner"
                                         fill
                                         priority
-                                        objectFit="cover"
+                                        style={{ objectFit: 'cover' }}
                                     />
                                 )}
                             </div>
@@ -246,7 +246,7 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
             <Suspense fallback={<LoadingPlaceholder />}>
                 <div className="container">
                     <div className="mb-14">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-dense">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-dense gap-4">
                             <div className='flex flex-col justify-center lg:gap-4 mt-10 lg:mt-0 lg:order-1 order-2'>
                                 <h2 className='text-head-large text-con-dark leading-[1] mb-5 lg:mb-0'>{data?.demoHeading}</h2>
                                 <p className='text-small-con text-con-light'>{data?.demoContent}</p>

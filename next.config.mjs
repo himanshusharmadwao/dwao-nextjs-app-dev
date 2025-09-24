@@ -9,17 +9,17 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
   staticPageGenerationTimeout: 120,
-  
+
   // Enable build caching
-  cacheMaxMemorySize: 0, // Disable in-memory caching, use file system cache
+  cacheMaxMemorySize: 10000000, // Disable in-memory caching, use file system cache
   cacheHandler: undefined, // Use default file system cache
-  
+
   // Target modern browsers to reduce polyfills
   experimental: {
     optimizeCss: true,
     cssChunking: 'strict', // Better CSS chunking strategy
   },
-  
+
   // Turbopack configuration (stable in Next.js 15)
   turbopack: {
     rules: {
@@ -29,7 +29,7 @@ const nextConfig = {
       },
     },
   },
-  
+
   // Compiler options for modern output
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
@@ -59,9 +59,9 @@ const nextConfig = {
     ],
     // Optimize image caching
     minimumCacheTTL: 31536000, // 1 year in seconds
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    formats: ['image/webp'],
+    formats: ['image/avif', 'image/webp'],
   },
 
   // Configure cache headers for static assets
@@ -87,15 +87,6 @@ const nextConfig = {
         ]
       },
       {
-        source: '/_next/image(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
-          }
-        ]
-      },
-      {
         source: '/icons/:path*',
         headers: [
           {
@@ -113,7 +104,7 @@ const nextConfig = {
     if (!isServer && !dev) {
       // Optimize runtime chunk
       config.optimization.runtimeChunk = 'single';
-      
+
       config.optimization.splitChunks = {
         chunks: 'all',
         minSize: 20000,
@@ -172,11 +163,11 @@ const nextConfig = {
           }
         },
       };
-      
+
       // Minimize JavaScript
       config.optimization.minimize = true;
     }
-    
+
     return config;
   },
 };

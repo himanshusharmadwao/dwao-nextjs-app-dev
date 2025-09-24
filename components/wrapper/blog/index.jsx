@@ -1,4 +1,4 @@
-import { getCategory } from '@/libs/apis/data/blog';
+import { getCategory, getAllBlogs } from '@/libs/apis/data/blog';
 import { getRegions } from '@/libs/apis/data/menu';
 import dynamicImport from 'next/dynamic';
 import { Suspense } from 'react';
@@ -20,7 +20,15 @@ const BlogWrapper = async ({preview, region = "default"}) => {
 
     const categoryResponse = await getCategory(preview, region);
 
-    // console.log("categoryResponse: ", categoryResponse)
+    // Fetch initial blog posts server-side with optimized fields
+    const initialBlogs = await getAllBlogs(
+        1, // page
+        6, // pageSize
+        null, // category
+        null, // subCategory
+        preview,
+        region
+    );
 
     const regions = await getRegions();
 
@@ -28,7 +36,15 @@ const BlogWrapper = async ({preview, region = "default"}) => {
         <>
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <BlogPost filterItems={categoryResponse?.data} variant="blogPosts" preview={preview} region={region} regions={regions}/>
+                <BlogPost
+                    filterItems={categoryResponse?.data}
+                    variant="blogPosts"
+                    preview={preview}
+                    region={region}
+                    regions={regions}
+                    initialPosts={initialBlogs?.data || []}
+                    initialMeta={initialBlogs?.meta || { pagination: { total: 0 } }}
+                />
             </Suspense>
 
             <Suspense fallback={<LoadingPlaceholder />}>

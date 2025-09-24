@@ -3,48 +3,53 @@ import BlogWrapper from "@/components/wrapper/blog";
 import { getRegions } from "@/libs/apis/data/menu";
 import { checkRegionValidity } from "@/libs/utils";
 
-export async function generateMetadata({ params }) {
-    const region = params?.region ?? "default";
+// Centralized data fetcher
+async function fetchBlogPageData(params, searchParams) {
+  const preview = searchParams?.preview === "true";
+  const region = params?.region ?? "default";
 
-    const regions = await getRegions();
-    const validRegion = checkRegionValidity(region, regions);
+  const regions = await getRegions();
+  const validRegion = checkRegionValidity(region, regions);
 
-    if (!validRegion) {
-        return {
-            title: "Page Not Found",
-            description: "Invalid region specified.",
-        };
-    }
+  return { preview, region, validRegion, regions };
+}
 
+// Generate dynamic metadata
+export async function generateMetadata({ params, searchParams }) {
+  const { region, validRegion } = await fetchBlogPageData(params, searchParams);
 
+  if (!validRegion) {
     return {
-        title: "Blogs",
-        alternates: {
-            canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""}/blog`
-        }
+      title: "Page Not Found",
+      description: "Invalid region specified.",
     };
+  }
+
+  return {
+    title: "Blogs",
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
+        region !== "default" ? `/${region}` : ""
+      }/blog`,
+    },
+  };
 }
 
 const Blog = async ({ params, searchParams }) => {
-    const paramsValue = await searchParams;
-    const preview = paramsValue?.preview === "true";
+  const { preview, region, validRegion } = await fetchBlogPageData(
+    params,
+    searchParams
+  );
 
-    // console.log("preview level 1: ", preview)
+  if (!validRegion) {
+    return <NotFound />;
+  }
 
-    const region = params?.region ?? "default";
-
-    const regions = await getRegions();
-
-    const validRegion = checkRegionValidity(region, regions);
-    if (!validRegion) {
-        return <NotFound />
-    }
-
-    return (
-        <>
-            <BlogWrapper preview={preview} region={region} />
-        </>
-    );
+  return (
+    <>
+      <BlogWrapper preview={preview} region={region} />
+    </>
+  );
 };
 
 export default Blog;

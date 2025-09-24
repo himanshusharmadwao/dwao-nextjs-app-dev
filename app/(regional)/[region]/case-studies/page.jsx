@@ -4,7 +4,8 @@ import { checkRegionValidity } from "@/libs/utils";
 import NotFound from "@/app/(regional)/[region]/not-found"
 
 export async function generateMetadata({ params }) {
-    const region = params?.region ?? "default";
+  const paramsData = await params;
+    const region = paramsData?.region ?? "default";
 
     const regions = await getRegions();
     const validRegion = checkRegionValidity(region, regions);
@@ -26,10 +27,11 @@ export async function generateMetadata({ params }) {
 
 const InsightCaseStudies = async ({ params, searchParams }) => {
     const paramsValue = await searchParams;
+    const paramsData = await params;
     const preview = paramsValue?.preview === "true";
     // console.log("preview level 1: ", preview)
 
-    const region = params?.region ?? "default";
+    const region = paramsData?.region ?? "default";
 
     const regions = await getRegions();
 

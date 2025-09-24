@@ -3,11 +3,19 @@ import CultureWrapper from "@/components/wrapper/culture"
 import { getCulture } from "@/libs/apis/data/culture";
 import { getRegions } from "@/libs/apis/data/menu";
 
+// Centralized data fetcher
+async function fetchCultureData(searchParams) {
+    const preview = searchParams?.preview === "true";
+    const [cultureResponse, regions] = await Promise.all([
+        getCulture(preview),
+        getRegions()
+    ]);
+    return { cultureResponse, regions, preview };
+}
+
 // Generate dynamic metadata
 export async function generateMetadata({ searchParams }) {
-    const paramsValue = await searchParams;
-    const preview = paramsValue?.preview === "true";
-    const cultureResponse = await getCulture(preview);
+    const { cultureResponse } = await fetchCultureData(searchParams);
 
     if (!cultureResponse) {
         return {
@@ -45,16 +53,7 @@ export async function generateMetadata({ searchParams }) {
 }
 
 const Culture = async ({ searchParams }) => {
-    const paramsValue = await searchParams;
-    const preview = paramsValue?.preview === "true";
-
-    const [
-        cultureResponse,
-        regions
-    ] = await Promise.all([
-        getCulture(preview),
-        getRegions()
-    ]);
+    const { cultureResponse, regions, preview } = await fetchCultureData(searchParams);
 
     const { data, error } = cultureResponse;
 
@@ -66,9 +65,13 @@ const Culture = async ({ searchParams }) => {
         )
     }
     if (!data) {
-        return (<div className='h-screen block'>
-            <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>Data Not Found!</h1>
-        </div>)
+        return (
+            <div className='h-screen block'>
+                <h1 className='text-black lg:text-[54px] text-[32px] font-bold text-center flex justify-center items-center h-full'>
+                    Data Not Found!
+                </h1>
+            </div>
+        )
     }
 
     return (
@@ -79,4 +82,4 @@ const Culture = async ({ searchParams }) => {
     )
 }
 
-export default Culture
+export default Culture;

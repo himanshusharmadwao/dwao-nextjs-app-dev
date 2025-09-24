@@ -69,7 +69,7 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "d
                                     alt="Desktop Banner"
                                     fill
                                     priority
-                                    objectFit="cover"
+                                    style={{ objectFit: 'cover' }}
                                 />
                             )}
                         </div>
@@ -80,7 +80,7 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "d
                                     alt="Mobile Banner"
                                     fill
                                     priority
-                                    objectFit="cover"
+                                    style={{ objectFit: 'cover' }}
                                 />
                             )}
                         </div>

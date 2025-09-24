@@ -4,6 +4,15 @@ import '@/styles/global.css'
 import Footer from "@/components/layout/footer";
 import { getRegions } from '@/libs/apis/data/menu';
 import { headers } from 'next/headers';
+import { Roboto } from 'next/font/google';
+
+const roboto = Roboto({
+  weight: ['100', '300', '400', '500', '700', '900'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto',
+});
 
 export const metadata = {
   title: {
@@ -15,13 +24,16 @@ export const metadata = {
 
 export default async function RootLayout({ children, params }) {
 
-  const h = headers();
+  const h = await headers();
   const preview = h.get('x-preview') === '1';
+
+  const paramsData = await params;
+  const region = paramsData?.region;
 
   const regions = await getRegions();
 
   return (
-    <html lang="en">
+    <html lang="en" className={roboto.variable}>
       <head>
         {regions?.data?.map(region => {
           const slug = region?.slug;
@@ -35,16 +47,16 @@ export default async function RootLayout({ children, params }) {
             <link
               key={hreflang}
               rel="alternate"
-              hrefLang={hreflang}
+              hrefLang={hreflang === "default" ? "x-default" : hreflang}
               href={url}
             />
           );
         })}
       </head>
-      <body>
-        <Header preview={preview} region={params.region} />
+      <body suppressHydrationWarning={true}>
+        <Header preview={preview} region={region} />
         {children}
-        <Footer preview={preview} region={params.region} />
+        <Footer preview={preview} region={region} />
       </body>
     </html>
   );

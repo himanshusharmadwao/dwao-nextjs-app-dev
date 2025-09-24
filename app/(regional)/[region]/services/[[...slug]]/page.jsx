@@ -1,6 +1,5 @@
 import React from 'react';
 import qs from 'qs';
-// import { notFound, redirect } from 'next/navigation';
 import SinglePageWrapper from '@/components/wrapper/single-page';
 import { getCapability } from '@/libs/apis/data/capabilities';
 import StructuredData from '@/components/StructuredData';
@@ -8,14 +7,27 @@ import { getRegions } from '@/libs/apis/data/menu';
 import NotFound from '@/app/(regional)/[region]/not-found';
 import { checkRegionValidity } from '@/libs/utils';
 
-export async function generateMetadata({ params, searchParams }) {
-  const resolvedParams = await params;
-  // console.log("Params: ", resolvedParams)
-
-  const region = resolvedParams?.region ?? "default"
+// Centralized data fetcher
+async function fetchCapabilityDataPage(params, searchParams) {
+  const region = params?.region ?? "default";
+  const slug1 = params?.slug?.[0];
+  const slug2 = params?.slug?.[1];
+  const preview = searchParams?.preview === "true";
 
   const regions = await getRegions();
   const validRegion = checkRegionValidity(region, regions);
+
+  if (!validRegion) {
+    return { validRegion: false, preview, region, regions, capabilityResponse: null, slug1, slug2 };
+  }
+
+  const capabilityResponse = await getCapability(preview, slug1, slug2, region);
+  return { capabilityResponse, preview, region, regions, validRegion: true, slug1, slug2 };
+}
+
+// Generate dynamic metadata
+export async function generateMetadata({ params, searchParams }) {
+  const { capabilityResponse, validRegion, slug1, slug2 } = await fetchCapabilityDataPage(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -24,112 +36,61 @@ export async function generateMetadata({ params, searchParams }) {
     };
   }
 
-  try {
-    // const { type, slug } = resolvedParams;
-    const resolvedSearchParams = await searchParams;
-    const preview = resolvedSearchParams?.preview === "true";
-    const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1], region);
-
-
-    if (!capabilityResponse) {
-      return {
-        title: "Blog Not Found",
-        description: "The requested capability blog post could not be found.",
-      };
-    }
-
-    const seo = capabilityResponse?.data?.[0]?.seo || {};
-
+  if (!capabilityResponse) {
     return {
-      title: seo?.metaTitle || capabilityResponse?.data?.[0]?.title,
-      description: seo?.metaDescription || "Explore our capabilities and expertise.",
-      ...(seo?.keywords && {
-        keywords: seo?.keywords.split(',').map(keyword => keyword.trim()),
-      }),
-      alternates: {
-        canonical: seo?.canonicalURL ||
-          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/services/${resolvedParams?.slug?.[0]}${resolvedParams?.slug?.[1] ? `/${resolvedParams.slug[1]}` : ""}`
-      },
-      openGraph: {
-        title: seo?.openGraph?.ogTitle,
-        description: seo?.openGraph?.ogDescription,
-        url: seo?.openGraph?.ogUrl,
-        images: [
-          {
-            url: seo?.openGraph?.ogImage?.url,
-            width: seo?.openGraph?.ogImage?.width,
-            height: seo?.openGraph?.ogImage?.height,
-            alt: seo?.openGraph?.ogImage?.alternativeText || 'DWAO Image',
-          },
-        ],
-        type: seo?.openGraph?.ogType || 'website'
-      }
-    };
-  } catch (error) {
-    console.error("Error generating metadata:", error);
-    return {
-      title: "Error",
-      description: "An error occurred while loading the blog post.",
+      title: "Blog Not Found",
+      description: "The requested capability blog post could not be found.",
     };
   }
+
+  const seo = capabilityResponse?.data?.[0]?.seo || {};
+
+  return {
+    title: seo?.metaTitle || capabilityResponse?.data?.[0]?.title,
+    description: seo?.metaDescription || "Explore our capabilities and expertise.",
+    ...(seo?.keywords && { keywords: seo?.keywords.split(',').map(k => k.trim()) }),
+    alternates: {
+      canonical: seo?.canonicalURL ||
+        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/services/${slug1}${slug2 ? `/${slug2}` : ""}`,
+    },
+    openGraph: {
+      title: seo?.openGraph?.ogTitle,
+      description: seo?.openGraph?.ogDescription,
+      url: seo?.openGraph?.ogUrl,
+      images: [
+        {
+          url: seo?.openGraph?.ogImage?.url,
+          width: seo?.openGraph?.ogImage?.width,
+          height: seo?.openGraph?.ogImage?.height,
+          alt: seo?.openGraph?.ogImage?.alternativeText || 'DWAO Image',
+        },
+      ],
+      type: seo?.openGraph?.ogType || 'website',
+    },
+  };
 }
 
+// Optional loader for future static pages (kept intact)
 export const loadPage = async (slug) => {
   const query = qs.stringify({
     filters: {
-      slug: {
-        $contains: slug
-      }
+      slug: { $contains: slug }
     },
     populate: {
-      Header: {
-        populate: "*" // Populate all components inside the dynamic zone
-      }
+      Header: { populate: "*" }
     }
   }, { encode: false });
 
-  // console.log(query, "query");
-
-  // try {
-  //   const getPageApi = await fetch(`http://localhost:1337/api/pages?${query}`);
-
-  //   if (!getPageApi.ok) {
-  //     console.error(`API responded with status: ${getPageApi.status}`);
-  //     return null;
-  //   }
-
-  //   const page = await getPageApi.json();
-
-  //   if (!page.data || page.data.length === 0) {
-  //     return null;
-  //   }
-
-  //   return page;
-  // } catch (error) {
-  //   console.error("Error fetching page data:", error);
-  //   return null;
-  // }
+  // Placeholder for future static API fetch usage
 };
 
+// Page component
 const DynamicPages = async ({ params, searchParams }) => {
-  const resolvedParams = await params;
-  // console.log("Resolvedparams: ", resolvedParams.slug[0], resolvedParams.slug[1])
-  const resolvedSearchParams = await searchParams;
-  const preview = resolvedSearchParams?.preview === "true"; //exact comparison because of js non-empty string logic
+  const { capabilityResponse, validRegion, regions } = await fetchCapabilityDataPage(params, searchParams);
 
-  const region = resolvedParams?.region ?? "default"
+  if (!validRegion) return <NotFound />;
 
-  const regions = await getRegions();
-
-  const validRegion = checkRegionValidity(region, regions);
-  if (!validRegion) {
-    return <NotFound />
-  }
-
-  const capabilityResponse = await getCapability(preview, resolvedParams.slug[0], resolvedParams.slug[1], region);
-  // console.log("capabilityResponse: ", capabilityResponse)
-
-  if (capabilityResponse.data == null) {
+  if (capabilityResponse?.data == null) {
     return <NotFound />;
   }
 
@@ -142,7 +103,12 @@ const DynamicPages = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={capabilityResponse?.data?.[0]?.seo?.structuredData} />
-      <SinglePageWrapper pageData={capabilityResponse?.data[0]} relatedCapabilities={capabilityResponse?.related} regions={regions} type="services"/>
+      <SinglePageWrapper
+        pageData={capabilityResponse?.data[0]}
+        relatedCapabilities={capabilityResponse?.related}
+        regions={regions}
+        type="services"
+      />
     </>
   );
 };

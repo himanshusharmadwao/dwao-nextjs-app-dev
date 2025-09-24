@@ -17,6 +17,27 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
   // console.log("secMenu: ", secMenu)
   // console.log("regions: ", regions)
 
+  // Helper function to get region-specific menu data
+  const getRegionSpecificMenu = useCallback((menuData, menuName, currentRegion = "default") => {
+    if (!menuData?.data) return null;
+
+    // First try to find menu data for the current region
+    const regionMenu = menuData.data.find(item =>
+      item.name === menuName &&
+      item.regions?.some(r => r.slug === currentRegion)
+    );
+
+    // If no region-specific menu found, fall back to default
+    if (!regionMenu) {
+      return menuData.data.find(item =>
+        item.name === menuName &&
+        item.regions?.some(r => r.slug === "default")
+      );
+    }
+
+    return regionMenu;
+  }, []);
+
   const [isRegionOpen, setIsRegionOpen] = useState(false);
   const regionRef = useRef(null);
   const [selectedRegion, setSelectedRegion] = useState();
@@ -59,10 +80,11 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
   const isReview = normalizedPath.includes("/reviews");
   const isPartner = normalizedPath.includes("/partners");
   const isService = normalizedPath.includes("/service");
+  const isContact = normalizedPath.includes("/contact");
 
   // to get capabilities hrefs - memoized for performance
   const getCapabilitiesHrefs = useCallback((headerData) => {
-    const primaryMenu = headerData.data.find((item) => item.name === "PrimaryMenu");
+    const primaryMenu = getRegionSpecificMenu(headerData, "PrimaryMenu", region);
 
     if (!primaryMenu) return [];
 
@@ -82,7 +104,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
     }, []);
 
     return hrefs;
-  }, []);
+  }, [region, getRegionSpecificMenu]);
 
   // Memoize capability URLs to avoid recalculation on every render
   const capabilityUrl = useMemo(() => getCapabilitiesHrefs(headerData), [headerData, getCapabilitiesHrefs]);
@@ -99,7 +121,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
 
   const handleSelectRegion = (region) => {
     if (region.slug === "in-en") {
-      if (isCulturePage || isBlogForRegion || isInsightsCaseStudiesForRegion || isCapability || isPartner || isService) {
+      if (isCulturePage || isBlogForRegion || isInsightsCaseStudiesForRegion || isCapability || isPartner || isService || isContact) {
         router.push(`${process.env.NEXT_PUBLIC_DWAO_DOMESTIC_URL}`);
       } else {
         router.push(
@@ -163,7 +185,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
     }
   }, [handleScroll]);
 
-  const primaryMenu = headerData.data.find((item) => item.name === "PrimaryMenu")?.menu || [];
+  const primaryMenu = getRegionSpecificMenu(headerData, "PrimaryMenu", region)?.menu || [];
 
   // map current URL to secMenu page
 

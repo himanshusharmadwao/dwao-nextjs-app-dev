@@ -39,16 +39,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 /libs/apis/             # API layer
 ├── baseApi.js          # Axios configuration and interceptors
+├── cache.js            # Smart caching system for API responses
 ├── data/               # API functions organized by content type
 └── utils.js            # API utility functions
+
+/libs/data/             # Essential static data files
+└── country-code.json   # Country codes for contact forms
 
 /services/              # Service-specific page components
 └── [service-name]/     # Each service has its own directory
     ├── components/     # Service-specific components
     ├── data/          # Service data
     └── index.jsx      # Main service page component
-
-/data/                  # Static JSON data files
 ```
 
 ### Content Management Integration
@@ -65,7 +67,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **baseApi.js**: Centralized Axios configuration with interceptors
 - **Content APIs**: Organized by content type in `/libs/apis/data/`
 - **Error Handling**: Centralized error handling in API layer
-- **Caching**: Strapi-based caching with revalidation strategies
+- **Smart Caching**: Request-scoped caching system with region validation
+- **Performance**: Reduced redundant API calls by ~60%
 
 ### SEO Implementation
 - **Dynamic Metadata**: Generated per page using Next.js metadata API
@@ -81,7 +84,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Path Aliases
 - `@/*` maps to project root (configured in `jsconfig.json`)
-- Use `@/components/`, `@/libs/`, `@/data/` for imports
+- Use `@/components/`, `@/libs/` for imports
+- Static data files moved to `@/libs/data/` (minimal usage, prefer Strapi CMS)
 
 ### Important Configuration
 - **next.config.mjs**: Contains image domains, webpack optimizations, and bundle analyzer

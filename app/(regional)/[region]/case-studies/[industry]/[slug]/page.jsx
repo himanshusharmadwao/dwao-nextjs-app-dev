@@ -15,6 +15,14 @@ const getCachedInsightBlog = cache(async (preview, industry, slug, region) => {
     return await getInsightBlog(preview, industry, slug, region || "default");
 });
 
+// Helper function to get image URL
+function getImageUrl(image) {
+    if (!image?.url) return null;
+    if (image.url.startsWith('http')) return image.url;
+    const baseUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+    return `${baseUrl}${image.url}`;
+}
+
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
     const { industry, slug, region } = await params;
@@ -41,10 +49,13 @@ export async function generateMetadata({ params, searchParams }) {
     }
 
     const seo = insightBlogsResponse?.data?.[0]?.seo || {};
+    const featuredImage = insightBlogsResponse?.data?.[0]?.featuredImage;
+    const heroImageUrl = getImageUrl(featuredImage);
 
     // console.log("seo: ", seo)
 
-    return {
+    // Create metadata with preload link for hero image
+    const metadata = {
         title: seo?.metaTitle || insightBlogsResponse?.data?.[0]?.title,
         description: seo?.metaDescription || "Read the latest insights and case studies.",
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
@@ -68,6 +79,22 @@ export async function generateMetadata({ params, searchParams }) {
             type: seo?.openGraph?.ogType || 'website'
         }
     };
+
+    // Add preload link for hero image to improve LCP
+    if (heroImageUrl) {
+        metadata.other = {
+            'link': [
+                {
+                    rel: 'preload',
+                    as: 'image',
+                    href: heroImageUrl,
+                    fetchpriority: 'high'
+                }
+            ]
+        };
+    }
+
+    return metadata;
 }
 
 

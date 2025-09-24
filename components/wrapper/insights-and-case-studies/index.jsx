@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { getInsightCategory } from '@/libs/apis/data/insights';
+import { getInsightCategory, getInsightBlogsListing } from '@/libs/apis/data/insights';
 import dynamic from "next/dynamic";
 import { getRegions } from '@/libs/apis/data/menu';
 
@@ -21,13 +21,31 @@ const InsightCaseWrapper = async ({ preview, region = "default" }) => {
 
     const insightCategoryResponse = await getInsightCategory(preview, region);
 
+    // Fetch initial case studies data server-side with optimized fields
+    const initialCaseStudies = await getInsightBlogsListing(
+        1, // page
+        6, // pageSize
+        null, // category
+        null, // subCategory
+        preview,
+        region
+    );
+
     const regions = await getRegions();
 
     return (
         <>
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
-                <BlogPost filterItems={insightCategoryResponse?.data} variant="caseStudies" preview={preview} region={region} regions={regions} />
+                <BlogPost
+                    filterItems={insightCategoryResponse?.data}
+                    variant="caseStudies"
+                    preview={preview}
+                    region={region}
+                    regions={regions}
+                    initialPosts={initialCaseStudies?.data || []}
+                    initialMeta={initialCaseStudies?.meta || { pagination: { total: 0 } }}
+                />
             </Suspense>
 
             {/* Contact */}

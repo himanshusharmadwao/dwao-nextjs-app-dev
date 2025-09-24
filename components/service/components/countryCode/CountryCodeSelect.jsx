@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import countryCodes from "@/data/country-code/country-code.json";
+import countryCodes from "@/libs/data/country-code.json";
 
 export default function CountryCodeSelect({
     name = "countryCode",

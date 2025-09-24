@@ -19,8 +19,8 @@ const DualLayout = ({ data, region, regions }) => {
                         <Image
                             src={getImageUrl(visual)}
                             alt="missing image"
-                            layout="fill"
-                            objectFit="cover"
+                            fill
+                            style={{ objectFit: 'cover' }}
                             priority
                         />
                     </div>

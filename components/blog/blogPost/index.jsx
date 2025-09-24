@@ -6,15 +6,16 @@ import Card from '@/components/ui/card';
 import Pagination from '@/components/ui/pagination';
 import OverlayCard from '@/components/common/overlayCard';
 import { getAllBlogs } from '@/libs/apis/data/blog';
-import { getAllInsightBlogs } from '@/libs/apis/data/insights';
+import { getInsightBlogsListing } from '@/libs/apis/data/insights';
 
-const BlogPost = ({ filterItems, variant, preview, region, regions }) => {
+const BlogPost = ({ filterItems, variant, preview, region, regions, initialPosts = [], initialMeta = null }) => {
     // console.log(filterItems)
     const [selectedFilter, setSelectedFilter] = useState({ category: null, sub_category: null });
     const [currentPage, setCurrentPage] = useState(1);
-    const [posts, setPosts] = useState([]);
-    const [totalItems, setTotalItems] = useState(0);
+    const [posts, setPosts] = useState(initialPosts);
+    const [totalItems, setTotalItems] = useState(initialMeta?.pagination?.total || 0);
     const [loading, setLoading] = useState(false);
+    const [hasInitialData, setHasInitialData] = useState(initialPosts.length > 0);
     const itemsPerPage = 6;
 
     const handleFilterSelect = (category, sub_category) => {
@@ -52,7 +53,7 @@ const BlogPost = ({ filterItems, variant, preview, region, regions }) => {
                     region
                 );
             } else if (variant === 'caseStudies') {
-                response = await getAllInsightBlogs(
+                response = await getInsightBlogsListing(
                     page,
                     itemsPerPage,
                     selectedFilter.category,
@@ -77,6 +78,11 @@ const BlogPost = ({ filterItems, variant, preview, region, regions }) => {
 
 
     useEffect(() => {
+        // Skip fetching if we have initial data and it's the first page with no filters
+        if (hasInitialData && currentPage === 1 && !selectedFilter.category && !selectedFilter.sub_category) {
+            setHasInitialData(false); // Mark that we've used the initial data
+            return;
+        }
         fetchPosts(currentPage);
     }, [currentPage, selectedFilter]);
 
@@ -84,7 +90,7 @@ const BlogPost = ({ filterItems, variant, preview, region, regions }) => {
         setCurrentPage(page);
     };
 
-    console.log("posts: ", posts)
+    // console.log("posts: ", posts)
 
     return (
         <div className="container">

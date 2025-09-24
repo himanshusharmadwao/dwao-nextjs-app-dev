@@ -131,7 +131,7 @@ const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region = "defa
                         <div className="lg:col-span-2 col-span-1">
                             <div className="relative lg:h-[700px] lg:w-[450px] h-[500px] w-full">
                                 {pageData?.insightVisual?.url && (
-                                    <Image src={getImageUrl(pageData?.insightVisual) || ''} fill alt="missing image" objectFit='cover' />
+                                    <Image src={getImageUrl(pageData?.insightVisual) || ''} fill alt="missing image" style={{ objectFit: 'cover' }} />
                                 )}
                             </div>
                         </div>

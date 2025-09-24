@@ -27,7 +27,7 @@ const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default
                                     alt="Desktop Banner"
                                     fill
                                     priority
-                                    objectFit="cover"
+                                    style={{ objectFit: 'cover' }}
                                 />
                             </div>
                             <div className="aspect-[15/7] lg:hidden">
@@ -36,7 +36,7 @@ const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default
                                     alt="Mobile Banner"
                                     fill
                                     priority
-                                    objectFit="cover"
+                                    style={{ objectFit: 'cover' }}
                                 />
                             </div>
                             <div className="absolute inset-0 bg-black/30 flex items-center">
