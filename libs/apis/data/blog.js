@@ -123,12 +123,10 @@ export const getBlog = async (preview = false, slug, region = "default") => {
       if (categorySlug) {
         // Only fetch fields needed for related blog cards display
         let relatedUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/blogs?` +
-          `fields[0]=title&fields[1]=slug&fields[2]=excerpt&` +
-          `populate[thumbnail][fields][0]=url&populate[thumbnail][fields][1]=alternativeText&` +
-          `populate[thumbnail][fields][2]=width&populate[thumbnail][fields][3]=height&` +
-          `populate[category][fields][0]=name&` +
-          `pagination[pageSize]=4` +
-          `&filters[slug][$ne]=${slug}&filters[category][slug][$eq]=${categorySlug}`;
+          `fields[0]=title&fields[1]=slug` +
+          `&pagination[pageSize]=4` +
+          `&filters[slug][$ne]=${slug}` +
+          `&filters[category][slug][$eq]=${categorySlug}`;
 
         // Multi-region filtering for related blogs
         if (region && region !== "default") {
