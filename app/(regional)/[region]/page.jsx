@@ -56,8 +56,7 @@ export async function generateMetadata({ params, searchParams }) {
     alternates: {
       canonical:
         seo?.canonicalURL ||
-        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
-          params?.region && params.region !== "default" ? `/${params.region}` : ""
+        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${params?.region && params.region !== "default" ? `/${params.region}` : ""
         }`,
     },
     openGraph: {
@@ -73,6 +72,9 @@ export async function generateMetadata({ params, searchParams }) {
         },
       ],
       type: seo?.openGraph?.ogType || "website",
+    },
+    other: {
+      "google-site-verification": "d4Ng9NKlUx8bd3h0ukTyQwWgZu8uT6UOSQFYpimQSV4",
     },
   };
 }
