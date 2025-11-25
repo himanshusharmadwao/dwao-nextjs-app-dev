@@ -9,6 +9,7 @@ import { getRegions } from '@/libs/apis/data/menu';
 // Centralized data fetcher
 async function fetchPartnerData(params, searchParams) {
   const { region, slug } = params;
+  if(slug === "partners-global") return <NotFound />;
   const preview = searchParams?.preview === "true"; // exact comparison
   const capabilityResponse = await getPartner(preview, slug, region || "default");
   const regions = await getRegions();

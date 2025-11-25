@@ -11,6 +11,7 @@ import { getRegions } from '@/libs/apis/data/menu';
 async function fetchCapabilityData(params, searchParams) {
   const preview = searchParams?.preview === "true";
   const [slug1, slug2] = params?.slug || [];
+  if(slug1 === slug2) return <NotFound />; 
   const capabilityResponse = await getCapability(preview, slug1, slug2);
   const regions = await getRegions();
 

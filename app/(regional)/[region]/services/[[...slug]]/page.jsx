@@ -17,6 +17,8 @@ async function fetchCapabilityDataPage(params, searchParams) {
   const regions = await getRegions();
   const validRegion = checkRegionValidity(region, regions);
 
+  if(slug1 === slug2) return <NotFound />; 
+
   if (!validRegion) {
     return { validRegion: false, preview, region, regions, capabilityResponse: null, slug1, slug2 };
   }

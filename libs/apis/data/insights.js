@@ -284,6 +284,7 @@ export const getAllInsightBlogs = async (
         `populate[category][fields][0]=name&` +
         `populate[sub_category][fields][0]=name&` +
         `populate[regions][fields][0]=slug&` +
+        `populate[stats]=*&` +
         `pagination[page]=${page}&pagination[pageSize]=${pageSize}` +
         `&sort[0]=createdAt:desc`;
 
