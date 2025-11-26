@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import styles from "./Header.module.css";
-import MobileHeader from "./mobile";
+import MobileHeader from "./mobile/index";
 import Image from "next/image";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 import { usePathname, useRouter } from "next/navigation";
@@ -273,7 +273,7 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
               ))}
             </ul>
 
-            <div ref={regionRef} className={`region relative inline-block text-left text-[15px] z-[99999] ${isRegionOpen ? styles.dropdownOpen : ''}`}
+            <div ref={regionRef} className={`region relative hidden lg:inline-block text-left text-[15px] z-[99999] ${isRegionOpen ? styles.dropdownOpen : ''}`}
               onMouseEnter={() => setIsRegionOpen(true)}
               onMouseLeave={() => setIsRegionOpen(false)}
             >
@@ -283,8 +283,8 @@ const HeaderWrapper = ({ region, headerData, secMenu, regions }) => {
                 onClick={() => setIsRegionOpen((prev) => !prev)}
               >
                 <GoGlobe />
-                <span className="lg:inline-block hidden">{selectedRegion?.name}</span>
-                <span className="inline-block lg:hidden">{selectedRegion?.slug}</span>
+                <span className="">{selectedRegion?.name}</span>
+                {/* <span className="inline-block lg:hidden">{selectedRegion?.slug}</span> */}
                 <RxCaretDown size={22}/>
               </div>
               {/* Dropdown */}
