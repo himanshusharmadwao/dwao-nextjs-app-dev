@@ -1,17 +1,38 @@
 import StructuredData from "@/components/StructuredData";
 import ReviewWrapper from "@/components/wrapper/marketing-automation-team"
+import { getRegions } from "@/libs/apis/data/menu";
 import { getReviews } from "@/libs/apis/data/reviews";
+import { checkRegionValidity } from "@/libs/utils";
+import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Centralized data fetcher
-async function fetchReviewData(searchParams) {
+async function fetchReviewData(params, searchParams) {
   const preview = searchParams?.preview === "true";
-  const reviewResponse = await getReviews(preview);
-  return { reviewResponse, preview };
+  const region = params?.region ?? "default";
+  const slug = params?.slug;
+
+  const regions = await getRegions();
+  const validRegion = checkRegionValidity(region, regions);
+
+  if (!validRegion) {
+    return { validRegion: false, preview, region, regions, reviewResponse: null };
+  }
+
+  const reviewResponse = await getReviews(preview, slug, region);
+  return { reviewResponse, preview, region, regions, validRegion: true };
 }
 
 // Generate dynamic metadata
-export async function generateMetadata({ searchParams }) {
-  const { reviewResponse } = await fetchReviewData(searchParams);
+export async function generateMetadata({ params, searchParams }) {
+  const { slug } = params;
+  const { reviewResponse, validRegion, region } = await fetchReviewData(params, searchParams);
+
+  if (!validRegion) {
+    return {
+      title: "Page Not Found",
+      description: "Invalid region specified.",
+    };
+  }
 
   if (!reviewResponse) {
     return {
@@ -29,7 +50,9 @@ export async function generateMetadata({ searchParams }) {
     alternates: {
       canonical:
         seo?.canonicalURL ||
-        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/reviews/marketing-automation-team`,
+        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
+          region !== "default" ? `/${region}` : ""
+        }/reviews/${slug}/`,
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
@@ -48,8 +71,12 @@ export async function generateMetadata({ searchParams }) {
   };
 }
 
-const Culture = async ({ searchParams }) => {
-  const { reviewResponse } = await fetchReviewData(searchParams);
+const ReviewMat = async ({ params, searchParams }) => {
+  const { reviewResponse, validRegion, preview, region } = await fetchReviewData(params, searchParams);
+
+  if (!validRegion) {
+    return <NotFound />;
+  }
 
   const { data, error } = reviewResponse;
 
@@ -75,10 +102,10 @@ const Culture = async ({ searchParams }) => {
 
   return (
     <>
-      <StructuredData data={reviewResponse?.data?.seo?.structuredData} />
-      <ReviewWrapper reviewResponse={data[0]} />
+      <StructuredData data={data?.seo?.structuredData} />
+      <ReviewWrapper reviewResponse={data[0]} region={region} />
     </>
   );
 };
 
-export default Culture;
+export default ReviewMat;

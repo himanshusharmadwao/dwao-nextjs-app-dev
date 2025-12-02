@@ -5,7 +5,7 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 
 const MobileHeader = ({ MenuStructure, isMenuOpen, toggleMenu }) => {
 
-  console.log("menu", MenuStructure);
+  // console.log("menu", MenuStructure);
 
   const [openSubMenus, setOpenSubMenus] = useState({});
 

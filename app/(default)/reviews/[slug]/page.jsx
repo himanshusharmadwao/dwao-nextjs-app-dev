@@ -1,36 +1,18 @@
 import StructuredData from "@/components/StructuredData";
 import ReviewWrapper from "@/components/wrapper/marketing-automation-team"
-import { getRegions } from "@/libs/apis/data/menu";
 import { getReviews } from "@/libs/apis/data/reviews";
-import { checkRegionValidity } from "@/libs/utils";
-import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Centralized data fetcher
-async function fetchReviewData(params, searchParams) {
+async function fetchReviewData(slug, searchParams) {
   const preview = searchParams?.preview === "true";
-  const region = params?.region ?? "default";
-
-  const regions = await getRegions();
-  const validRegion = checkRegionValidity(region, regions);
-
-  if (!validRegion) {
-    return { validRegion: false, preview, region, regions, reviewResponse: null };
-  }
-
-  const reviewResponse = await getReviews(preview, region);
-  return { reviewResponse, preview, region, regions, validRegion: true };
+  const reviewResponse = await getReviews(preview, slug);
+  return { reviewResponse, preview };
 }
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { reviewResponse, validRegion, region } = await fetchReviewData(params, searchParams);
-
-  if (!validRegion) {
-    return {
-      title: "Page Not Found",
-      description: "Invalid region specified.",
-    };
-  }
+  const { slug } = params;
+  const { reviewResponse } = await fetchReviewData(slug, searchParams);
 
   if (!reviewResponse) {
     return {
@@ -48,9 +30,7 @@ export async function generateMetadata({ params, searchParams }) {
     alternates: {
       canonical:
         seo?.canonicalURL ||
-        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
-          region !== "default" ? `/${region}` : ""
-        }/reviews/marketing-automation-team`,
+        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/reviews/${slug}/`,
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
@@ -69,12 +49,9 @@ export async function generateMetadata({ params, searchParams }) {
   };
 }
 
-const ReviewMat = async ({ params, searchParams }) => {
-  const { reviewResponse, validRegion, preview, region } = await fetchReviewData(params, searchParams);
-
-  if (!validRegion) {
-    return <NotFound />;
-  }
+const Culture = async ({params, searchParams }) => {
+  const { slug } = params;
+  const { reviewResponse } = await fetchReviewData(slug, searchParams);
 
   const { data, error } = reviewResponse;
 
@@ -100,10 +77,10 @@ const ReviewMat = async ({ params, searchParams }) => {
 
   return (
     <>
-      <StructuredData data={data?.seo?.structuredData} />
-      <ReviewWrapper reviewResponse={data[0]} region={region} />
+      <StructuredData data={reviewResponse?.data?.seo?.structuredData} />
+      <ReviewWrapper reviewResponse={data[0]} />
     </>
   );
 };
 
-export default ReviewMat;
+export default Culture;

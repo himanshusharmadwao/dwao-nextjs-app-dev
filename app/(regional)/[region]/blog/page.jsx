@@ -30,7 +30,7 @@ export async function generateMetadata({ params, searchParams }) {
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
         region !== "default" ? `/${region}` : ""
-      }/blog`,
+      }/blog/`,
     },
   };
 }

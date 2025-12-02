@@ -29,7 +29,7 @@ async function fetchCapabilityDataPage(params, searchParams) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { capabilityResponse, validRegion, slug1, slug2 } = await fetchCapabilityDataPage(params, searchParams);
+  const { capabilityResponse, validRegion, region, slug1, slug2 } = await fetchCapabilityDataPage(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -53,7 +53,9 @@ export async function generateMetadata({ params, searchParams }) {
     ...(seo?.keywords && { keywords: seo?.keywords.split(',').map(k => k.trim()) }),
     alternates: {
       canonical: seo?.canonicalURL ||
-        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/services/${slug1}${slug2 ? `/${slug2}` : ""}`,
+        `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
+          region !== "default" ? `/${region}` : ""
+        }/services/${slug1}${slug2 ? `/${slug2}` : ""}/`,
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,

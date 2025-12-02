@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
     return {
         title: "Blogs",
         alternates: {
-            canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""}/case-studies`
+            canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""}/case-studies/`
         }
     };
 }

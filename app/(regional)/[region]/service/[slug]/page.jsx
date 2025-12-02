@@ -25,7 +25,8 @@ async function fetchServiceDataPage(params, searchParams) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { serviceResponse, validRegion } = await fetchServiceDataPage(params, searchParams);
+  const slug = params?.slug;
+  const { serviceResponse, validRegion, region } = await fetchServiceDataPage(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -48,7 +49,10 @@ export async function generateMetadata({ params, searchParams }) {
     description: seo?.metaDescription || serviceResponse?.data?.[0]?.excerpt,
     keywords: seo?.keywords ? seo?.keywords.split(',').map((k) => k.trim()) : [],
     alternates: {
-      canonical: seo?.canonicalURL,
+      canonical: seo?.canonicalURL ||
+            `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
+          region !== "default" ? `/${region}` : ""
+        }/${slug}/`,
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,

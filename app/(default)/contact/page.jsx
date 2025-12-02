@@ -30,7 +30,7 @@ export async function generateMetadata({ searchParams }) {
         keywords: seo?.keywords ? seo?.keywords.split(",").map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||
-                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/contact`
+                `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/contact/`
         },
         openGraph: {
             title: seo?.openGraph?.ogTitle,

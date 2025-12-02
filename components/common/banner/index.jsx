@@ -5,7 +5,7 @@ import { breakTitle } from '@/libs/utils';
 
 const CommonBanner = ({ data }) => {
 
-  console.log("data: ", data)
+  // console.log("data: ", data)
 
   const {
     title = "",

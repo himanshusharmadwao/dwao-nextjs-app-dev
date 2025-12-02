@@ -57,7 +57,7 @@ export async function generateMetadata({ params, searchParams }) {
       canonical:
         seo?.canonicalURL ||
         `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${params?.region && params.region !== "default" ? `/${params.region}` : ""
-        }`,
+        }/`,
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
