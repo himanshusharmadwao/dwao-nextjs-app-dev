@@ -26,7 +26,11 @@ const Newsletter = () => {
 
         try {
             const result = await submitSubscriber(subscriber);
-            console.log("Form submitted:", result);
+            if (result.error) {
+                toast.error(result.error, toastStyle);
+                return;
+            }
+            // console.log("Form submitted:", result);
             toast("Form submission succeeded", toastStyle);
             setSubscriber('');
         } catch (error) {
@@ -34,8 +38,6 @@ const Newsletter = () => {
             console.error(error);
         }
     };
-
-
 
     return (
         <>

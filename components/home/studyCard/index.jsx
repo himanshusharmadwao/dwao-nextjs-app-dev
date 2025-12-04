@@ -6,12 +6,11 @@ const StudyCard = ({ imageSrc, title, description, href }) => {
     return (
         <div className="w-full group">
             {/* Image Section */}
-            <div className="relative rounded-lg overflow-hidden">
+            <div className="relative rounded-lg overflow-hidden w-full aspect-[350/245]">
                 <Image
                     src={imageSrc || "/featured-thumb-lenskart.webp"}
                     alt={title || "Card Image"}
-                    width={200}
-                    height={140}
+                    fill
                     className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
                 />
             </div>
@@ -19,8 +18,8 @@ const StudyCard = ({ imageSrc, title, description, href }) => {
             {/* Content Section */}
             <div className="py-6 relative z-10">
                 <div className="flex justify-between ">
-                    <Link prefetch={false}  href={href} className="transition-all duration-300 leading-[27px] text-[25px] hover:text-[var(--mainColor)]">{title}</Link>
-                    <Link prefetch={false}  href={href} aria-label="Bookmark this item" title="Bookmark">
+                    <Link prefetch={false} href={href} className="transition-all duration-300 leading-[27px] text-[25px] hover:text-[var(--mainColor)]">{title}</Link>
+                    <Link prefetch={false} href={href} aria-label="Bookmark this item" title="Bookmark">
                         <span className="relative  mt-2">
                             {/* Default: Outlined icon (Visible by default) */}
                             <svg
@@ -56,7 +55,7 @@ const StudyCard = ({ imageSrc, title, description, href }) => {
                 </div>
                 <p className="mt-2 text-con text-con-light"> {description?.length > 80 ? `${description?.slice(0, 80)}...` : `${description}...`} </p>
             </div>
-            <Link prefetch={false}  href={href} className="group flex items-center gap-2" aria-label="Learn More">
+            <Link prefetch={false} href={href} className="group flex items-center gap-2" aria-label="Learn More">
                 <span className="transition-transform transition-opacity duration-300 ease-in-out opacity-0 translate-x-0 group-hover:translate-x-2 group-hover:opacity-100">
                     <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" fillRule="evenodd">

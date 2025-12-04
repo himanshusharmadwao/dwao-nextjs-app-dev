@@ -41,13 +41,17 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "d
     // console.log(relatedCapabilities)
 
     const relatedCard = relatedCapabilities?.map((item, index) => {
+
         return (
             <div className='' key={index}>
-                {/* <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.title}
-                    linkHref={buildRegionalPath(`/services/${item.category.slug}/${item.slug}`, region, regions.data)} /> */}
 
                 <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.title}
-                    linkHref={buildRegionalPath(`/${type === "services" ? "services/" : ""}${item?.category?.slug}/${item?.slug}`, region, regions.data)} />
+                    // linkHref={buildRegionalPath(`/${type === "services" ? "services/" : ""}${item?.category?.slug}/${item?.slug}`, region, regions.data)}
+                    linkHref={buildRegionalPath(
+                        `/${type === "services" ? "services/" : ""}${item?.category?.slug}${item?.category?.slug !== item?.slug ? `/${item?.slug}` : ""}`,
+                        region,
+                        regions.data
+                    )} />
             </div>
         )
     })

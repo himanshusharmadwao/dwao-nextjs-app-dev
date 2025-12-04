@@ -34,12 +34,14 @@ const Banner = ({ data }) => {
                             {/* Header Section */}
                             <div className="bg-[var(--mainColor)] text-white p-6 flex items-center justify-center">
                                 {data?.brandLogo && (
-                                    <Image
-                                        src={getImageUrl(data?.brandLogo)}
-                                        alt="missing image"
-                                        height={80}
-                                        width={80}
-                                    />
+                                    <div className="h-[50px] w-[140px] relative">
+                                        <Image
+                                            src={getImageUrl(data?.brandLogo)}
+                                            alt="missing image"
+                                            fill
+                                            className="object-contain"
+                                        />
+                                    </div>
                                 )}
                             </div>
 
