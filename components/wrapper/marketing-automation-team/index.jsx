@@ -30,7 +30,6 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
                 name={testimonial?.name}
                 title={testimonial?.title}
                 imageSrc={getImageUrl(testimonial?.image)}
-                type="emp_test"
             />
         ));
 
@@ -42,7 +41,6 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
                 name={testimonial?.name}
                 title={testimonial?.title}
                 imageSrc={getImageUrl(testimonial?.image)}
-                type="emp_test"
             />
         ));
     } else {
@@ -55,7 +53,6 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
                 name={testimonial?.name}
                 title={testimonial?.title}
                 imageSrc={getImageUrl(testimonial?.image)}
-                type="emp_test"
             />
         ));
 

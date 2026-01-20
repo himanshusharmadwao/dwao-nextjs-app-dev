@@ -88,6 +88,87 @@ export const getServiceData = async (preview = false, slug, region = "default") 
   }
 };
 
+export const getAllServiceData = async (preview = false, region = "default") => {
+  try {
+    const cacheKey = `getAllServiceData_${preview}_${region}`;
+
+    // 1. Check cache
+    if (hasCachedApiResult(cacheKey)) {
+      logCacheHit("getAllServiceData", preview, region);
+      return getCachedApiResult(cacheKey);
+    }
+
+    // 2. Check in-flight request
+    if (hasInFlightRequest(cacheKey)) {
+      console.log("🔀 Reusing in-flight request: getAllServiceData", { preview, region });
+      return await getInFlightRequest(cacheKey);
+    }
+
+    logCacheMiss("getAllServiceData", preview, region);
+
+    // 3. Create actual API call promise
+    const apiPromise = (async () => {
+      let url =
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/service-pages?` +
+        `fields[0]=slug&fields[1]=updatedAt&fields[2]=createdAt`;
+
+      if (region) {
+        url += `&filters[regions][slug][$eq]=${region}`;
+      }
+
+      if (preview) {
+        url += `&status=draft`;
+      }
+
+      let response = await fetch(url, {
+        next: { revalidate: getRevalidateTime(preview) },
+      });
+      let finalResponse = await response.json();
+      let data = finalResponse?.data || [];
+
+      // Fallback to default region if nothing found
+      if ((!data || data.length === 0) && region !== "default") {
+        const fallbackUrl = url.replace(
+          `filters[regions][slug][$eq]=${region}`,
+          `filters[regions][slug][$eq]=default`
+        );
+
+        response = await fetch(fallbackUrl, {
+          next: { revalidate: getRevalidateTime(preview) },
+        });
+        finalResponse = await response.json();
+        data = finalResponse?.data || [];
+      }
+
+      // Error handling
+      if (finalResponse?.error && Object.keys(finalResponse?.error).length > 0) {
+        const errorResult = {
+          data: null,
+          error: finalResponse?.error?.message || "Unknown error",
+        };
+        setCachedApiResult(cacheKey, errorResult);
+        return errorResult;
+      }
+
+      const result = { data, error: null };
+      setCachedApiResult(cacheKey, result);
+      return result;
+    })();
+
+    // 4. Mark this API call as in-flight
+    setInFlightRequest(cacheKey, apiPromise);
+
+    return await apiPromise;
+  } catch (error) {
+    console.error("Error:", error);
+    const cacheKey = `getAllServiceData_${preview}_${region}`;
+    const errorResult = { data: null, error: error.message || "Something went wrong" };
+    setCachedApiResult(cacheKey, errorResult);
+    return errorResult;
+  }
+};
+
+
 
 export const submitLeadForm = async (formData) => {
   try {

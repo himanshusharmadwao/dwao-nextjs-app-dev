@@ -39,7 +39,10 @@ const Banner = ({ data }) => {
                             <h1 className='text-[24px] lg:text-[42px] leading-[1.5] text-white lg:mb-6 mb-2'>
                                 {data?.title}
                             </h1>
-                            <p className='text-[16px] lg:text-[18px] font-bold text-white lg:mb-4 mb-2'>Streamline lead management by integrating your CRM</p>
+                            <p className='text-[16px] lg:text-[18px] font-bold text-white lg:mb-4 mb-2'>
+                                {data?.excerpt?.split(" ").slice(0, 10).join(" ")}
+                                {data?.excerpt?.split(" ").length > 10 && "..."}
+                            </p>
                             <p className='text-[18px] font-bold text-white lg:mb-4 mb-2'>By {data?.author?.name}</p>
                             <p className='text-[18px] text-white'>{formattedDate} | 5 Minutes | <Image src="/icons/share.svg" height={24} width={24} alt="missing image" className='inline-block cursor-pointer' onClick={copyUrl} /> | <Image src="/icons/print.svg" height={24} width={24} alt="missing image" className='inline-block cursor-pointer' onClick={() => window.print()} /></p>
                         </div>

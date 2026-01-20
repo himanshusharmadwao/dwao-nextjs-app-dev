@@ -8,7 +8,7 @@ const StoryCard = ({ logo, metric, metricLabel, title, description, stats, caseS
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="p-8 border-b border-gray-100">
-        <Image src={logo} alt="Icon Image" height={70} width={90} className='mx-auto mb-6'/>
+        <Image src={logo} alt="Icon Image" height={70} width={90} className='mx-auto mb-6' />
         <div className="flex justify-center items-center mb-6">
           <span className="text-5xl font-bold text-[#4A69BB]">{metric}</span>
           <span className="text-lg ml-2 text-gray-600">{metricLabel}</span>
@@ -30,12 +30,14 @@ const StoryCard = ({ logo, metric, metricLabel, title, description, stats, caseS
             </div>
           ))}
         </div>
-        <div className="mt-6 text-center">
-          <Link prefetch={false}  href={caseStudyHref} className="inline-flex items-center text-[#4A69BB] font-medium hover:text-blue-700 cursor-pointer">
-            {caseStudyLink}
-            <Image src="/dv360/icons/arrowRight.svg" alt="Icon Image" height={20} width={20} className='ms-2'/>
-          </Link>
-        </div>
+        {caseStudyHref && caseStudyLink && (
+          <div className="mt-6 text-center">
+            <Link prefetch={false} href={caseStudyHref} className="inline-flex items-center text-[#4A69BB] font-medium hover:text-blue-700 cursor-pointer">
+              {caseStudyLink}
+              <Image src="/dv360/icons/arrowRight.svg" alt="Icon Image" height={20} width={20} className='ms-2' />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

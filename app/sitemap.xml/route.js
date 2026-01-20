@@ -1,6 +1,8 @@
 import { getAllBlogs } from '@/libs/apis/data/blog';
 import { getAllInsightBlogs } from '@/libs/apis/data/insights';
 import { getRegions } from '@/libs/apis/data/menu';
+import { getAllCapabilities } from '@/libs/apis/data/capabilities';
+import { getAllPartners } from '@/libs/apis/data/partners';
 
 const BASE_URL = process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL || 'https://dwao.com';
 
@@ -9,13 +11,16 @@ export async function GET() {
     // Fetch all regions
     const regionsResponse = await getRegions();
     const regions = regionsResponse?.data || [];
-    const regionSlugs = regions.map(r => r.slug).filter(slug => slug !== 'default');
+    // Exclude 'default' and 'in-en' (India) from sitemap
+    const regionSlugs = regions
+      .map(r => r.slug)
+      .filter(slug => slug !== 'default' && slug !== 'in-en');
 
     // Create dynamic region to hreflang mapping
     const regionMap = {};
     regions.forEach(region => {
-      if (region.slug !== 'default' && region.hreflang) {
-        regionMap[region.slug] = region.hreflang;
+      if (region.slug !== 'default' && region.hrefLang) {
+        regionMap[region.slug] = region.hrefLang;
       }
     });
 
@@ -35,125 +40,210 @@ export async function GET() {
       }
     });
 
-    // Fetch all blogs (with regions field)
-    const blogsResponse = await getAllBlogs(1, 100, null, null, false, 'default');
-    const blogs = blogsResponse?.data || [];
+    // Fetch all blogs with pagination (to ensure we get ALL blogs)
+    const blogs = [];
+    let blogPage = 1;
+    let hasMoreBlogs = true;
+    const blogsPerPage = 100;
 
-    // Fetch all case studies
-    const caseStudiesResponse = await getAllInsightBlogs(1, 100, null, null, false, 'default');
-    const caseStudies = caseStudiesResponse?.data || [];
+    while (hasMoreBlogs) {
+      const blogsResponse = await getAllBlogs(blogPage, blogsPerPage, null, null, false, 'default');
+      const pageBlogs = blogsResponse?.data || [];
+
+      if (pageBlogs.length > 0) {
+        blogs.push(...pageBlogs);
+        blogPage++;
+        // If we got less than the page size, we've reached the end
+        hasMoreBlogs = pageBlogs.length === blogsPerPage;
+      } else {
+        hasMoreBlogs = false;
+      }
+    }
+
+    // Fetch all case studies with pagination
+    const caseStudies = [];
+    let caseStudyPage = 1;
+    let hasMoreCaseStudies = true;
+    const caseStudiesPerPage = 100;
+
+    while (hasMoreCaseStudies) {
+      const caseStudiesResponse = await getAllInsightBlogs(caseStudyPage, caseStudiesPerPage, null, null, false, 'default');
+      const pageCaseStudies = caseStudiesResponse?.data || [];
+
+      if (pageCaseStudies.length > 0) {
+        caseStudies.push(...pageCaseStudies);
+        caseStudyPage++;
+        hasMoreCaseStudies = pageCaseStudies.length === caseStudiesPerPage;
+      } else {
+        hasMoreCaseStudies = false;
+      }
+    }
+
+    // Fetch all capabilities/services with pagination
+    const capabilities = [];
+    let capabilityPage = 1;
+    let hasMoreCapabilities = true;
+    const capabilitiesPerPage = 100;
+
+    while (hasMoreCapabilities) {
+      const capabilitiesResponse = await getAllCapabilities(capabilityPage, capabilitiesPerPage, false, 'default');
+      const pageCapabilities = capabilitiesResponse?.data || [];
+
+      if (pageCapabilities.length > 0) {
+        capabilities.push(...pageCapabilities);
+        capabilityPage++;
+        hasMoreCapabilities = pageCapabilities.length === capabilitiesPerPage;
+      } else {
+        hasMoreCapabilities = false;
+      }
+    }
+
+    // Fetch all partners with pagination
+    const partners = [];
+    let partnerPage = 1;
+    let hasMorePartners = true;
+    const partnersPerPage = 100;
+
+    while (hasMorePartners) {
+      const partnersResponse = await getAllPartners(partnerPage, partnersPerPage, false, 'default');
+      const pagePartners = partnersResponse?.data || [];
+
+      if (pagePartners.length > 0) {
+        partners.push(...pagePartners);
+        partnerPage++;
+        hasMorePartners = pagePartners.length === partnersPerPage;
+      } else {
+        hasMorePartners = false;
+      }
+    }
 
     // Generate sitemap entries
     const urls = [];
 
-    // 1. Static pages for all regions
+    // 1. Static pages with regional variants
     const staticPages = [
       { path: '', priority: 1.0, changefreq: 'weekly' },
       { path: '/blog', priority: 0.8, changefreq: 'daily' },
       { path: '/case-studies', priority: 0.8, changefreq: 'weekly' },
       { path: '/services', priority: 0.8, changefreq: 'monthly' },
+      { path: '/partners', priority: 0.8, changefreq: 'monthly' },
       { path: '/about', priority: 0.7, changefreq: 'monthly' },
+      { path: '/about/culture', priority: 0.7, changefreq: 'monthly' },
       { path: '/contact', priority: 0.7, changefreq: 'yearly' },
     ];
 
-    // Add static pages for default route
+    // Add static pages with hreflang support (one entry per page with all regional variants)
     staticPages.forEach(page => {
       urls.push({
         loc: `${BASE_URL}${page.path}`,
         lastmod: new Date().toISOString(),
         changefreq: page.changefreq,
         priority: page.priority,
+        isStaticPage: true,
+        regionalVariants: regionSlugs,
       });
     });
 
-    // Add static pages for each region
-    regionSlugs.forEach(region => {
-      staticPages.forEach(page => {
-        urls.push({
-          loc: `${BASE_URL}/${region}${page.path}`,
-          lastmod: new Date().toISOString(),
-          changefreq: page.changefreq,
-          priority: page.priority * 0.9, // Slightly lower priority for regional pages
-        });
-      });
-    });
-
-    // 2. Blog posts - Generate for ALL regions regardless of content settings
+    // 2. Blog posts - One entry per blog with all regional variants
     blogs.forEach(blog => {
-      // Default URL
       urls.push({
         loc: `${BASE_URL}/blog/${blog.slug}`,
         lastmod: blog.updatedAt || blog.createdAt,
         changefreq: 'weekly',
         priority: 0.6,
         isGlobalContent: true,
-      });
-
-      // All regional URLs
-      regionSlugs.forEach(region => {
-        urls.push({
-          loc: `${BASE_URL}/${region}/blog/${blog.slug}`,
-          lastmod: blog.updatedAt || blog.createdAt,
-          changefreq: 'weekly',
-          priority: 0.6,
-          isGlobalContent: true,
-        });
+        regionalVariants: regionSlugs,
       });
     });
 
-    // 3. Case studies - Generate for ALL regions regardless of content settings
+    // 3. Case studies - One entry per case study with all regional variants
     caseStudies.forEach(caseStudy => {
       const industry = caseStudy.stats?.industry || '';
       const slug = caseStudy.slug;
       const industrySlug = industry.toLowerCase().replace(/\s+/g, '-');
 
-      // Default URL
       urls.push({
         loc: `${BASE_URL}/case-studies/${industrySlug}/${slug}`,
         lastmod: caseStudy.updatedAt || caseStudy.createdAt,
         changefreq: 'monthly',
         priority: 0.6,
         isGlobalContent: true,
+        regionalVariants: regionSlugs,
       });
+    });
 
-      // All regional URLs
-      regionSlugs.forEach(region => {
-        urls.push({
-          loc: `${BASE_URL}/${region}/case-studies/${industrySlug}/${slug}`,
-          lastmod: caseStudy.updatedAt || caseStudy.createdAt,
-          changefreq: 'monthly',
-          priority: 0.6,
-          isGlobalContent: true,
-        });
+    // 4. Capabilities/Services - One entry per service with all regional variants
+    capabilities.forEach(capability => {
+      const categorySlug = capability.category?.slug || '';
+      const slug = capability.slug;
+
+      // Build the service URL based on the routing structure
+      // Route pattern: /services/[slug1]/[slug2] where slug1 = category, slug2 = capability
+      // If slug equals categorySlug, it's a category landing page: /services/{category}
+      // Otherwise it's a specific service: /services/{category}/{service}
+      let servicePath = '/services';
+
+      if (categorySlug && slug !== categorySlug) {
+        // Specific service page: /services/{category}/{service}
+        servicePath += `/${categorySlug}/${slug}`;
+      } else if (categorySlug) {
+        // Category landing page where slug === categorySlug: /services/{category}
+        servicePath += `/${categorySlug}`;
+      } else {
+        // No category, just the slug: /services/{slug}
+        servicePath += `/${slug}`;
+      }
+
+      urls.push({
+        loc: `${BASE_URL}${servicePath}`,
+        lastmod: capability.updatedAt || capability.createdAt,
+        changefreq: 'monthly',
+        priority: 0.7,
+        isGlobalContent: true,
+        regionalVariants: regionSlugs,
+      });
+    });
+
+    // 5. Partners - One entry per partner with all regional variants
+    partners.forEach(partner => {
+      const slug = partner.slug;
+
+      urls.push({
+        loc: `${BASE_URL}/partners/${slug}`,
+        lastmod: partner.updatedAt || partner.createdAt,
+        changefreq: 'monthly',
+        priority: 0.7,
+        isGlobalContent: true,
+        regionalVariants: regionSlugs,
       });
     });
 
     // Generate XML with hreflang support
     const generateUrlEntry = (url) => {
-      // Generate hreflang links if this is a content page
       let hreflangLinks = '';
 
-      // Extract the path from the URL
-      const urlPath = url.loc.replace(BASE_URL, '');
-
-      // Check if this is a blog or case study page
-      if (urlPath.includes('/blog/') || urlPath.includes('/case-studies/')) {
-        // Extract the actual content path (removing region if present)
-        let contentPath = urlPath;
-        const regionMatch = urlPath.match(/^\/([a-z]{2}-[a-z]{2})\//);
-        if (regionMatch) {
-          contentPath = urlPath.replace(`/${regionMatch[1]}`, '');
-        }
-
-        // Generate hreflang links for all available versions
+      // Generate hreflang links if this page has regional variants
+      if (url.regionalVariants && url.regionalVariants.length > 0) {
         const hreflangs = [];
 
-        // Add default version
+        // Extract the content path from the URL
+        const contentPath = url.loc.replace(BASE_URL, '');
+
+        // Add x-default (the default region version)
         hreflangs.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}${contentPath}"/>`);
 
-        // Since we're generating all content for all regions, add all regional variants
-        Object.entries(regionMap).forEach(([region, hreflang]) => {
-          hreflangs.push(`    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${BASE_URL}/${region}${contentPath}"/>`);
+        // Add all regional variants
+        url.regionalVariants.forEach(regionSlug => {
+          const hreflang = regionMap[regionSlug];
+          if (hreflang) {
+            // For static pages (home, contact, etc.), the regional URL is just /region
+            // For content pages (blog, case studies), it's /region/content-path
+            const regionalUrl = url.isStaticPage && contentPath === ''
+              ? `${BASE_URL}/${regionSlug}`
+              : `${BASE_URL}/${regionSlug}${contentPath}`;
+
+            hreflangs.push(`    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${regionalUrl}"/>`);
+          }
         });
 
         hreflangLinks = '\n' + hreflangs.join('\n');
@@ -168,8 +258,7 @@ export async function GET() {
     };
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.map(generateUrlEntry).join('\n')}
 </urlset>`;
 

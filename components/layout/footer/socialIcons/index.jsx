@@ -12,6 +12,8 @@ const SocialIcons = ({ links }) => {
                     <Link prefetch={false} 
                         key={index}
                         href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="transition ease-in-out duration-300 text-[var(--color-con-gray)] hover:text-white"
                         aria-label="Social Icons"
                     >

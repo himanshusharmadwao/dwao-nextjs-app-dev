@@ -118,8 +118,10 @@ const ServiceWrapper = ({ serviceData }) => {
                                     <p className="text-sm text-blue-200 mb-4">{serviceData?.banner?.trustedBrandsText}</p>
                                     <div className="flex flex-wrap items-center gap-8">
                                         {serviceData?.banner?.trustedBrands.map((item, index) => (
-                                            <div key={index} className="bg-white/10 p-3 rounded-lg">
-                                                <Image src={getImageUrl(item)} alt="Brand Image" height={30} width={30} loading="lazy" />
+                                            <div key={index} className="bg-white/10 p-3 rounded-lg h-[55px] w-[55px]">
+                                                <Image src={getImageUrl(item)} alt="Brand Image" height={30} width={30} loading="lazy"
+                                                    style={{ height: "30px !important", objectFit: "contain" }}
+                                                    className='rounded-md' />
                                             </div>
                                         ))}
                                     </div>

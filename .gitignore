@@ -42,3 +42,6 @@ next-env.d.ts
 
 # static data folder (use Strapi CMS instead)
 /data/
+
+# sitemap 
+app/sitemap.xml/route.js

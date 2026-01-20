@@ -5,7 +5,7 @@ export async function generateMetadata() {
     return {
         title: "Blogs",
         alternates: {
-            canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/case-studies/`
+            canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/case-studies`
         }
     };
 }

@@ -77,6 +77,7 @@ const MobileHeader = ({ MenuStructure, isMenuOpen, toggleMenu, region, regions }
   const isPartner = normalizedPath.includes("/partners");
   const isService = normalizedPath.includes("/service");
   const isContact = normalizedPath.includes("/contact");
+  const isCapability = normalizedPath.includes("/services");
 
   const isBlogForRegion = normalizedPath.includes("/blog");
   const isInsightsCaseStudiesForRegion = normalizedPath.includes("/case-studies");

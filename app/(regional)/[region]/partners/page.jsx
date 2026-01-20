@@ -20,7 +20,7 @@ async function fetchPartnersData(params, searchParams) {
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   try {
-    const { capabilityResponse } = await fetchPartnersData(params, searchParams);
+    const { capabilityResponse, region } = await fetchPartnersData(params, searchParams);
 
     if (!capabilityResponse) {
       return {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params, searchParams }) {
           seo?.canonicalURL ||
           `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
           region !== "default" ? `/${region}` : ""
-        }/partners/`,
+        }/partners`,
       },
       openGraph: {
         title: seo?.openGraph?.ogTitle,

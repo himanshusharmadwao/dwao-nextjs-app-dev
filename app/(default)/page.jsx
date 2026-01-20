@@ -32,7 +32,7 @@ export async function generateMetadata({ searchParams }) {
     description: seo?.metaDescription || homeResponse?.data?.[0]?.excerpt,
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
-      canonical: seo?.canonicalURL || `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/`,
+      canonical: seo?.canonicalURL || `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}`,
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
@@ -49,7 +49,7 @@ export async function generateMetadata({ searchParams }) {
       type: seo?.openGraph?.ogType || "website",
     },
     other: {
-      "google-site-verification": "d4Ng9NKlUx8bd3h0ukTyQwWgZu8uT6UOSQFYpimQSV4",
+      "google-site-verification": "jSDzbvVgi6toSCmJCYq8Noro6mMr7G6yXNoaNIImulE",
     },
   };
 }

@@ -1,5 +1,42 @@
 import { getRevalidateTime } from "@/libs/utils";
 
+export const getAllCapabilities = async (page = 1, pageSize = 100, preview = false, region = "default") => {
+  try {
+    let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?` +
+      `fields[0]=slug&fields[1]=updatedAt&fields[2]=createdAt` +
+      `&populate[category][fields][0]=slug` +
+      `&populate[sub_category][fields][0]=slug` +
+      `&filters[category][slug][$ne]=partners` +
+      `&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+
+    if (region) {
+      url += `&filters[regions][slug][$eq]=${region}`;
+    }
+
+    if (preview) {
+      url += `&status=draft`;
+    }
+
+    const response = await fetch(url, {
+      next: { revalidate: getRevalidateTime(preview) },
+    });
+
+    const data = await response.json();
+
+    if (data?.error && Object.keys(data?.error).length > 0) {
+      return { data: null, error: data?.error?.message || "Something went wrong", status: "error" };
+    }
+
+    return {
+      data: data?.data || [],
+      pagination: data?.meta?.pagination || {},
+    };
+  } catch (error) {
+    console.error("Error fetching all capabilities:", error);
+    throw error;
+  }
+};
+
 export const getCapability = async (preview = false, type, slug, region = "default") => {
   try {
     let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/capabilities?` +

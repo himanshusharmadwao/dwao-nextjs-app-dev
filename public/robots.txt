@@ -1,2 +1,11 @@
+# robots.txt for DWAO
+
 User-agent: *
-Disallow: /
+# Allow public content
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login/
+Disallow: /preview/
+
+# Sitemap URL
+Sitemap: https://dwao.com/sitemap.xml

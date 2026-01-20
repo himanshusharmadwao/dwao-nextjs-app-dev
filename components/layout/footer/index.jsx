@@ -39,12 +39,12 @@ const Footer = async ({ preview, region }) => {
     {
       title: "Twitter",
       icon: "/icons/fa-twitter.svg",
-      href: "#"
+      href: "https://x.com/dwao_digital"
     },
     {
       title: "LinkedIn",
       icon: "/icons/fa-linkedin.svg",
-      href: "#"
+      href: "https://in.linkedin.com/company/digital-web-analytics-and-optimization"
     }
   ];
 

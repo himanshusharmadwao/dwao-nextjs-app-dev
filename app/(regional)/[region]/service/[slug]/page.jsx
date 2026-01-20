@@ -52,7 +52,7 @@ export async function generateMetadata({ params, searchParams }) {
       canonical: seo?.canonicalURL ||
             `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
           region !== "default" ? `/${region}` : ""
-        }/${slug}/`,
+        }/${slug}`,
     },
     openGraph: {
       title: seo?.openGraph?.ogTitle,
