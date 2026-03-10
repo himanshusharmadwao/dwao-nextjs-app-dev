@@ -1,0 +1,30 @@
+version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - '# No backend build commands'
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Force use of committed lock file (overwrite any stale cached version)
+        - git checkout package-lock.json
+        # Fresh install without stale cache
+        - npm ci --no-audit --no-fund
+        # Create .env file from Amplify environment variables
+        - echo "NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL" >> .env
+    build:
+      commands:
+        # Set Node.js memory limit for large builds
+        - export NODE_OPTIONS="--max_old_space_size=4096"
+        # Build with production optimizations
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      # Cache Next.js build cache only - node_modules must be fresh
+      - .next/cache/**/*
