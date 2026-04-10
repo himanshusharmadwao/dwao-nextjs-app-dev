@@ -5,7 +5,8 @@ export const getPolicy = async (preview = false, region = "default") => {
   try {
     let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/privacy-policies?` +
       `populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=seo` +
-      `&populate[3]=seo.openGraph&populate[4]=seo.openGraph.ogImage`;
+      `&populate[3]=seo.openGraph&populate[4]=seo.openGraph.ogImage` +
+      `&populate[5]=regionBlocks&populate[6]=regionBlocks.region`;
 
     if (preview) url += `&status=draft`;
     if (region) url += `&filters[regions][slug][$eq]=${region}`;

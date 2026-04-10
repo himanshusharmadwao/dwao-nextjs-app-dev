@@ -2,6 +2,7 @@
 
 import React, { Suspense } from 'react'
 import { getImageUrl, buildRegionalPath } from '@/libs/utils'
+import SafeMarkdownComp from '@/components/common/SafeMarkdownComp';
 import Image from 'next/image'
 import dynamic from 'next/dynamic';
 
@@ -36,8 +37,6 @@ const LoadingPlaceholder = () => (
 
 const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "default", type }) => {
 
-    // console.log(pageData)
-
     // console.log(relatedCapabilities)
 
     const relatedCard = relatedCapabilities?.map((item, index) => {
@@ -46,7 +45,6 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "d
             <div className='' key={index}>
 
                 <RelatedCard imageSrc={item?.thumbnail} linkTitle={item?.title}
-                    // linkHref={buildRegionalPath(`/${type === "services" ? "services/" : ""}${item?.category?.slug}/${item?.slug}`, region, regions.data)}
                     linkHref={buildRegionalPath(
                         `/${type === "services" ? "services/" : ""}${item?.category?.slug}${item?.category?.slug !== item?.slug ? `/${item?.slug}` : ""}`,
                         region,
@@ -116,6 +114,20 @@ const SinglePageWrapper = ({ pageData, relatedCapabilities, regions, region = "d
                     })}
                 </div>
             </Suspense>
+
+            {/* region block */}
+            {(() => {
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? pageData?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container">
+                        <div className="mb-14">
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             {relatedCard.length !== 0 && (
                 <Suspense fallback={<LoadingPlaceholder />}>

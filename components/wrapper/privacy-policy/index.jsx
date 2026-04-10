@@ -8,6 +8,7 @@ import rehypeRaw from 'rehype-raw'; // for raw html
 import styles from "@/styles/markdown.module.css";
 import Image from 'next/image';
 import { breakTitle, getImageUrl } from '@/libs/utils';
+import SafeMarkdownComp from '@/components/common/SafeMarkdownComp';
 
 const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default" }) => {
 
@@ -73,6 +74,21 @@ const PrivacyPolicyWrapper = async ({ policyResponse, preview, region = "default
                     </ReactMarkdown>
                 </div>
             </div>
+
+            {/* region block */}
+            {(() => {
+                console.log("region: ", region)
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? policyResponse?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container">
+                        <div className="mb-14">
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             {/* Contact */}
             <ReachOut preview={preview} region={region} />

@@ -24,11 +24,11 @@ export async function generateMetadata({ params, searchParams }) {
     };
   }
 
-  const seo = reviewResponse?.data?.seo || {};
+  const seo = reviewResponse?.data[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || reviewResponse?.data?.title,
-    description: seo?.metaDescription || reviewResponse?.data?.excerpt,
+    title: seo?.metaTitle || reviewResponse?.data[0]?.title,
+    description: seo?.metaDescription || reviewResponse?.data[0]?.excerpt,
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:
@@ -80,7 +80,7 @@ const Culture = async ({params, searchParams }) => {
 
   return (
     <>
-      <StructuredData data={reviewResponse?.data?.seo?.structuredData} />
+      <StructuredData data={reviewResponse?.data[0]?.seo?.structuredData} />
       <ReviewWrapper reviewResponse={data[0]} />
     </>
   );

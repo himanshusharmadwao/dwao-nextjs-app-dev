@@ -4,7 +4,7 @@ import StructuredData from "@/components/StructuredData";
 import SingleBlogWrapper from "@/components/wrapper/insight-single-blog"
 import { getInsightBlog } from "@/libs/apis/data/insights";
 import { getRegions } from '@/libs/apis/data/menu';
-import { checkRegionValidity } from '@/libs/utils';
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from '@/libs/utils';
 
 // Use edge runtime for faster responses
 export const runtime = 'nodejs'; // Keep nodejs for now due to dependencies
@@ -52,12 +52,10 @@ export async function generateMetadata({ params, searchParams }) {
     const featuredImage = insightBlogsResponse?.data?.[0]?.featuredImage;
     const heroImageUrl = getImageUrl(featuredImage);
 
-    // console.log("seo: ", seo)
-
     // Create metadata with preload link for hero image
     const metadata = {
-        title: seo?.metaTitle || insightBlogsResponse?.data?.[0]?.title,
-        description: seo?.metaDescription || "Read the latest insights and case studies.",
+        title: appendRegionToTitle(seo?.metaTitle || insightBlogsResponse?.data?.[0]?.title, region, regions),
+        description: prependRegionToDescription(seo?.metaDescription || "Read the latest insights and case studies.", region, regions),
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||

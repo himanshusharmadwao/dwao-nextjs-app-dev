@@ -6,10 +6,11 @@ import { getImageUrl, buildRegionalPath } from '@/libs/utils'
 import ReactMarkdown from 'react-markdown';
 import DOMPurify from 'dompurify';
 import remarkGfm from 'remark-gfm'; // for features like strikethrough and tables
-import rehypeRaw from 'rehype-raw'; // for raw html 
+import rehypeRaw from 'rehype-raw'; // for raw html
 import styles from "./Insight.module.css";
 import dynamic from "next/dynamic";
 import { getRegions } from '@/libs/apis/data/menu';
+import SafeMarkdownComp from '@/components/common/SafeMarkdownComp';
 
 // Dynamic imports with loading placeholders
 const ReachOut = dynamic(() => import('@/components/common/reachOut'), {
@@ -188,8 +189,22 @@ const SingleBlogWrapper = async ({ pageData, relatedInsightBlogs, region = "defa
                             );
                         })}
                     </div>
+
+                    {(() => {
+                        const matchedBlock = (region && region !== "default" && region !== "in-en") ? pageData?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                        return matchedBlock ? (
+                            <div>
+                                <SafeMarkdownComp>
+                                    {matchedBlock.description}
+                                </SafeMarkdownComp>
+                            </div>
+                        ) : null;
+                    })()}
+                    
                 </div>
+
             </div>
+
 
             <div className="light-bg py-20" id='relatedCaseStudies'>
                 <div className="container">

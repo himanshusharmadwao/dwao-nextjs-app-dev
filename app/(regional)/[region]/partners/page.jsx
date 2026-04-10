@@ -5,6 +5,7 @@ import SinglePageWrapper from '@/components/wrapper/single-page';
 import { getPartner } from '@/libs/apis/data/partners';
 import StructuredData from '@/components/StructuredData';
 import { getRegions } from '@/libs/apis/data/menu';
+import { appendRegionToTitle, prependRegionToDescription } from '@/libs/utils';
 
 // Centralized data fetcher
 async function fetchPartnersData(paramsPromise, searchParamsPromise) {
@@ -27,7 +28,7 @@ async function fetchPartnersData(paramsPromise, searchParamsPromise) {
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   try {
-    const { capabilityResponse, region } = await fetchPartnersData(params, searchParams);
+    const { capabilityResponse, region, regions } = await fetchPartnersData(params, searchParams);
 
     if (!capabilityResponse) {
       return {
@@ -38,9 +39,11 @@ export async function generateMetadata({ params, searchParams }) {
 
     const seo = capabilityResponse?.data?.[0]?.seo || {};
 
+    // console.log("seo: ", seo)
+
     return {
-      title: seo?.metaTitle || capabilityResponse?.data?.[0]?.title,
-      description: seo?.metaDescription || "Explore our capabilities and expertise.",
+      title: appendRegionToTitle(seo?.metaTitle || capabilityResponse?.data?.[0]?.title, region, regions),
+      description: prependRegionToDescription(seo?.metaDescription || "Explore our capabilities and expertise.", region, regions),
       ...(seo?.keywords && {
         keywords: seo?.keywords.split(",").map((keyword) => keyword.trim()),
       }),
@@ -75,7 +78,7 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 const DynamicPages = async ({ params, searchParams }) => {
-  const { capabilityResponse, preview, regions } = await fetchPartnersData(
+  const { capabilityResponse, preview, region, regions } = await fetchPartnersData(
     params,
     searchParams
   );
@@ -91,6 +94,7 @@ const DynamicPages = async ({ params, searchParams }) => {
         pageData={capabilityResponse?.data[0]}
         relatedCapabilities={capabilityResponse?.related}
         regions={regions}
+        region={region}
         type="partners"
       />
     </>

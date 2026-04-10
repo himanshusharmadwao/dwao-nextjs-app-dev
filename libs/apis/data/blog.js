@@ -91,6 +91,8 @@ export const getBlog = async (preview = false, slug, region = "default") => {
         `&populate[4]=seo&populate[5]=seo.openGraph&populate[6]=seo.openGraph.ogImage` +
         `&populate[7]=thumbnail&populate[8]=featuredImage` +
         `&populate[9]=regions` +
+        `&populate[10]=regionBlocks` +
+        `&populate[11]=regionBlocks.region` +
         `&filters[slug][$eq]=${slug}`;
 
       if (preview) url += `&status=draft`;

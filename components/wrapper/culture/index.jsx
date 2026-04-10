@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import Image from 'next/image'
-import { getCulture,  } from '@/libs/apis/data/culture'
+import { getCulture, } from '@/libs/apis/data/culture'
 import { getImageUrl, buildRegionalPath } from '@/libs/utils'
 import dynamic from 'next/dynamic';
 import ReactMarkdown from 'react-markdown';
@@ -8,6 +8,7 @@ import DOMPurify from 'dompurify';
 import remarkGfm from 'remark-gfm'; // for features like strikethrough and tables
 import rehypeRaw from 'rehype-raw'; // for raw html
 import styles from './culture.module.css'
+import SafeMarkdownComp from '@/components/common/SafeMarkdownComp';
 
 const Card = dynamic(() => import('@/components/culture/Card'), {
     loading: () => <div className="animate-pulse h-40 bg-gray-100 rounded"></div>,
@@ -242,6 +243,20 @@ const CultureWrapper = async ({ data, regions, region = "default" }) => {
                     </Suspense>
                 </div>
             </div>
+
+            {/* region block */}
+            {(() => {
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? data?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container">
+                        <div className="mb-14">
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             {/* contact us */}
             <div className='bg-[var(--mainColor)] md:py-14 py-12'>

@@ -4,7 +4,8 @@ export const getContact = async (preview = false, region = "default") => {
   try {
     let baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/contacts?` +
       `populate[0]=bannerDeskImage&populate[1]=bannerMobileImage&populate[2]=offices` +
-      `&populate[3]=officeMap&populate[4]=seo&populate[5]=seo.openGraph&populate[6]=seo.openGraph.ogImage`;
+      `&populate[3]=officeMap&populate[4]=seo&populate[5]=seo.openGraph&populate[6]=seo.openGraph.ogImage` +
+      `&populate[7]=regionBlocks&populate[8]=regionBlocks.region`;
 
     const buildUrl = (region) => `${baseUrl}&filters[regions][slug][$eq]=${region}${preview ? '&status=draft' : ''}`;
 

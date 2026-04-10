@@ -265,3 +265,23 @@ export const checkRegionValidity = (region, regions) => {
 
   return regions?.data?.some(item => item.slug === region);
 };
+
+export const getRegionName = (regionSlug, regions) => {
+  if (!regions || !Array.isArray(regions.data)) return null;
+  const region = regions.data.find(item => item.slug === regionSlug);
+  return region?.name || null;
+};
+
+export const appendRegionToTitle = (title, regionSlug, regions) => {
+  if (!title) return title;
+  const regionName = getRegionName(regionSlug, regions);
+  if (!regionName) return title;
+  return `${title} | ${regionName}`;
+};
+
+export const prependRegionToDescription = (description, regionSlug, regions) => {
+  if (!description) return description;
+  const regionName = getRegionName(regionSlug, regions);
+  if (!regionName) return description;
+  return `DWAO ${regionName} - ${description}`;
+};

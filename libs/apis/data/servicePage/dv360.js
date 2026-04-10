@@ -34,7 +34,8 @@ export const getServiceData = async (preview = false, slug, region = "default") 
         `&populate[5]=faq&populate[6]=faq.faq&populate[7]=seo&populate[8]=seo.openGraph` +
         `&populate[9]=seo.openGraph.ogImage&populate[10]=clientsSlide&populate[11]=clientsSlide.entity` +
         `&populate[12]=clientsSlide.entity.logo&populate[13]=textBlockOne&populate[14]=textBlockOne.image` +
-        `&populate[15]=textBlockTwo&populate[16]=textBlockTwo.image&` +
+        `&populate[15]=textBlockTwo&populate[16]=textBlockTwo.image` +
+        `&populate[17]=regionBlocks&populate[18]=regionBlocks.region&` +
         `filters[slug][$eq]=${slug}`;
 
       if (region) {

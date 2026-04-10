@@ -38,7 +38,7 @@ export const getHome = async (device = "desktop", preview = false, region = "def
         ? `populate[0]=banner.mobileImg&populate[1]=storyOverlay.image&populate[2]=insightMobileImg`
         : `populate[0]=banner.deskImg&populate[1]=storyOverlay.image&populate[2]=insightDeskImg`;
 
-      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/homes?${basePopulate}&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=clientsSlides&populate[7]=clientsSlides.entity&populate[8]=clientsSlides.entity.logo&populate[9]=regions`;
+      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/homes?${basePopulate}&populate[3]=seo&populate[4]=seo.openGraph&populate[5]=seo.openGraph.ogImage&populate[6]=clientsSlides&populate[7]=clientsSlides.entity&populate[8]=clientsSlides.entity.logo&populate[9]=regions&populate[10]=regionBlocks&populate[11]=regionBlocks.region`;
 
       if (preview) url += `&status=draft`;
 

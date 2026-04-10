@@ -5,7 +5,7 @@ import SinglePageWrapper from "@/components/wrapper/single-page";
 import { getPartner } from "@/libs/apis/data/partners";
 import StructuredData from "@/components/StructuredData";
 import { getRegions } from "@/libs/apis/data/menu";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 
 // Centralized data fetcher
 async function fetchPartnerData(paramsPromise, searchParamsPromise) {
@@ -30,7 +30,7 @@ async function fetchPartnerData(paramsPromise, searchParamsPromise) {
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   try {
-    const { capabilityResponse, validRegion, region, slug } = await fetchPartnerData(params, searchParams);
+    const { capabilityResponse, validRegion, region, slug, regions } = await fetchPartnerData(params, searchParams);
 
     if (!validRegion) {
       return {
@@ -48,17 +48,18 @@ export async function generateMetadata({ params, searchParams }) {
 
     const seo = capabilityResponse?.data?.[0]?.seo || {};
 
+    // console.log("seo: ", seo)
+
     return {
-      title: seo?.metaTitle || capabilityResponse?.data?.[0]?.title,
-      description: seo?.metaDescription || "Explore our capabilities and expertise.",
+      title: appendRegionToTitle(seo?.metaTitle || capabilityResponse?.data?.[0]?.title, region, regions),
+      description: prependRegionToDescription(seo?.metaDescription || "Explore our capabilities and expertise.", region, regions),
       ...(seo?.keywords && {
         keywords: seo?.keywords.split(",").map((keyword) => keyword.trim()),
       }),
       alternates: {
         canonical:
           seo?.canonicalURL ||
-          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
-            region !== "default" ? `/${region}` : ""
+          `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""
           }/partners/${slug}`,
       },
       openGraph: {
@@ -116,6 +117,8 @@ const DynamicPages = async ({ params, searchParams }) => {
   if (capabilityResponse?.data == null) {
     return <NotFound />;
   }
+
+  console.log("capabilityResponse: ", capabilityResponse)
 
   return (
     <>

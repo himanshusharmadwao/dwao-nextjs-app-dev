@@ -3,7 +3,7 @@ import StructuredData from "@/components/StructuredData";
 import CultureWrapper from "@/components/wrapper/culture"
 import { getCulture } from "@/libs/apis/data/culture";
 import { getRegions } from "@/libs/apis/data/menu";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 
 // Centralized data fetcher
 async function fetchCultureData(paramsPromise, searchParamsPromise) {
@@ -41,7 +41,7 @@ async function fetchCultureData(paramsPromise, searchParamsPromise) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { cultureResponse, validRegion, region } = await fetchCultureData(params, searchParams);
+  const { cultureResponse, validRegion, region, regions } = await fetchCultureData(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -59,9 +59,11 @@ export async function generateMetadata({ params, searchParams }) {
 
   const seo = cultureResponse?.data?.[0]?.seo || {};
 
+  // console.log("seo: ", cultureResponse)
+
   return {
-    title: seo?.metaTitle || cultureResponse?.data?.[0]?.title,
-    description: seo?.metaDescription || cultureResponse?.data?.[0]?.excerpt,
+    title: appendRegionToTitle(seo?.metaTitle || cultureResponse?.data?.[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || cultureResponse?.data?.[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:

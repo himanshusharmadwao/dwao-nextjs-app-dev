@@ -16,7 +16,7 @@ const LoadingPlaceholder = () => (
     <div className="w-full h-40 bg-gray-100 animate-pulse rounded"></div>
 );
 
-const BlogWrapper = async ({preview, region = "default"}) => {
+const BlogWrapper = async ({ preview, region = "default" }) => {
 
     const categoryResponse = await getCategory(preview, region);
 
@@ -34,6 +34,7 @@ const BlogWrapper = async ({preview, region = "default"}) => {
 
     return (
         <>
+
             {/* filter and blog listing */}
             <Suspense fallback={<LoadingPlaceholder />}>
                 <BlogPost
@@ -49,7 +50,7 @@ const BlogWrapper = async ({preview, region = "default"}) => {
 
             <Suspense fallback={<LoadingPlaceholder />}>
                 {/* Contact */}
-                <ReachOut preview={preview} region={region}/>
+                <ReachOut preview={preview} region={region} />
             </Suspense >
         </>
     );

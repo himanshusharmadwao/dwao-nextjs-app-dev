@@ -4,7 +4,7 @@ import { getServiceData } from '@/libs/apis/data/servicePage/dv360';
 import NotFound from "@/app/(regional)/[region]/not-found";
 import StructuredData from '@/components/StructuredData';
 import { getRegions } from '@/libs/apis/data/menu';
-import { checkRegionValidity } from '@/libs/utils';
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from '@/libs/utils';
 
 // Centralized data fetcher
 async function fetchServiceDataPage(paramsPromise, searchParamsPromise) {
@@ -29,7 +29,7 @@ async function fetchServiceDataPage(paramsPromise, searchParamsPromise) {
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   const { slug } = await params;
-  const { serviceResponse, validRegion, region } = await fetchServiceDataPage(params, searchParams);
+  const { serviceResponse, validRegion, region, regions } = await fetchServiceDataPage(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -48,8 +48,8 @@ export async function generateMetadata({ params, searchParams }) {
   const seo = serviceResponse?.data?.[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || serviceResponse?.data?.[0]?.name,
-    description: seo?.metaDescription || serviceResponse?.data?.[0]?.excerpt,
+    title: appendRegionToTitle(seo?.metaTitle || serviceResponse?.data?.[0]?.name, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || serviceResponse?.data?.[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(',').map((k) => k.trim()) : [],
     alternates: {
       canonical: seo?.canonicalURL ||
@@ -75,7 +75,7 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 const DV360 = async ({ params, searchParams }) => {
-  const { serviceResponse, validRegion } = await fetchServiceDataPage(params, searchParams);
+  const { serviceResponse, validRegion, region } = await fetchServiceDataPage(params, searchParams);
 
   if (!validRegion) {
     return <NotFound />;
@@ -106,7 +106,7 @@ const DV360 = async ({ params, searchParams }) => {
   return (
     <>
       <StructuredData data={data[0]?.seo?.structuredData} />
-      <ServicePage serviceData={data[0]} />
+      <ServicePage serviceData={data[0]} region={region} />
     </>
   );
 };

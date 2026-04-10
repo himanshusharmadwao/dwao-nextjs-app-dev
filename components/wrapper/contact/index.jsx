@@ -4,6 +4,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { getContact } from "@/libs/apis/data/contact";
 import { getImageUrl } from "@/libs/utils";
+import SafeMarkdownComp from "@/components/common/SafeMarkdownComp";
 
 // Dynamic imports with loading placeholders
 const CommonBanner = dynamic(() => import("@/components/common/banner"), {
@@ -118,6 +119,20 @@ const ContactWrapper = async ({ data, preview, region = "default" }) => {
                     />
                 </div>
             </div>
+
+            {/* region block */}
+            {(() => {
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? data?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container">
+                        <div className="mb-14">
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             {/* contact */}
             <Suspense fallback={<LoadingPlaceholder />}>

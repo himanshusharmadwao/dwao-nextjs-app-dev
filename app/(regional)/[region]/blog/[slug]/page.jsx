@@ -3,7 +3,7 @@ import StructuredData from "@/components/StructuredData";
 import SingleBlogWrapper from "@/components/wrapper/single-blog"
 import { getBlog } from "@/libs/apis/data/blog";
 import { getRegions } from "@/libs/apis/data/menu";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 import { redirect } from "next/navigation";
 
 // Centralized data fetcher
@@ -43,7 +43,7 @@ async function fetchBlogData(params, searchParams) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { blogsResponse, validRegion, region, slug } = await fetchBlogData(params, searchParams);
+  const { blogsResponse, validRegion, region, slug, regions } = await fetchBlogData(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -62,8 +62,8 @@ export async function generateMetadata({ params, searchParams }) {
   const seo = blogsResponse?.data?.[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || blogsResponse?.data?.[0]?.title,
-    description: seo?.metaDescription || blogsResponse?.data?.[0]?.excerpt,
+    title: appendRegionToTitle(seo?.metaTitle || blogsResponse?.data?.[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || blogsResponse?.data?.[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:
@@ -89,7 +89,7 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 const SingleBlog = async ({ params, searchParams }) => {
-  const { blogsResponse, validRegion, preview } = await fetchBlogData(params, searchParams);
+  const { blogsResponse, validRegion, preview, region } = await fetchBlogData(params, searchParams);
 
   if (!validRegion) {
     return <NotFound />;
@@ -108,6 +108,7 @@ const SingleBlog = async ({ params, searchParams }) => {
         pageData={blogsResponse?.data[0]}
         relatedBlogs={blogsResponse?.related}
         preview={preview}
+        region={region}
       />
     </>
   );

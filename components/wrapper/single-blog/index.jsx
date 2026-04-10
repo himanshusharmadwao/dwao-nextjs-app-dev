@@ -45,6 +45,16 @@ const SingleBlogWrapper = async ({ pageData, relatedBlogs, preview, region = "de
                         ) : (
                             <p>No content available</p>
                         )}
+                        {(() => {
+                            const matchedBlock = (region && region !== "default" && region !== "in-en") ? pageData?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                            return matchedBlock ? (
+                                <div className="py-5 rounded-lg">
+                                    <SafeMarkdownComp>
+                                        {matchedBlock.description}
+                                    </SafeMarkdownComp>
+                                </div>
+                            ) : null;
+                        })()}
                     </div>
                     <div className="basis-[30%] lg:sticky lg:top-[200px] lg:h-fit lg:min-h-screen">
                         <aside>

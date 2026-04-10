@@ -176,6 +176,7 @@ export const getInsightBlog = async (preview = false, industry = '', slug = '', 
       `&populate[7]=objective&populate[8]=solution&populate[9]=insightVisual` +
       `&populate[10]=result.resultStats&populate[11]=insightTestimonial&populate[12]=insightTestimonial.image` +
       `&populate[13]=seo&populate[14]=seo.openGraph&populate[15]=seo.openGraph.ogImage` +
+      `&populate[16]=regionBlocks&populate[17]=regionBlocks.region` +
       `&filters[slug][$eq]=${slug}` +
       `&filters[stats][industry][$eqi]=${industry.replace(/-/g, ' ')}`;
 

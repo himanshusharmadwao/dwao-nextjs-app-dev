@@ -2,7 +2,7 @@ import StructuredData from "@/components/StructuredData";
 import HomeWrapper from "@/components/wrapper/home";
 import { getHome } from "@/libs/apis/data/home";
 import { getRegions } from "@/libs/apis/data/menu";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 import { headers } from "next/headers";
 import NotFound from "@/app/(regional)/[region]/not-found";
 
@@ -34,7 +34,8 @@ async function fetchHomeData(paramsPromise, searchParamsPromise) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { homeResponse, validRegion } = await fetchHomeData(params, searchParams);
+  const { homeResponse, validRegion, region } = await fetchHomeData(params, searchParams);
+  const regions = await getRegions();
 
   if (!validRegion) {
     return {
@@ -53,8 +54,8 @@ export async function generateMetadata({ params, searchParams }) {
   const seo = homeResponse?.data?.[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || homeResponse?.data?.[0]?.title,
-    description: seo?.metaDescription || homeResponse?.data?.[0]?.excerpt,
+    title: appendRegionToTitle(seo?.metaTitle || homeResponse?.data?.[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || homeResponse?.data?.[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:

@@ -1,11 +1,11 @@
 import React from 'react'
 import ServiceWrapper from './serviceWrapper'
 
-const ServicePage = async ({ serviceData }) => {
+const ServicePage = async ({ serviceData, region = "default" }) => {
 
   return (
     <>
-      <ServiceWrapper serviceData={serviceData} />
+      <ServiceWrapper serviceData={serviceData} region={region} />
     </>
   )
 }

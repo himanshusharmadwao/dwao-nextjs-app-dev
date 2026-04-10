@@ -8,7 +8,14 @@ import OverlayCard from '@/components/common/overlayCard';
 import { getAllBlogs } from '@/libs/apis/data/blog';
 import { getInsightBlogsListing } from '@/libs/apis/data/insights';
 
+const regionTextMap = {
+    "us-en": "This is USA content",
+    "ae-en": "This is UAE content",
+    "th-en": "This is thailand content",
+};
+
 const BlogPost = ({ filterItems, variant, preview, region, regions, initialPosts = [], initialMeta = null }) => {
+    const regionText = regionTextMap[region];
     // console.log(filterItems)
     const [selectedFilter, setSelectedFilter] = useState({ category: null, sub_category: null });
     const [currentPage, setCurrentPage] = useState(1);
@@ -114,6 +121,12 @@ const BlogPost = ({ filterItems, variant, preview, region, regions, initialPosts
                     {variant === "caseStudies" && posts?.map((item, index) => (
                         <OverlayCard key={index} data={item}  region={region} regions={regions} className="basis-full md:basis-[calc((100%-60px)/3)]" />
                     ))}
+                </div>
+            )}
+
+            {regionText && (
+                <div className="mb-14">
+                    <p>{regionText}</p>
                 </div>
             )}
 

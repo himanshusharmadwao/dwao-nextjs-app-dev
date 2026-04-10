@@ -1,6 +1,6 @@
 import InsightCaseWrapper from "@/components/wrapper/insights-and-case-studies";
 import { getRegions } from "@/libs/apis/data/menu";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 import NotFound from "@/app/(regional)/[region]/not-found"
 
 export async function generateMetadata({ params }) {
@@ -18,7 +18,8 @@ export async function generateMetadata({ params }) {
     }
 
     return {
-        title: "Blogs",
+        title: appendRegionToTitle("Blogs", region, regions),
+        description: prependRegionToDescription("DWAO offers digital transformation and marketing services, including analytics, CRO, performance marketing, CDP, marketing automation, SEO, and more, helping businesses enhance their online presence, optimize performance, and drive growth.", region, regions),
         alternates: {
             canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${region !== "default" ? `/${region}` : ""}/case-studies`
         }

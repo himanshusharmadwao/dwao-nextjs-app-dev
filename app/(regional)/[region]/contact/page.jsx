@@ -2,7 +2,7 @@ import StructuredData from "@/components/StructuredData";
 import ContactWrapper from "@/components/wrapper/contact"
 import { getContact } from "@/libs/apis/data/contact";
 import { getRegions } from "@/libs/apis/data/menu";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Centralized data fetcher
@@ -41,7 +41,7 @@ async function fetchContactData(paramsPromise, searchParamsPromise) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { contactResponse, validRegion, region } = await fetchContactData(params, searchParams);
+  const { contactResponse, validRegion, region, regions } = await fetchContactData(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -60,8 +60,8 @@ export async function generateMetadata({ params, searchParams }) {
   const seo = contactResponse?.data?.[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || contactResponse?.data?.[0]?.title,
-    description: seo?.metaDescription || contactResponse?.data?.[0]?.excerpt,
+    title: appendRegionToTitle(seo?.metaTitle || contactResponse?.data?.[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || contactResponse?.data?.[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:

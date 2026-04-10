@@ -21,7 +21,7 @@ const SafeMarkdownComp = dynamic(() => import('@/components/common/SafeMarkdownC
     loading: () => <div className="animate-pulse h-20 bg-gray-100 rounded"></div>
 });
 
-const ServiceWrapper = ({ serviceData }) => {
+const ServiceWrapper = ({ serviceData, region = "default" }) => {
 
     // console.log("service data: ", serviceData)
 
@@ -93,15 +93,6 @@ const ServiceWrapper = ({ serviceData }) => {
                                     {serviceData?.banner?.description}
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    {/* <Link prefetch={false} href={serviceData?.banner?.primaryBtnHref || '/'}
-                                        className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition text-center font-medium cursor-pointer getStarted"
-                                        onClick={focusHeroInput}
-                                    >
-                                        {serviceData?.banner?.primaryBtnTitle}
-                                    </Link>
-                                    <Link prefetch={false} href={serviceData?.banner?.secondaryBtnHref || '/'} className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-blue-900 transition text-center font-medium cursor-pointer">
-                                        {serviceData?.banner?.secondaryBtnTitle}
-                                    </Link> */}
                                     <span
                                         className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition text-center font-medium cursor-pointer getStarted"
                                         onClick={scrollToHomeForm}
@@ -180,12 +171,6 @@ const ServiceWrapper = ({ serviceData }) => {
                             ))}
                         </div>
                         <div className="mt-12 text-center">
-                            {/* <Link prefetch={false} href={serviceData?.section[1]?.ctaHref || '/'}
-                                className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer getStarted"
-                            // onClick={pageMove}
-                            >
-                                {serviceData?.section?.[1]?.ctaTitle}
-                            </Link> */}
 
                             <span
                                 className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer getStarted" onClick={scrollToHomeForm}
@@ -317,9 +302,6 @@ const ServiceWrapper = ({ serviceData }) => {
                             <TestimonialCarousel slides={testimonialSlides} />
                         </div>
                         <div className="mt-12 text-center">
-                            {/* <Link prefetch={false} href={serviceData?.clientTestimonial?.ctaHref || '/'} className="inline-block bg-[#4A69BB] text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer">
-                                {serviceData?.clientTestimonial?.ctaTitle}
-                            </Link> */}
                             <span className="inline-block bg-[#4A69BB] text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-medium cursor-pointer" onClick={scrollToHomeForm}>
                                 {serviceData?.clientTestimonial?.ctaTitle}
                             </span>
@@ -427,6 +409,19 @@ const ServiceWrapper = ({ serviceData }) => {
                 </section>
             )}
 
+            {/* region block */}
+            {(() => {
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? serviceData?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container mx-auto">
+                        <div className="pb-14">
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             {/* CTA Section */}
             <section id="cta" className="py-20 bg-gradient-to-r from-[#4A69BB] to-[#6283E5] text-white">

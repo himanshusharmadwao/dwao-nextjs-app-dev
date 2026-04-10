@@ -1,7 +1,7 @@
 import NotFound from "@/app/(regional)/[region]/not-found"
 import BlogWrapper from "@/components/wrapper/blog";
 import { getRegions } from "@/libs/apis/data/menu";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 
 // Centralized data fetcher
 async function fetchBlogPageData(params, searchParams) {
@@ -20,7 +20,7 @@ async function fetchBlogPageData(params, searchParams) {
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
   
-  const { region, validRegion } = await fetchBlogPageData(params, searchParams);
+  const { region, validRegion, regions } = await fetchBlogPageData(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -30,7 +30,8 @@ export async function generateMetadata({ params, searchParams }) {
   }
 
   return {
-    title: "Blogs",
+    title: appendRegionToTitle("Blogs", region, regions),
+    description: prependRegionToDescription("DWAO offers digital transformation and marketing services, including analytics, CRO, performance marketing, CDP, marketing automation, SEO, and more, helping businesses enhance their online presence, optimize performance, and drive growth.", region, regions),
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}${
         region !== "default" ? `/${region}` : ""

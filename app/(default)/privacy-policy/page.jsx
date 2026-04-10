@@ -23,11 +23,11 @@ export async function generateMetadata({ searchParams }) {
     };
   }
 
-  const seo = policyResponse?.data?.seo || {};
+  const seo = policyResponse?.data[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || policyResponse?.data?.title,
-    description: seo?.metaDescription || policyResponse?.data?.excerpt,
+    title: seo?.metaTitle || policyResponse?.data[0]?.title,
+    description: seo?.metaDescription || policyResponse?.data[0]?.excerpt,
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:
@@ -78,7 +78,7 @@ const PrivacyPolicy = async ({ searchParams }) => {
 
   return (
     <>
-      <StructuredData data={policyResponse?.data?.seo?.structuredData} />
+      <StructuredData data={policyResponse?.data[0]?.seo?.structuredData} />
       <PrivacyPolicyWrapper policyResponse={data[0]} preview={preview} />
     </>
   );

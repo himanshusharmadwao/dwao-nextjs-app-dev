@@ -6,7 +6,8 @@ import Link from 'next/link'
 import ReactMarkdown from 'react-markdown';
 import DOMPurify from 'dompurify';
 import remarkGfm from 'remark-gfm'; // for features like strikethrough and tables
-import rehypeRaw from 'rehype-raw'; // for raw html 
+import rehypeRaw from 'rehype-raw'; // for raw html
+import SafeMarkdownComp from '@/components/common/SafeMarkdownComp';
 
 const ClientCarousel = dynamic(() => import('@/components/common/clientCarousel'), {
     loading: () => <div className="animate-pulse h-20 bg-gray-100 rounded"></div>
@@ -306,6 +307,20 @@ const AboutWrapper = async ({ data, regions, preview, region = "default" }) => {
                     </div>
                 </div>
             </Suspense>
+
+            {/* region block */}
+            {(() => {
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? data?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container">
+                        <div className='mb-14'>
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             {/* contact */}
             <Suspense fallback={<LoadingPlaceholder />}>

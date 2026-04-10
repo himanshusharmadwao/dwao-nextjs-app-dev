@@ -10,7 +10,8 @@ export const getAboutData = async (preview = false, region = "default") => {
       `&populate[12]=seo.openGraph&populate[13]=seo.openGraph.ogImage` +
       `&populate[14]=clientsSlide&populate[15]=clientsSlide.entity` +
       `&populate[16]=clientsSlide.entity.logo` +
-      `&populate[17]=regions`;
+      `&populate[17]=regions` +
+      `&populate[18]=regionBlocks&populate[19]=regionBlocks.region`;
 
     if (preview) url += `&status=draft`;
     if (region) url += `&filters[regions][slug][$eq]=${region}`;

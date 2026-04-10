@@ -6,6 +6,7 @@ import React from 'react'
 import CompanyEvents from '@/components/culture/companyEvents'
 import { buildRegionalPath, getImageUrl } from '@/libs/utils'
 import { getRegions } from '@/libs/apis/data/menu'
+import SafeMarkdownComp from '@/components/common/SafeMarkdownComp'
 
 const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
 
@@ -136,6 +137,20 @@ const ReviewWrapper = async ({ reviewResponse, region = "default" }) => {
                         </div>
                     </div>
                 )}
+
+            {/* region block */}
+            {(() => {
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? reviewResponse?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container">
+                        <div className="mb-14">
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             {/* contact us */}
             {reviewResponse?.ctaDescription &&

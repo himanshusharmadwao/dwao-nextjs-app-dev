@@ -45,6 +45,7 @@ export const getPartner = async (preview = false, slug = 'partners-global', regi
       `populate[0]=thumbnail&populate[1]=featuredImage&populate[2]=category` +
       `&populate[3]=sub_category&populate[4]=section.visual&populate[5]=section.content` +
       `&populate[6]=seo&populate[7]=seo.openGraph&populate[8]=seo.openGraph.ogImage` +
+      `&populate[9]=regionBlocks&populate[10]=regionBlocks.region` +
       `&filters[category][slug][$eq]=partners`;
 
     if (slug) baseUrl += `&filters[slug][$eq]=${slug}`;
@@ -57,16 +58,6 @@ export const getPartner = async (preview = false, slug = 'partners-global', regi
 
     let finalResponse = await response.json();
     let mainCapability = finalResponse?.data?.[0];
-
-    // if (!mainCapability) {
-    //   baseUrl = baseUrl.replace(
-    //     `filters[regions][slug][$eq]=${region}`,
-    //     `filters[regions][slug][$eq]=default`
-    //   );
-    //   response = await fetch(baseUrl, { next: { revalidate: getRevalidateTime(preview) } });
-    //   finalResponse = await response.json();
-    //   mainCapability = finalResponse?.data?.[0];
-    // }
 
     if (!mainCapability) {
       const fallbackRegion = "default";

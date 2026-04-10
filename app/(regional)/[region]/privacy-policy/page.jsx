@@ -2,7 +2,7 @@ import StructuredData from "@/components/StructuredData";
 import PrivacyPolicyWrapper from "@/components/wrapper/privacy-policy";
 import { getRegions } from "@/libs/apis/data/menu";
 import { getPolicy } from "@/libs/apis/data/privacyPolicy";
-import { checkRegionValidity } from "@/libs/utils";
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from "@/libs/utils";
 import NotFound from "@/app/(regional)/[region]/not-found"
 
 // Centralized data fetcher
@@ -26,7 +26,7 @@ async function fetchPolicyData(paramsPromise, searchParamsPromise) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { policyResponse, validRegion, region } = await fetchPolicyData(params, searchParams);
+  const { policyResponse, validRegion, region, regions } = await fetchPolicyData(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -42,11 +42,11 @@ export async function generateMetadata({ params, searchParams }) {
     };
   }
 
-  const seo = policyResponse?.data?.seo || {};
+  const seo = policyResponse?.data[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || policyResponse?.data?.title,
-    description: seo?.metaDescription || policyResponse?.data?.excerpt,
+    title: appendRegionToTitle(seo?.metaTitle || policyResponse?.data[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || policyResponse?.data[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:
@@ -103,7 +103,7 @@ const PrivacyPolicy = async ({ params, searchParams }) => {
 
   return (
     <>
-      <StructuredData data={data?.seo?.structuredData} />
+      <StructuredData data={data[0]?.seo?.structuredData} />
       <PrivacyPolicyWrapper
         policyResponse={data[0]}
         preview={preview}

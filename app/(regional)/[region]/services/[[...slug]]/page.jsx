@@ -5,7 +5,7 @@ import { getCapability } from '@/libs/apis/data/capabilities';
 import StructuredData from '@/components/StructuredData';
 import { getRegions } from '@/libs/apis/data/menu';
 import NotFound from '@/app/(regional)/[region]/not-found';
-import { checkRegionValidity } from '@/libs/utils';
+import { checkRegionValidity, appendRegionToTitle, prependRegionToDescription } from '@/libs/utils';
 
 // Centralized data fetcher
 async function fetchCapabilityDataPage(paramsPromise, searchParamsPromise) {
@@ -32,7 +32,7 @@ async function fetchCapabilityDataPage(paramsPromise, searchParamsPromise) {
 
 // Generate dynamic metadata
 export async function generateMetadata({ params, searchParams }) {
-  const { capabilityResponse, validRegion, region, slug1, slug2 } = await fetchCapabilityDataPage(params, searchParams);
+  const { capabilityResponse, validRegion, region, slug1, slug2, regions } = await fetchCapabilityDataPage(params, searchParams);
 
   if (!validRegion) {
     return {
@@ -51,8 +51,8 @@ export async function generateMetadata({ params, searchParams }) {
   const seo = capabilityResponse?.data?.[0]?.seo || {};
 
   return {
-    title: seo?.metaTitle || capabilityResponse?.data?.[0]?.title,
-    description: seo?.metaDescription || "Explore our capabilities and expertise.",
+    title: appendRegionToTitle(seo?.metaTitle || capabilityResponse?.data?.[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || "Explore our capabilities and expertise.", region, regions),
     ...(seo?.keywords && { keywords: seo?.keywords.split(',').map(k => k.trim()) }),
     alternates: {
       canonical: seo?.canonicalURL ||
@@ -93,7 +93,7 @@ export const loadPage = async (slug) => {
 
 // Page component
 const DynamicPages = async ({ params, searchParams }) => {
-  const { capabilityResponse, validRegion, regions } = await fetchCapabilityDataPage(params, searchParams);
+  const { capabilityResponse, validRegion, regions, region } = await fetchCapabilityDataPage(params, searchParams);
 
   if (!validRegion) return <NotFound />;
 
@@ -114,6 +114,7 @@ const DynamicPages = async ({ params, searchParams }) => {
         pageData={capabilityResponse?.data[0]}
         relatedCapabilities={capabilityResponse?.related}
         regions={regions}
+        region={region}
         type="services"
       />
     </>

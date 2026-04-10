@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import Banner from "@/components/home/banner";
 import { getClientTestimonials, getHome } from '@/libs/apis/data/home';
 import { getImageUrl, buildRegionalPath } from '@/libs/utils';
+import SafeMarkdownComp from '@/components/common/SafeMarkdownComp';
 import { getAllInsightBlogs } from '@/libs/apis/data/insights';
 import dynamic from 'next/dynamic'
 import Image from 'next/image';
@@ -211,6 +212,20 @@ const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
                     </div>
                 </div>
             </Suspense>
+
+            {/* region block */}
+            {(() => {
+                const matchedBlock = (region && region !== "default" && region !== "in-en") ? data?.regionBlocks?.find(rb => rb.region?.some(r => r.slug === region)) : null;
+                return matchedBlock ? (
+                    <div className="container">
+                        <div className="mb-14">
+                            <SafeMarkdownComp>
+                                {matchedBlock.description}
+                            </SafeMarkdownComp>
+                        </div>
+                    </div>
+                ) : null;
+            })()}
 
             <Suspense fallback={<LoadingPlaceholder />}>
                 {/* contact */}
