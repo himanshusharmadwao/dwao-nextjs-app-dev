@@ -42,11 +42,11 @@ export async function generateMetadata({ params, searchParams }) {
     };
   }
 
-  const seo = policyResponse?.data[0]?.seo || {};
+  const seo = policyResponse?.data?.[0]?.seo || {};
 
   return {
-    title: appendRegionToTitle(seo?.metaTitle || policyResponse?.data[0]?.title, region, regions),
-    description: prependRegionToDescription(seo?.metaDescription || policyResponse?.data[0]?.excerpt, region, regions),
+    title: appendRegionToTitle(seo?.metaTitle || policyResponse?.data?.[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || policyResponse?.data?.[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:

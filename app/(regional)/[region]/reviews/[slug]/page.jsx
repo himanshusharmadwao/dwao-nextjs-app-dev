@@ -44,11 +44,11 @@ export async function generateMetadata({ params, searchParams }) {
     };
   }
 
-  const seo = reviewResponse?.data[0]?.seo || {};
+  const seo = reviewResponse?.data?.[0]?.seo || {};
 
   return {
-    title: appendRegionToTitle(seo?.metaTitle || reviewResponse?.data[0]?.title, region, regions),
-    description: prependRegionToDescription(seo?.metaDescription || reviewResponse?.data[0]?.excerpt, region, regions),
+    title: appendRegionToTitle(seo?.metaTitle || reviewResponse?.data?.[0]?.title, region, regions),
+    description: prependRegionToDescription(seo?.metaDescription || reviewResponse?.data?.[0]?.excerpt, region, regions),
     keywords: seo?.keywords ? seo?.keywords.split(",").map((k) => k.trim()) : [],
     alternates: {
       canonical:
