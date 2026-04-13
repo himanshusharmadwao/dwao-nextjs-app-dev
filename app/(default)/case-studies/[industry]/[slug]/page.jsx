@@ -105,7 +105,7 @@ const SingleBlog = async ({ params, searchParams }) => {
     return (
         <>
             <StructuredData data={insightBlogsResponse?.data?.[0]?.seo?.structuredData} />
-            <SingleBlogWrapper pageData={insightBlogsResponse.data[0]} relatedInsightBlogs={insightBlogsResponse.related} />
+            <SingleBlogWrapper pageData={insightBlogsResponse?.data?.[0]} relatedInsightBlogs={insightBlogsResponse?.related} />
         </>
     )
 

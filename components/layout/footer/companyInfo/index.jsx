@@ -5,7 +5,7 @@ import Link from "next/link";
 const CompanyInfo = async ({ preview, regions, region }) => {
 
     const contactResponse = await getContact(preview, region);
-    const officeResponse = contactResponse?.data[0];
+    const officeResponse = contactResponse?.data?.[0];
 
     // console.log("office: ", officeResponse)
 

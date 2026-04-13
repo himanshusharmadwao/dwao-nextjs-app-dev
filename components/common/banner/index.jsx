@@ -48,7 +48,7 @@ const CommonBanner = ({ data }) => {
               <h1 className="lg:text-[3.5vw] text-[28px] leading-[1.2] text-white">
                 {breakTitle(title)}
               </h1>
-              <p className="text-[17px] text-white mt-[2rem]">{content[0]}</p>
+              <p className="text-[17px] text-white mt-[2rem]">{content?.[0]}</p>
               {linkTitle !== "" && linkSrc !== "" && (
                 <ExtendLink title={linkTitle} href={linkSrc} className="text-white text-[20px]" />
               )}

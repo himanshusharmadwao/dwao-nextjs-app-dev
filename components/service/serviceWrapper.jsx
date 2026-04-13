@@ -137,7 +137,7 @@ const ServiceWrapper = ({ serviceData, region = "default" }) => {
                             </p>
                         </div>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {serviceData?.section?.[0]?.card.map((item, index) => (
+                            {serviceData?.section?.[0]?.card?.map((item, index) => (
                                 <IntroCard
                                     key={index}
                                     icon={getImageUrl(item.icon)}

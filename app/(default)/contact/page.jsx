@@ -23,12 +23,12 @@ export async function generateMetadata({ searchParams }) {
         };
     }
 
-    const seo = contactResponse?.data[0]?.seo || {};
+    const seo = contactResponse?.data?.[0]?.seo || {};
     // console.log("Seo: ", seo);
 
     return {
-        title: seo?.metaTitle || contactResponse?.data[0]?.title,
-        description: seo?.metaDescription || contactResponse?.data[0]?.excerpt,
+        title: seo?.metaTitle || contactResponse?.data?.[0]?.title,
+        description: seo?.metaDescription || contactResponse?.data?.[0]?.excerpt,
         keywords: seo?.keywords ? seo?.keywords.split(",").map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||

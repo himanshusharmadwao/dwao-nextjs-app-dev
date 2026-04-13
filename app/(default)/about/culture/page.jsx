@@ -28,12 +28,12 @@ export async function generateMetadata({ searchParams }) {
         };
     }
 
-    const seo = cultureResponse?.data[0]?.seo || {};
+    const seo = cultureResponse?.data?.[0]?.seo || {};
     // console.log("Seo: ", seo);
 
     return {
-        title: seo?.metaTitle || cultureResponse?.data[0]?.title,
-        description: seo?.metaDescription || cultureResponse?.data[0]?.excerpt,
+        title: seo?.metaTitle || cultureResponse?.data?.[0]?.title,
+        description: seo?.metaDescription || cultureResponse?.data?.[0]?.excerpt,
         keywords: seo?.keywords ? seo?.keywords.split(',').map(keyword => keyword.trim()) : [],
         alternates: {
             canonical: seo?.canonicalURL ||
@@ -80,8 +80,8 @@ const Culture = async ({ searchParams }) => {
 
     return (
         <>
-            <StructuredData data={cultureResponse?.data[0]?.seo?.structuredData} />
-            <CultureWrapper data={cultureResponse?.data[0]} regions={regions} />
+            <StructuredData data={cultureResponse?.data?.[0]?.seo?.structuredData} />
+            <CultureWrapper data={cultureResponse?.data?.[0]} regions={regions} />
         </>
     )
 }

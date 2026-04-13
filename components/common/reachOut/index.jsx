@@ -11,7 +11,7 @@ const ReachOut = async ({ preview, region }) => {
 
   try {
     const response = await getReachOutUI(preview, region);
-    data = response.data[0];
+    data = response.data?.[0];
   } catch (error) {
     console.error('Failed to fetch ReachOut UI data:', error);
   }

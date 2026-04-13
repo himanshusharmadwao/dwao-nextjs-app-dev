@@ -105,7 +105,7 @@ const BlogPost = ({ filterItems, variant, preview, region, regions, initialPosts
             <FilterContent data={filterItems} onFilterSelect={handleFilterSelect} />
 
             {loading ? (
-                <div className="flex gap-[30px] flex-wrap mb-14 border-b border-gray-300 pb-8">
+                <div className="flex gap-[30px] flex-wrap mb-14">
                     {[...Array(itemsPerPage)].map((_, index) => (
                         <div
                             key={index}
@@ -114,7 +114,7 @@ const BlogPost = ({ filterItems, variant, preview, region, regions, initialPosts
                     ))}
                 </div>
             ) : (
-                <div className="flex gap-[30px] flex-wrap mb-14 border-b border-gray-300 pb-8">
+                <div className="flex gap-[30px] flex-wrap mb-14">
                     {variant === "blogPosts" && posts?.map((item, index) => (
                         <Card key={index} data={item}  region={region} regions={regions} className="basis-full md:basis-[calc((100%-60px)/3)]" />
                     ))}
@@ -130,7 +130,7 @@ const BlogPost = ({ filterItems, variant, preview, region, regions, initialPosts
                 </div>
             )}
 
-            <div className="mb-14">
+            <div className="mb-14 border-t border-[#ccc]">
                 <Pagination
                     currentPage={currentPage}
                     totalItems={totalItems}

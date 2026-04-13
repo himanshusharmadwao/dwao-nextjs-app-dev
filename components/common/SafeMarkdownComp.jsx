@@ -5,7 +5,6 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { sanitizeHtml } from '@/libs/sanitizeHtml';
 import { useMemo } from 'react';
-import DOMPurify from 'dompurify'; // required even when it is not used 
 
 const SafeMarkdownComp = ({ children, ...props }) => {
   // Sanitize content before rendering

@@ -72,7 +72,7 @@ const HomeWrapper = async ({ isMobile, data, preview, region = "default" }) => {
 
     // console.log("insightBlogsResponse: ",insightBlogsResponse)
 
-    const testimonialSlides = clientTestimonialResponse?.data[0]?.entity?.map((testimonial, index) => (
+    const testimonialSlides = clientTestimonialResponse?.data?.[0]?.entity?.map((testimonial, index) => (
         <TestimonialCard
             key={index}
             rating={testimonial.rating}

@@ -1,9 +1,14 @@
-import Header from '@/components/layout/header'
-
 import '@/styles/global.css'
-import Footer from "@/components/layout/footer";
-import { getRegions } from '@/libs/apis/data/menu';
+import { Roboto } from 'next/font/google';
 import FloatingForm from '@/components/floatingForm/FloatingForm';
+
+const roboto = Roboto({
+  weight: ['100', '300', '400', '500', '700', '900'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto',
+});
 
 export const metadata = {
   title: {
@@ -14,14 +19,14 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-
-
   return (
-    <>
-      {children}
-      <div className='fixed right-1 md:right-5 top-1/2 -translate-y-1/2 z-[999999] px-2 py-3'>
-        <FloatingForm />
-      </div>
-    </>
+    <html lang="en" className={roboto.variable}>
+      <body suppressHydrationWarning={true}>
+        {children}
+        <div className='fixed right-1 md:right-5 top-1/2 -translate-y-1/2 z-[999999] px-2 py-3'>
+          <FloatingForm />
+        </div>
+      </body>
+    </html>
   );
 }

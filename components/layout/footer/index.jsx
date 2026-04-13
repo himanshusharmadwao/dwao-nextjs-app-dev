@@ -64,7 +64,7 @@ const Footer = async ({ preview, region }) => {
             <div className="grid grid-cols-5">
               {/* Second Column */}
               <div className='col-span-2'>
-                <QuickLinks data={quickLinks?.data[0]?.menu} regions={regions} region={region} />
+                <QuickLinks data={quickLinks?.data?.[0]?.menu} regions={regions} region={region} />
               </div>
 
               {/* Third Column */}
