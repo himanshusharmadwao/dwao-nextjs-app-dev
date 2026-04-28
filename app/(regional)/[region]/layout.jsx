@@ -1,5 +1,6 @@
 import Header from '@/components/layout/header'
 import Footer from "@/components/layout/footer";
+import HreflangLinks from '@/components/common/HreflangLinks';
 import { getRegions } from '@/libs/apis/data/menu';
 import { headers } from 'next/headers';
 
@@ -23,23 +24,7 @@ export default async function RegionalLayout({ children, params }) {
 
   return (
     <>
-      {regions?.data?.map(region => {
-        const slug = region?.slug;
-        const hreflang = region?.hrefLang;
-        if (!hreflang) return null;
-        const url =
-          hreflang === "default"
-            ? process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL
-            : `${process.env.NEXT_PUBLIC_DWAO_GLOBAL_URL}/${slug}`;
-        return (
-          <link
-            key={hreflang}
-            rel="alternate"
-            hrefLang={hreflang === "default" ? "x-default" : hreflang}
-            href={url}
-          />
-        );
-      })}
+      <HreflangLinks regions={regions?.data} region={region} />
       <Header preview={preview} region={region} />
       {children}
       <Footer preview={preview} region={region} />
