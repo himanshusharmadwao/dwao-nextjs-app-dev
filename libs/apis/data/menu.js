@@ -41,7 +41,7 @@ export const getMenu = async (preview = false, region = "default") => {
 
     // Create a promise for the actual API call
     const apiPromise = (async () => {
-      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/menus?populate[menu][populate][subMenu][populate]=subSubMenu&populate=regions`;
+      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/menus?populate[regions]=true&populate[menu][populate][subMenu][populate]=subSubMenu`;
 
       if (preview) url += `&status=draft`;
 
@@ -107,7 +107,7 @@ export const getLegalMenu = async (preview = false, region = "default") => {
 
     // Create a promise for the actual API call
     const apiPromise = (async () => {
-      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/legal-menus/?populate[menu][populate][subMenu][populate]=subSubMenu&populate=regions`;
+      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/legal-menus/?populate[regions]=true&populate[menu][populate][subMenu][populate]=subSubMenu`;
 
       if (preview) url += `&status=draft`;
 
@@ -172,7 +172,7 @@ export const getQuickLinks = async (preview = false, region = "default") => {
 
     // Create a promise for the actual API call
     const apiPromise = (async () => {
-      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/quick-links/?populate[menu][populate][subMenu][populate]=subSubMenu&populate=regions`;
+      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/quick-links/?populate[regions]=true&populate[menu][populate][subMenu][populate]=subSubMenu`;
 
       if (preview) url += `&status=draft`;
 
@@ -238,7 +238,7 @@ export const getSecondaryMenu = async (preview = false, region = "default") => {
 
     // Create a promise for the actual API call
     const apiPromise = (async () => {
-      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/secondary-menus?populate[menu][populate][subMenu][populate]=subSubMenu&populate=regions`;
+      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/secondary-menus?populate[regions]=true&populate[menu][populate][subMenu][populate]=subSubMenu`;
 
       if (preview) url += `&status=draft`;
 
